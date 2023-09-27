@@ -20,5 +20,6 @@ from django.urls import include, path
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('csrf_token/', get_token, name='get_csrf_token'),
+    path('authentication/', include('authentication.urls')),
     path('accounts/', include('accounts.urls')),
 ]
