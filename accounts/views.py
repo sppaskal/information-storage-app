@@ -15,6 +15,5 @@ class AddAccount(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
-    def get(self, request):
-        # Your view logic here
+    def post(self, request):
         return Response({"message": "Added Account"})
