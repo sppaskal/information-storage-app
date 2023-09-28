@@ -2,6 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
+from .serializers import AccountSerializer
 
 class TestConnection(APIView):
     permission_classes = [AllowAny]
@@ -16,4 +17,17 @@ class AddAccount(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        return Response({"message": "Added Account"})
+        print(request.data)
+        # Deserialize and validate the incoming data
+        serializer = AccountSerializer(data=request.data)
+        if serializer.is_valid():
+            # Save the data to the database
+            serializer.save()
+            return Response(
+                {
+                    "message": "Added Account",
+                    "account": serializer.data
+                }
+            )
+        else:
+            return Response(serializer.errors, status=400)  # Return validation errors if data is invalid
