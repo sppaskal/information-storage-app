@@ -1,15 +1,20 @@
-from django.http import HttpResponse
-from django.views import View
-from django.http import JsonResponse
-from django.middleware.csrf import get_token
+from rest_framework.views import APIView
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.response import Response
 
-# Create your views here.
+class TestConnection(APIView):
+    permission_classes = [AllowAny]
 
-class TestConnection(View):
     def get(self, request):
-        return HttpResponse("Connection Successful")
+        # Your view logic here
+        return Response({"message": "Connection Successful"})
 
-class GetCSRFToken(View):
+
+class Login(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
-        csrf_token = get_token(request)
-        return JsonResponse({'csrf_token': csrf_token})
+        # Your view logic here
+        return Response({"message": "Successful Login"})

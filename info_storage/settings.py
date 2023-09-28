@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'rest_framework.authtoken',
     'authentication',
     'accounts',
 ]
@@ -75,10 +77,21 @@ WSGI_APPLICATION = 'info_storage.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
+# DATABASE_ROUTERS = ['info_storage.auth_db_router.AuthRouter']
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    },
+    'auth_db':
+    {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'auth_db',
+        'USER': 'sppaskal',
+        'PASSWORD': '6D%Rjf2sppaskal',
+        'HOST': 'localhost',
+        'PORT': '3306'
     },
     'account_information':
     {
@@ -90,6 +103,10 @@ DATABASES = {
         'PORT': '3306'
     }
 }
+
+# AUTHENTICATION_BACKENDS = [
+#     'django.contrib.auth.backends.ModelBackend',
+# ]
 
 
 # Password validation
@@ -130,4 +147,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-X_FRAME_OPTIONS = 'ALLOWALL'
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    # Other DRF settings...
+}
