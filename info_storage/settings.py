@@ -77,7 +77,7 @@ WSGI_APPLICATION = 'info_storage.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-# DATABASE_ROUTERS = ['info_storage.auth_db_router.AuthRouter']
+DATABASE_ROUTERS = ['info_storage.auth_db_router.AuthRouter']
 
 DATABASES = {
     'default': {
