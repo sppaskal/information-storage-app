@@ -41,3 +41,11 @@ class ListAccounts(APIView):
         serializer = AccountSerializer(accounts, many=True)
         return Response(serializer.data)
     
+class ListAccountsByEmail(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, email):
+        accounts = Account.objects.filter(email=email)
+        serializer = AccountSerializer(accounts, many=True)
+        return Response(serializer.data)
