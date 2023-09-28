@@ -6,5 +6,5 @@ app_name = 'accounts'
 urlpatterns = [
     path('connection-test/', views.TestConnection.as_view(), name='test_connection'),
     path('add/', views.AddAccount.as_view(), name='add_account'),
-    
+    path('list/', views.ListAccounts.as_view(), name='list_accounts'),
 ]
