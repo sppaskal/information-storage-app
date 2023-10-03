@@ -1,7 +1,12 @@
 from django.db import models
 from django_cryptography.fields import encrypt
 
-# Create your models here.
+
+class Type(models.Model):
+    name = models.CharField(max_length=254)
+
+# -------------------------------------------------------------------
+
 class Account(models.Model):
     email = models.EmailField(max_length=254, blank=True)
     username = models.CharField(max_length=254, blank=True)
@@ -9,7 +14,9 @@ class Account(models.Model):
     company = models.CharField(max_length=254, blank=True)
     website = models.URLField(blank=True)
     description = models.TextField(blank=True)
-    # type = foreign key to a Type table (ex: gaming, banking, work, ect)
+    type = models.ForeignKey(Type, null=True, on_delete=models.SET_NULL)
 
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
+
+# -------------------------------------------------------------------
