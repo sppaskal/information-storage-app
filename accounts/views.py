@@ -12,6 +12,7 @@ class TestConnection(APIView):
         # Your view logic here
         return Response({"message": "Connection Successful"})
 
+# -------------------------------------------------------------------
 
 class AddAccount(APIView):
     authentication_classes = [TokenAuthentication]
@@ -21,7 +22,6 @@ class AddAccount(APIView):
         # Deserialize and validate the incoming data
         serializer = AccountSerializer(data=request.data)
         if serializer.is_valid():
-            # Save the data to the database
             serializer.save()
             return Response(
                 {
@@ -30,7 +30,9 @@ class AddAccount(APIView):
                 }
             )
         else:
-            return Response(serializer.errors, status=400)  # Return validation errors if data is invalid
+            return Response(serializer.errors, status=400)
+
+# -------------------------------------------------------------------
 
 class ListAccounts(APIView):
     authentication_classes = [TokenAuthentication]
@@ -38,14 +40,25 @@ class ListAccounts(APIView):
 
     def get(self, request):
         accounts = Account.objects.all()
-        serializer = AccountSerializer(accounts, many=True)
+        serializer = AccountSerializer(
+            accounts,
+            many=True,
+        )
         return Response(serializer.data)
-    
+
+# -------------------------------------------------------------------
+
 class ListAccountsByEmail(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get(self, request, email):
         accounts = Account.objects.filter(email=email)
-        serializer = AccountSerializer(accounts, many=True)
+        serializer = AccountSerializer(
+            accounts,
+            many=True,
+        )
         return Response(serializer.data)
+    
+# -------------------------------------------------------------------
+    
