@@ -2,7 +2,10 @@ from rest_framework.views import APIView
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
-from .serializers import AccountSerializer
+from .serializers import (
+    AccountSerializer,
+    TypeSerializer
+)
 from .models import Account
 
 class TestConnection(APIView):
@@ -61,4 +64,21 @@ class ListAccountsByEmail(APIView):
         return Response(serializer.data)
     
 # -------------------------------------------------------------------
-    
+
+class AddType(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        # Deserialize and validate the incoming data
+        serializer = TypeSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                {
+                    "message": "Added Type",
+                    "account": serializer.data
+                }
+            )
+        else:
+            return Response(serializer.errors, status=400)

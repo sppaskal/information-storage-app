@@ -3,7 +3,7 @@ from django_cryptography.fields import encrypt
 
 
 class Type(models.Model):
-    name = models.CharField(max_length=254)
+    name = models.CharField(max_length=254, unique=True)
 
 # -------------------------------------------------------------------
 
