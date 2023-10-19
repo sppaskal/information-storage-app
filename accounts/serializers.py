@@ -18,4 +18,10 @@ class TypeSerializer(serializers.ModelSerializer):
         model = Type
         fields = '__all__'
 
+
+class TypeUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Type
+        fields = ('name',)
+
 # -------------------------------------------------------------------

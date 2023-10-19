@@ -1,10 +1,14 @@
 from rest_framework.views import APIView
+from rest_framework import generics
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
+from rest_framework import status
+from .helpers.type_helper import TypeHelper
 from .serializers import (
     AccountSerializer,
-    TypeSerializer
+    TypeSerializer,
+    TypeUpdateSerializer
 )
 from .models import Account
 
@@ -87,3 +91,31 @@ class AddType(APIView):
             )
         else:
             return Response(serializer.errors, status=400)
+
+# -------------------------------------------------------------------
+
+
+class UpdateType(generics.UpdateAPIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    serializer_class = TypeUpdateSerializer
+    lookup_field = 'id'
+
+    def get_queryset(self):
+        type_id = self.kwargs.get('id')
+        return TypeHelper.get_type_qs_by_id(type_id)
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(
+            {
+                "message": "Updated Type",
+                "type": serializer.data
+            },
+            status=status.HTTP_200_OK
+        )
