@@ -8,6 +8,7 @@ from .serializers import (
 )
 from .models import Account
 
+
 class TestConnection(APIView):
     permission_classes = [AllowAny]
 
@@ -16,6 +17,7 @@ class TestConnection(APIView):
         return Response({"message": "Connection Successful"})
 
 # -------------------------------------------------------------------
+
 
 class AddAccount(APIView):
     authentication_classes = [TokenAuthentication]
@@ -37,6 +39,7 @@ class AddAccount(APIView):
 
 # -------------------------------------------------------------------
 
+
 class ListAccounts(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
@@ -51,6 +54,7 @@ class ListAccounts(APIView):
 
 # -------------------------------------------------------------------
 
+
 class ListAccountsByEmail(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
@@ -62,8 +66,9 @@ class ListAccountsByEmail(APIView):
             many=True,
         )
         return Response(serializer.data)
-    
+
 # -------------------------------------------------------------------
+
 
 class AddType(APIView):
     authentication_classes = [TokenAuthentication]

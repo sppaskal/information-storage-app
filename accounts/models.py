@@ -7,6 +7,7 @@ class Type(models.Model):
 
 # -------------------------------------------------------------------
 
+
 class Account(models.Model):
     email = models.EmailField(max_length=254, blank=True)
     username = models.CharField(max_length=254, blank=True)

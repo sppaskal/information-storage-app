@@ -4,12 +4,14 @@ from .models import (
     Type
 )
 
+
 class AccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
         fields = '__all__'
 
 # -------------------------------------------------------------------
+
 
 class TypeSerializer(serializers.ModelSerializer):
     class Meta:
