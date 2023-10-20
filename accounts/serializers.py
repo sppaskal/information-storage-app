@@ -4,11 +4,27 @@ from .models import (
     Type
 )
 
+# -------------------------------------------------------------------
+
 
 class AccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
         fields = '__all__'
+
+
+class AccountUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Account
+        fields = (
+            'email',
+            'username',
+            'password',
+            'company',
+            'website',
+            'description',
+            'type',
+        )
 
 # -------------------------------------------------------------------
 
