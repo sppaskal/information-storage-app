@@ -29,4 +29,8 @@ urlpatterns = [
         'update/type/<int:id>/', views.UpdateType.as_view(),
         name='update_type'
     ),
+    path(
+        'list/type/', views.ListTypes.as_view(),
+        name='list_type'
+    ),
 ]

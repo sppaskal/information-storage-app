@@ -4,6 +4,10 @@ from ..models import Type
 class TypeHelper:
 
     @staticmethod
+    def get_all_types():
+        return Type.objects.all()
+
+    @staticmethod
     def get_type_instance_by_name(type_name):
         return Type.objects.get(name=type_name)
 

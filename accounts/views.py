@@ -149,3 +149,18 @@ class UpdateType(generics.UpdateAPIView):
             },
             status=status.HTTP_200_OK
         )
+    
+# -------------------------------------------------------------------
+
+
+class ListTypes(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        types = TypeHelper.get_all_types()
+        serializer = TypeSerializer(
+            types,
+            many=True
+        )
+        return Response(serializer.data)
