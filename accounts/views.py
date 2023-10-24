@@ -12,7 +12,6 @@ from .serializers import (
     TypeSerializer,
     TypeUpdateSerializer
 )
-from .models import Account
 
 
 class TestConnection(APIView):
@@ -79,7 +78,7 @@ class ListAccounts(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        accounts = Account.objects.all()
+        accounts = AccountHelper.get_all_accounts()
         serializer = AccountSerializer(
             accounts,
             many=True,
@@ -94,7 +93,7 @@ class ListAccountsByEmail(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, email):
-        accounts = Account.objects.filter(email=email)
+        accounts = AccountHelper.get_account_qs_by_email(email)
         serializer = AccountSerializer(
             accounts,
             many=True,
@@ -149,7 +148,7 @@ class UpdateType(generics.UpdateAPIView):
             },
             status=status.HTTP_200_OK
         )
-    
+
 # -------------------------------------------------------------------
 
 

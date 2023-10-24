@@ -8,7 +8,7 @@ urlpatterns = [
         'connection-test/', views.TestConnection.as_view(),
         name='test_connection'),
     path(
-        'add/', views.AddAccount.as_view(), 
+        'add/', views.AddAccount.as_view(),
         name='add_account'),
     path(
         'update/<int:id>/', views.UpdateAccount.as_view(),
