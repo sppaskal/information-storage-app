@@ -46,7 +46,7 @@ class AddAccount(APIView):
                 )
             else:
                 return Response(
-                    serializer.errors,
+                    {"error": str(serializer.errors)},
                     status=status.HTTP_400_BAD_REQUEST
                 )
         except Exception as e:
@@ -163,7 +163,7 @@ class AddType(APIView):
                 )
             else:
                 return Response(
-                    serializer.errors,
+                    {"error": str(serializer.errors)},
                     status=status.HTTP_400_BAD_REQUEST
                 )
         except Exception as e:
