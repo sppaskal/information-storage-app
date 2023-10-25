@@ -18,8 +18,10 @@ class TestConnection(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
-        # Your view logic here
-        return Response({"message": "Connection Successful"})
+        return Response(
+            {"message": "Connection Successful"},
+            status=status.HTTP_200_OK
+        )
 
 # -------------------------------------------------------------------
 
@@ -37,10 +39,14 @@ class AddAccount(APIView):
                 {
                     "message": "Added Account",
                     "account": serializer.data
-                }
+                },
+                status=status.HTTP_201_CREATED
             )
         else:
-            return Response(serializer.errors, status=400)
+            return Response(
+                serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
 # -------------------------------------------------------------------
 
@@ -83,7 +89,10 @@ class ListAccounts(APIView):
             accounts,
             many=True,
         )
-        return Response(serializer.data)
+        return Response(
+            serializer.data,
+            status=status.HTTP_200_OK
+        )
 
 # -------------------------------------------------------------------
 
@@ -98,7 +107,10 @@ class ListAccountsByEmail(APIView):
             accounts,
             many=True,
         )
-        return Response(serializer.data)
+        return Response(
+            serializer.data,
+            status=status.HTTP_200_OK
+        )
 
 # -------------------------------------------------------------------
 
@@ -116,10 +128,14 @@ class AddType(APIView):
                 {
                     "message": "Added Type",
                     "account": serializer.data
-                }
+                },
+                status=status.HTTP_201_CREATED
             )
         else:
-            return Response(serializer.errors, status=400)
+            return Response(
+                serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
 # -------------------------------------------------------------------
 
@@ -162,4 +178,7 @@ class ListTypes(APIView):
             types,
             many=True
         )
-        return Response(serializer.data)
+        return Response(
+            serializer.data,
+            status=status.HTTP_200_OK
+        )
