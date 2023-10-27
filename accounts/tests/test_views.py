@@ -20,6 +20,8 @@ class AccountViewTest(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + token.key)
         self.client.login(username='testuser', password='testpassword')
 
+    # -------------------------------------------------------------------
+
     def test_add_account(self):
         url = reverse('accounts:add_account')
         data = {
@@ -44,7 +46,7 @@ class AccountViewTest(APITestCase):
         self.assertEqual(response.data["account"]["description"], "automated test")
         self.assertEqual(response.data["account"]["type"], 1)
 
-    def test_add_account_with_invalid_data(self):
+    def test_add_account_with_invalid_type(self):
         url = reverse('accounts:add_account')
         data = {
             "email": "test-auto@gmail.com",
@@ -67,7 +69,7 @@ class AccountViewTest(APITestCase):
 
     # -------------------------------------------------------------------
 
-    def test_update_account_with_valid_data(self):
+    def test_update_account(self):
         url = reverse('accounts:update_account', kwargs={'id': 1})
         data = {
             "email": "test-auto-updated@gmail.com",
@@ -76,6 +78,7 @@ class AccountViewTest(APITestCase):
             "company": "auto-test-updated",
             "website": "https://www.example-updated.com",
             "description": "automated test updated",
+            "type": 2
         }
 
         response = self.client.patch(url, data, format='json')
@@ -88,3 +91,26 @@ class AccountViewTest(APITestCase):
         self.assertEqual(response.data["account"]["company"], "auto-test-updated")
         self.assertEqual(response.data["account"]["website"], "https://www.example-updated.com")
         self.assertEqual(response.data["account"]["description"], "automated test updated")
+
+    def test_update_account_with_invalid_type(self):
+        url = reverse('accounts:update_account', kwargs={'id': 1})
+        data = {
+            "email": "test-auto-updated@gmail.com",
+            "username": "test-auto-updated",
+            "password": "test-password-updated",
+            "company": "auto-test-updated",
+            "website": "https://www.example-updated.com",
+            "description": "automated test updated",
+            "type": -1
+        }
+
+        response = self.client.patch(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            response.data["error"],
+            "{'type': [ErrorDetail(string='Invalid pk \"-1\" - object does not exist.', "
+            "code='does_not_exist')]}"
+        )
+
+    # -------------------------------------------------------------------
