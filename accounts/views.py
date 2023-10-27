@@ -79,7 +79,7 @@ class UpdateAccount(generics.UpdateAPIView):
             return Response(
                 {
                     "message": "Updated Account",
-                    "type": serializer.data
+                    "account": serializer.data
                 },
                 status=status.HTTP_200_OK
             )

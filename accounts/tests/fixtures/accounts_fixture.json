@@ -1,0 +1,93 @@
+[
+    {
+      "model": "accounts.account",
+      "pk": 1,
+      "fields": {
+        "email": "testt@gmail.com",
+        "username": "testt",
+        "password": "testpass",
+        "company": "Slav-Co",
+        "website": "https://www.example.com",
+        "description": "A place for all things slav.",
+        "type": 2,
+        "date_created": "2023-10-03T18:08:42.569Z",
+        "date_updated": "2023-10-20T23:40:01.720Z"
+      }
+    },
+    {
+      "model": "accounts.account",
+      "pk": 2,
+      "fields": {
+        "email": "test1@gmail.com",
+        "username": "test",
+        "password": "test_password",
+        "company": "Slav-Co",
+        "website": "https://www.example.com",
+        "description": "A place for all things slav.",
+        "type": null,
+        "date_created": "2023-10-03T18:08:50.645Z",
+        "date_updated": "2023-10-03T18:08:50.645Z"
+      }
+    },
+    {
+      "model": "accounts.account",
+      "pk": 3,
+      "fields": {
+        "email": "test2@gmail.com",
+        "username": "test",
+        "password": "test_password",
+        "company": "Slav-Co",
+        "website": "https://www.example.com",
+        "description": "A place for all things slav.",
+        "type": null,
+        "date_created": "2023-10-03T18:19:42.442Z",
+        "date_updated": "2023-10-03T18:19:42.442Z"
+      }
+    },
+    {
+      "model": "accounts.account",
+      "pk": 4,
+      "fields": {
+        "email": "test3@gmail.com",
+        "username": "test",
+        "password": "test_password",
+        "company": "Slav-Co",
+        "website": "https://www.example.com",
+        "description": "A place for all things slav.",
+        "type": null,
+        "date_created": "2023-10-25T00:01:53.473Z",
+        "date_updated": "2023-10-25T00:01:53.473Z"
+      }
+    },
+    {
+      "model": "accounts.account",
+      "pk": 5,
+      "fields": {
+        "email": "test4@gmail.com",
+        "username": "testt",
+        "password": "testpass",
+        "company": "Slav-Co",
+        "website": "https://www.example.com",
+        "description": "A place for all things slav.",
+        "type": 1,
+        "date_created": "2023-10-25T00:02:19.890Z",
+        "date_updated": "2023-10-27T01:50:58.326Z"
+      }
+    },
+    {
+      "model": "accounts.account",
+      "pk": 6,
+      "fields": {
+        "email": "test4@gmail.com",
+        "username": "test",
+        "password": "test_password",
+        "company": "Slav-Co",
+        "website": "https://www.example.com",
+        "description": "A place for all things slav.",
+        "type": 1,
+        "date_created": "2023-10-25T00:45:44.978Z",
+        "date_updated": "2023-10-25T00:45:44.979Z"
+      }
+    }
+    ]
+    

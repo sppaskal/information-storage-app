@@ -1,0 +1,31 @@
+[
+    {
+      "model": "accounts.type",
+      "pk": 1,
+      "fields": {
+        "name": "work"
+      }
+    },
+    {
+      "model": "accounts.type",
+      "pk": 2,
+      "fields": {
+        "name": "school"
+      }
+    },
+    {
+      "model": "accounts.type",
+      "pk": 3,
+      "fields": {
+        "name": "gaming"
+      }
+    },
+    {
+      "model": "accounts.type",
+      "pk": 4,
+      "fields": {
+        "name": "random"
+      }
+    }
+    ]
+    
