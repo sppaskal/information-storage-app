@@ -1,10 +1,9 @@
 from rest_framework.test import APITestCase
 from rest_framework.authtoken.models import Token
 from rest_framework import status
-from rest_framework.exceptions import ErrorDetail
-from django.contrib.auth.models import User
 from django.urls import reverse
-from ..helpers.account_helper import AccountHelper
+from django.contrib.auth.models import User
+import json
 
 
 class AccountViewTest(APITestCase):
@@ -114,3 +113,18 @@ class AccountViewTest(APITestCase):
         )
 
     # -------------------------------------------------------------------
+
+    def test_list_accounts(self):
+        url = reverse('accounts:list_accounts')
+
+        response = self.client.get(url)
+        actual_response = json.loads(response.content)
+
+        with open(
+            'accounts/tests/test_data/list_accounts_output.json',
+            'r'
+        ) as expected_response_file:
+            expected_response = json.load(expected_response_file)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(actual_response, expected_response)

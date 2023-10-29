@@ -1,93 +1,74 @@
 [
     {
-      "model": "accounts.account",
-      "pk": 1,
-      "fields": {
+        "id": 1,
         "email": "testt@gmail.com",
         "username": "testt",
         "password": "testpass",
         "company": "Slav-Co",
         "website": "https://www.example.com",
         "description": "A place for all things slav.",
-        "type": 2,
         "date_created": "2023-10-03T18:08:42.569391Z",
-        "date_updated": "2023-10-20T23:40:01.720727Z"
-      }
+        "date_updated": "2023-10-20T23:40:01.720727Z",
+        "type": 2
     },
     {
-      "model": "accounts.account",
-      "pk": 2,
-      "fields": {
+        "id": 2,
         "email": "test1@gmail.com",
         "username": "test",
         "password": "test_password",
         "company": "Slav-Co",
         "website": "https://www.example.com",
         "description": "A place for all things slav.",
-        "type": null,
         "date_created": "2023-10-03T18:08:50.645146Z",
-        "date_updated": "2023-10-03T18:08:50.645433Z"
-      }
+        "date_updated": "2023-10-03T18:08:50.645433Z",
+        "type": null
     },
     {
-      "model": "accounts.account",
-      "pk": 3,
-      "fields": {
+        "id": 3,
         "email": "test2@gmail.com",
         "username": "test",
         "password": "test_password",
         "company": "Slav-Co",
         "website": "https://www.example.com",
         "description": "A place for all things slav.",
-        "type": null,
         "date_created": "2023-10-03T18:19:42.442407Z",
-        "date_updated": "2023-10-03T18:19:42.442407Z"
-      }
+        "date_updated": "2023-10-03T18:19:42.442407Z",
+        "type": null
     },
     {
-      "model": "accounts.account",
-      "pk": 4,
-      "fields": {
+        "id": 4,
         "email": "test3@gmail.com",
         "username": "test",
         "password": "test_password",
         "company": "Slav-Co",
         "website": "https://www.example.com",
         "description": "A place for all things slav.",
-        "type": null,
         "date_created": "2023-10-25T00:01:53.473749Z",
-        "date_updated": "2023-10-25T00:01:53.473749Z"
-      }
+        "date_updated": "2023-10-25T00:01:53.473749Z",
+        "type": null
     },
     {
-      "model": "accounts.account",
-      "pk": 5,
-      "fields": {
+        "id": 5,
         "email": "test4@gmail.com",
         "username": "testt",
         "password": "testpass",
         "company": "Slav-Co",
         "website": "https://www.example.com",
         "description": "A place for all things slav.",
-        "type": 1,
         "date_created": "2023-10-25T00:02:19.890684Z",
-        "date_updated": "2023-10-27T01:50:58.326856Z"
-      }
+        "date_updated": "2023-10-27T01:50:58.326856Z",
+        "type": 1
     },
     {
-      "model": "accounts.account",
-      "pk": 6,
-      "fields": {
+        "id": 6,
         "email": "test4@gmail.com",
         "username": "test",
         "password": "test_password",
         "company": "Slav-Co",
         "website": "https://www.example.com",
         "description": "A place for all things slav.",
-        "type": 1,
         "date_created": "2023-10-25T00:45:44.978663Z",
-        "date_updated": "2023-10-25T00:45:44.979664Z"
-      }
+        "date_updated": "2023-10-25T00:45:44.979664Z",
+        "type": 1
     }
-    ]
-    
+]
