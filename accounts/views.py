@@ -157,7 +157,7 @@ class AddType(APIView):
                 return Response(
                     {
                         "message": "Added Type",
-                        "account": serializer.data
+                        "type": serializer.data
                     },
                     status=status.HTTP_201_CREATED
                 )

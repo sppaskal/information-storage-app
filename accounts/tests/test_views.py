@@ -145,3 +145,16 @@ class AccountViewTest(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(actual_response, expected_response)
+
+    # -------------------------------------------------------------------
+
+    def test_add_type(self):
+        url = reverse('accounts:add_type')
+        data = {
+            "name": "test"
+        }
+
+        response = self.client.post(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data["type"]["name"], "test")
