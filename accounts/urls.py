@@ -31,6 +31,6 @@ urlpatterns = [
     ),
     path(
         'list/type/', views.ListTypes.as_view(),
-        name='list_type'
+        name='list_types'
     ),
 ]

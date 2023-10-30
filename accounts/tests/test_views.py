@@ -173,3 +173,20 @@ class AccountViewTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["message"], "Updated Type")
         self.assertEqual(response.data["type"]["name"], "test-updated")
+
+    # -------------------------------------------------------------------
+
+    def test_list_types(self):
+        url = reverse("accounts:list_types")
+
+        response = self.client.get(url)
+        actual_response = json.loads(response.content)
+
+        with open(
+            "accounts/tests/test_data/list_types_output.json",
+            "r"
+        ) as expected_response_file:
+            expected_response = json.load(expected_response_file)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(actual_response, expected_response)
