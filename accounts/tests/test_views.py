@@ -9,8 +9,8 @@ import json
 class AccountViewTest(APITestCase):
     databases = "__all__"
     fixtures = [
-        "accounts/tests/fixtures/types_fixture.json",
-        "accounts/tests/fixtures/accounts_fixture.json"
+        "accounts/tests/fixtures/types.json",
+        "accounts/tests/fixtures/accounts.json"
     ]
 
     def setUp(self):
