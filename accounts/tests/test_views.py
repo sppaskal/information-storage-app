@@ -5,6 +5,8 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 import json
 
+# NOTE: Test command: python manage.py test accounts.tests.test_views
+
 
 class AccountViewTest(APITestCase):
     databases = "__all__"
