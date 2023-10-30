@@ -1,0 +1,14 @@
+[
+    {
+        "id": 1,
+        "email": "testt@gmail.com",
+        "username": "testt",
+        "password": "testpass",
+        "company": "Slav-Co",
+        "website": "https://www.example.com",
+        "description": "A place for all things slav.",
+        "date_created": "2023-10-03T18:08:42.569391Z",
+        "date_updated": "2023-10-20T23:40:01.720727Z",
+        "type": 2
+    }
+]

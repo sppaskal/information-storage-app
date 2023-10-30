@@ -128,3 +128,20 @@ class AccountViewTest(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(actual_response, expected_response)
+
+    # -------------------------------------------------------------------
+
+    def test_list_accounts_by_email(self):
+        url = reverse('accounts:list_accounts_by_email', kwargs={'email': 'testt@gmail.com'})
+
+        response = self.client.get(url)
+        actual_response = json.loads(response.content)
+
+        with open(
+            'accounts/tests/test_data/list_accounts_by_email_output.json',
+            'r'
+        ) as expected_response_file:
+            expected_response = json.load(expected_response_file)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(actual_response, expected_response)
