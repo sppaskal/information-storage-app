@@ -14,15 +14,15 @@ class AccountViewTest(APITestCase):
     ]
 
     def setUp(self):
-        self.user = User.objects.create_user(username='testuser', password='testpassword')
+        self.user = User.objects.create_user(username="testuser", password="testpassword")
         token, created = Token.objects.get_or_create(user=self.user)
-        self.client.credentials(HTTP_AUTHORIZATION='Token ' + token.key)
-        self.client.login(username='testuser', password='testpassword')
+        self.client.credentials(HTTP_AUTHORIZATION="Token " + token.key)
+        self.client.login(username="testuser", password="testpassword")
 
     # -------------------------------------------------------------------
 
     def test_add_account(self):
-        url = reverse('accounts:add_account')
+        url = reverse("accounts:add_account")
         data = {
             "email": "test-auto@gmail.com",
             "username": "test-auto",
@@ -46,7 +46,7 @@ class AccountViewTest(APITestCase):
         self.assertEqual(response.data["account"]["type"], 1)
 
     def test_add_account_with_invalid_type(self):
-        url = reverse('accounts:add_account')
+        url = reverse("accounts:add_account")
         data = {
             "email": "test-auto@gmail.com",
             "username": "test-auto",
@@ -57,7 +57,7 @@ class AccountViewTest(APITestCase):
             "type": -1
         }
 
-        response = self.client.post(url, data, format='json')
+        response = self.client.post(url, data, format="json")
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(
@@ -69,7 +69,7 @@ class AccountViewTest(APITestCase):
     # -------------------------------------------------------------------
 
     def test_update_account(self):
-        url = reverse('accounts:update_account', kwargs={'id': 1})
+        url = reverse("accounts:update_account", kwargs={"id": 1})
         data = {
             "email": "test-auto-updated@gmail.com",
             "username": "test-auto-updated",
@@ -92,7 +92,7 @@ class AccountViewTest(APITestCase):
         self.assertEqual(response.data["account"]["description"], "automated test updated")
 
     def test_update_account_with_invalid_type(self):
-        url = reverse('accounts:update_account', kwargs={'id': 1})
+        url = reverse("accounts:update_account", kwargs={"id": 1})
         data = {
             "email": "test-auto-updated@gmail.com",
             "username": "test-auto-updated",
@@ -103,7 +103,7 @@ class AccountViewTest(APITestCase):
             "type": -1
         }
 
-        response = self.client.patch(url, data, format='json')
+        response = self.client.patch(url, data, format="json")
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(
@@ -115,14 +115,14 @@ class AccountViewTest(APITestCase):
     # -------------------------------------------------------------------
 
     def test_list_accounts(self):
-        url = reverse('accounts:list_accounts')
+        url = reverse("accounts:list_accounts")
 
         response = self.client.get(url)
         actual_response = json.loads(response.content)
 
         with open(
-            'accounts/tests/test_data/list_accounts_output.json',
-            'r'
+            "accounts/tests/test_data/list_accounts_output.json",
+            "r"
         ) as expected_response_file:
             expected_response = json.load(expected_response_file)
 
@@ -132,14 +132,14 @@ class AccountViewTest(APITestCase):
     # -------------------------------------------------------------------
 
     def test_list_accounts_by_email(self):
-        url = reverse('accounts:list_accounts_by_email', kwargs={'email': 'testt@gmail.com'})
+        url = reverse("accounts:list_accounts_by_email", kwargs={"email": "testt@gmail.com"})
 
         response = self.client.get(url)
         actual_response = json.loads(response.content)
 
         with open(
-            'accounts/tests/test_data/list_accounts_by_email_output.json',
-            'r'
+            "accounts/tests/test_data/list_accounts_by_email_output.json",
+            "r"
         ) as expected_response_file:
             expected_response = json.load(expected_response_file)
 
@@ -149,12 +149,27 @@ class AccountViewTest(APITestCase):
     # -------------------------------------------------------------------
 
     def test_add_type(self):
-        url = reverse('accounts:add_type')
+        url = reverse("accounts:add_type")
         data = {
             "name": "test"
         }
 
-        response = self.client.post(url, data, format='json')
+        response = self.client.post(url, data, format="json")
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data["message"], "Added Type")
         self.assertEqual(response.data["type"]["name"], "test")
+
+    # -------------------------------------------------------------------
+
+    def test_update_type(self):
+        url = reverse("accounts:update_type", kwargs={"id": 1})
+        data = {
+            "name": "test-updated"
+        }
+
+        response = self.client.patch(url, data, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["message"], "Updated Type")
+        self.assertEqual(response.data["type"]["name"], "test-updated")
