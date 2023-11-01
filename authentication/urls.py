@@ -1,16 +1,17 @@
 from django.urls import path
 from . import views
-from rest_framework.authtoken.views import obtain_auth_token
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 app_name = 'authentication'
 
 urlpatterns = [
     path(
         'connection-test/',
-        views.TestConnection.as_view(), name='test_connection'
+        views.TestConnection.as_view(),
+        name='test_connection'
     ),
     path(
-        'api-token-auth/',
-        obtain_auth_token, name='api_token_auth'
+        'token/', TokenObtainPairView.as_view(),
+        name='token_obtain_pair'
     ),
 ]

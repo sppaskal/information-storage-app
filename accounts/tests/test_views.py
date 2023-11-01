@@ -1,6 +1,7 @@
 from rest_framework.test import APITestCase
 from rest_framework.authtoken.models import Token
 from rest_framework import status
+from rest_framework_simplejwt.tokens import RefreshToken
 from django.urls import reverse
 from django.contrib.auth.models import User
 import json
@@ -17,9 +18,9 @@ class AccountViewTest(APITestCase):
 
     def setUp(self):
         self.user = User.objects.create_user(username="testuser", password="testpassword")
-        token, created = Token.objects.get_or_create(user=self.user)
-        self.client.credentials(HTTP_AUTHORIZATION="Token " + token.key)
-        self.client.login(username="testuser", password="testpassword")
+        refresh = RefreshToken.for_user(self.user)
+        access_token = str(refresh.access_token)
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {access_token}")
 
     # -------------------------------------------------------------------
 
