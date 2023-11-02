@@ -27,6 +27,23 @@ class TestConnection(APIView):
 # -------------------------------------------------------------------
 
 
+class Test(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        try:
+            # Enter test code here
+            return Response(status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+# -------------------------------------------------------------------
+
+
 class AddAccount(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]

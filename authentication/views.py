@@ -14,3 +14,10 @@ class TestConnection(APIView):
         )
 
 # -------------------------------------------------------------------
+
+
+class Login(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        pass

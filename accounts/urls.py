@@ -8,6 +8,9 @@ urlpatterns = [
         'connection-test/', views.TestConnection.as_view(),
         name='test_connection'),
     path(
+        'test/', views.Test.as_view(),
+        name='test'),
+    path(
         'add/', views.AddAccount.as_view(),
         name='add_account'),
     path(
