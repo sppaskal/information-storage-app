@@ -11,11 +11,11 @@ urlpatterns = [
         name='test_connection'
     ),
     path(
-        'login/', views.Login.as_view(),
-        name='login'
+        'login-initial/', views.LoginInitial.as_view(),
+        name='login-initial'
     ),
     path(
-        'token/', TokenObtainPairView.as_view(),
-        name='token_obtain_pair'
+        'login-final/', views.LoginFinal.as_view(),
+        name='login-final'
     ),
 ]

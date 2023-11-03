@@ -10,10 +10,3 @@ class AccessCodeHelper():
             return AccessCode.objects.get(user=user_id)
         except AccessCode.DoesNotExist:
             return None
-
-    @staticmethod
-    def create_access_code_entry(access_code_data):
-        return AccessCode.objects.create(
-            user=access_code_data.get("user"),
-            code=access_code_data.get("code")
-        )
