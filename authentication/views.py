@@ -88,6 +88,13 @@ class LoginFinal(APIView):
             password = request.data.get("password")
             code = request.data.get("access_code")
             user = authenticate(username=username, password=password)
+
+            if user is None:
+                return Response(
+                    {"error": "invalid username or password"},
+                    status=status.HTTP_401_UNAUTHORIZED
+                )
+
             access_code = AccessCodeHelper.get_access_code_instance_by_user_id(user.id)
 
             if access_code is not None:
