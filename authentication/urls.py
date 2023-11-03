@@ -11,7 +11,7 @@ urlpatterns = [
         name='test_connection'
     ),
     path(
-        'login/', TokenObtainPairView.as_view(),
+        'login/', views.Login.as_view(),
         name='login'
     ),
     path(

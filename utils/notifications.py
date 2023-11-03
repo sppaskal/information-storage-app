@@ -2,7 +2,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 
 
-class email():
+class Email():
 
     @staticmethod
     def send_email(title, message, recipients):
