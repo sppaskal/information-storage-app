@@ -1,5 +1,4 @@
 from rest_framework.test import APITestCase
-from rest_framework.authtoken.models import Token
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.urls import reverse
@@ -17,7 +16,10 @@ class AccountViewTest(APITestCase):
     ]
 
     def setUp(self):
-        self.user = User.objects.create_user(username="testuser", password="testpassword")
+        self.user = User.objects.create_user(
+            username="testuser",
+            password="testpassword"
+        )
         refresh = RefreshToken.for_user(self.user)
         access_token = str(refresh.access_token)
         self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {access_token}")
@@ -39,14 +41,38 @@ class AccountViewTest(APITestCase):
         response = self.client.post(url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data["message"], "Added Account")
-        self.assertEqual(response.data["account"]["email"], "test-auto@gmail.com")
-        self.assertEqual(response.data["account"]["username"], "test-auto")
-        self.assertEqual(response.data["account"]["password"], "test-password")
-        self.assertEqual(response.data["account"]["company"], "auto-test")
-        self.assertEqual(response.data["account"]["website"], "https://www.example.com")
-        self.assertEqual(response.data["account"]["description"], "automated test")
-        self.assertEqual(response.data["account"]["type"], 1)
+        self.assertEqual(
+            response.data["message"],
+            "Added Account"
+        )
+        self.assertEqual(
+            response.data["account"]["email"],
+            "test-auto@gmail.com"
+        )
+        self.assertEqual(
+            response.data["account"]["username"],
+            "test-auto"
+        )
+        self.assertEqual(
+            response.data["account"]["password"],
+            "test-password"
+        )
+        self.assertEqual(
+            response.data["account"]["company"],
+            "auto-test"
+        )
+        self.assertEqual(
+            response.data["account"]["website"],
+            "https://www.example.com"
+        )
+        self.assertEqual(
+            response.data["account"]["description"],
+            "automated test"
+        )
+        self.assertEqual(
+            response.data["account"]["type"],
+            1
+        )
 
     def test_add_account_with_invalid_type(self):
         url = reverse("accounts:add_account")
@@ -65,8 +91,8 @@ class AccountViewTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(
             response.data["error"],
-            "{'type': [ErrorDetail(string='Invalid pk \"-1\" - object does not exist.', "
-            "code='does_not_exist')]}"
+            "{'type': [ErrorDetail(string='Invalid pk \"-1\" - "
+            "object does not exist.', code='does_not_exist')]}"
         )
 
     # -------------------------------------------------------------------
@@ -86,13 +112,34 @@ class AccountViewTest(APITestCase):
         response = self.client.patch(url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["message"], "Updated Account")
-        self.assertEqual(response.data["account"]["email"], "test-auto-updated@gmail.com")
-        self.assertEqual(response.data["account"]["username"], "test-auto-updated")
-        self.assertEqual(response.data["account"]["password"], "test-password-updated")
-        self.assertEqual(response.data["account"]["company"], "auto-test-updated")
-        self.assertEqual(response.data["account"]["website"], "https://www.example-updated.com")
-        self.assertEqual(response.data["account"]["description"], "automated test updated")
+        self.assertEqual(
+            response.data["message"],
+            "Updated Account"
+        )
+        self.assertEqual(
+            response.data["account"]["email"],
+            "test-auto-updated@gmail.com"
+        )
+        self.assertEqual(
+            response.data["account"]["username"],
+            "test-auto-updated"
+        )
+        self.assertEqual(
+            response.data["account"]["password"],
+            "test-password-updated"
+        )
+        self.assertEqual(
+            response.data["account"]["company"],
+            "auto-test-updated"
+        )
+        self.assertEqual(
+            response.data["account"]["website"],
+            "https://www.example-updated.com"
+        )
+        self.assertEqual(
+            response.data["account"]["description"],
+            "automated test updated"
+        )
 
     def test_update_account_with_invalid_type(self):
         url = reverse("accounts:update_account", kwargs={"id": 1})
@@ -111,8 +158,8 @@ class AccountViewTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(
             response.data["error"],
-            "{'type': [ErrorDetail(string='Invalid pk \"-1\" - object does not exist.', "
-            "code='does_not_exist')]}"
+            "{'type': [ErrorDetail(string='Invalid pk \"-1\" - "
+            "object does not exist.', code='does_not_exist')]}"
         )
 
     # -------------------------------------------------------------------
@@ -135,7 +182,10 @@ class AccountViewTest(APITestCase):
     # -------------------------------------------------------------------
 
     def test_list_accounts_by_email(self):
-        url = reverse("accounts:list_accounts_by_email", kwargs={"email": "testt@gmail.com"})
+        url = reverse(
+            "accounts:list_accounts_by_email",
+            kwargs={"email": "testt@gmail.com"}
+        )
 
         response = self.client.get(url)
         actual_response = json.loads(response.content)
@@ -166,7 +216,10 @@ class AccountViewTest(APITestCase):
     # -------------------------------------------------------------------
 
     def test_update_type(self):
-        url = reverse("accounts:update_type", kwargs={"id": 1})
+        url = reverse(
+            "accounts:update_type",
+            kwargs={"id": 1}
+        )
         data = {
             "name": "test-updated"
         }
