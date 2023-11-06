@@ -1,1 +1,1 @@
-# NOTE: Test command: python manage.py test accounts.tests.test_serliazers
+# NOTE: Test command: python manage.py test authentication.tests.test_serliazers
