@@ -118,6 +118,38 @@ class UpdateAccount(generics.UpdateAPIView):
 # -------------------------------------------------------------------
 
 
+class DeleteAccount(generics.DestroyAPIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    serializer_class = AccountSerializer
+    lookup_field = 'id'
+
+    def get_queryset(self):
+        account_id = self.kwargs.get('id')
+        return AccountHelper.get_account_qs_by_id(account_id)
+
+    def destroy(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+            account_email = instance.email
+            self.perform_destroy(instance)
+            return Response(
+                {
+                    "message": "Deleted Account: " + str(account_email),
+                },
+                status=status.HTTP_200_OK
+            )
+
+        except Exception as e:
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+# -------------------------------------------------------------------
+
+
 class ListAccounts(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
