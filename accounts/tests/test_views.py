@@ -4,6 +4,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.urls import reverse
 from django.contrib.auth.models import User
 import json
+from ..helpers.account_helper import AccountHelper
 
 # NOTE: Test command: python manage.py test accounts.tests.test_views
 
@@ -98,7 +99,11 @@ class AccountViewTest(APITestCase):
     # -------------------------------------------------------------------
 
     def test_update_account(self):
-        url = reverse("accounts:update_account", kwargs={"id": 1})
+        url = reverse(
+            "accounts:update_account",
+            kwargs={"id": 1}
+        )
+
         data = {
             "email": "test-auto-updated@gmail.com",
             "username": "test-auto-updated",
@@ -142,7 +147,11 @@ class AccountViewTest(APITestCase):
         )
 
     def test_update_account_with_invalid_type(self):
-        url = reverse("accounts:update_account", kwargs={"id": 1})
+        url = reverse(
+            "accounts:update_account",
+            kwargs={"id": 1}
+        )
+
         data = {
             "email": "test-auto-updated@gmail.com",
             "username": "test-auto-updated",
@@ -161,6 +170,23 @@ class AccountViewTest(APITestCase):
             "{'type': [ErrorDetail(string='Invalid pk \"-1\" - "
             "object does not exist.', code='does_not_exist')]}"
         )
+
+    # -------------------------------------------------------------------
+
+    def test_delete_account(self):
+        account_id = 1
+        url = reverse(
+            "accounts:delete_account",
+            kwargs={"id": account_id}
+        )
+
+        account = AccountHelper.get_account_instance_by_id(account_id)
+        expected_msg = "Deleted Account: " + str(account.email)
+
+        response = self.client.delete(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["message"], expected_msg)
 
     # -------------------------------------------------------------------
 
