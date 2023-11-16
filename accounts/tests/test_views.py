@@ -186,7 +186,24 @@ class AccountViewTest(APITestCase):
         response = self.client.delete(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["message"], expected_msg)
+        self.assertEqual(
+            response.data["message"],
+            expected_msg
+        )
+
+    def test_delete_account_with_invalid_id(self):
+        url = reverse(
+            "accounts:delete_account",
+            kwargs={"id": 999999}
+        )
+
+        response = self.client.delete(url)
+
+        self.assertEqual(response.status_code, status.HTTP_500_INTERNAL_SERVER_ERROR)
+        self.assertEqual(
+            response.data["error"],
+            "No Account matches the given query."
+        )
 
     # -------------------------------------------------------------------
 
