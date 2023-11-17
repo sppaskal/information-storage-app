@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 import json
 from ..helpers.account_helper import AccountHelper
+from ..helpers.type_helper import TypeHelper
 
 # NOTE: Test command: python manage.py test accounts.tests.test_views
 
@@ -272,6 +273,23 @@ class AccountViewTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["message"], "Updated Type")
         self.assertEqual(response.data["type"]["name"], "test-updated")
+
+    # ----------------------------------------------------------------------------
+
+    def test_delete_type(self):
+        type_id = 1
+        url = reverse(
+            "accounts:delete_type",
+            kwargs={"id": type_id}
+        )
+
+        type_inst = TypeHelper.get_type_instance_by_id(type_id)
+        expected_msg = "Deleted Type: " + str(type_inst.name)
+
+        response = self.client.delete(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["message"], expected_msg)
 
     # ----------------------------------------------------------------------------
 
