@@ -36,6 +36,10 @@ urlpatterns = [
         name='update_type'
     ),
     path(
+        'delete/type/<int:id>/', views.DeleteType.as_view(),
+        name='delete_type'
+    ),
+    path(
         'list/type/', views.ListTypes.as_view(),
         name='list_types'
     ),

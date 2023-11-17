@@ -271,6 +271,37 @@ class UpdateType(generics.UpdateAPIView):
 # -------------------------------------------------------------------------------
 
 
+class DeleteType(generics.DestroyAPIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    serializer_class = TypeSerializer
+    lookup_field = 'id'
+
+    def get_queryset(self):
+        type_id = self.kwargs.get('id')
+        return TypeHelper.get_type_qs_by_id(type_id)
+
+    def destroy(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+            type_name = instance.name
+            self.perform_destroy(instance)
+            return Response(
+                {
+                    "message": "Deleted Type: " + str(type_name)
+                },
+                status=status.HTTP_200_OK
+            )
+        except Exception as e:
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+# -------------------------------------------------------------------------------
+
+
 class ListTypes(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
