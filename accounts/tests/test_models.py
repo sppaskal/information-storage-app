@@ -6,6 +6,7 @@ from ..models import (
 )
 
 # NOTE: Test command: python manage.py test accounts.tests.test_models
+# NOTE: To run all test modules: python manage.py run_accounts_tests
 
 
 class ModelTest(TestCase):

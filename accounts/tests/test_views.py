@@ -8,6 +8,7 @@ from ..helpers.account_helper import AccountHelper
 from ..helpers.type_helper import TypeHelper
 
 # NOTE: Test command: python manage.py test accounts.tests.test_views
+# NOTE: To run all test modules: python manage.py run_accounts_tests
 
 
 class AccountViewTest(APITestCase):
