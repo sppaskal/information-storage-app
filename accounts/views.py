@@ -24,7 +24,7 @@ class TestConnection(APIView):
             status=status.HTTP_200_OK
         )
 
-# -------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 
 class Test(APIView):
@@ -41,7 +41,7 @@ class Test(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
-# -------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 
 class AddAccount(APIView):
@@ -72,7 +72,7 @@ class AddAccount(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
-# -------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 
 class UpdateAccount(generics.UpdateAPIView):
@@ -115,7 +115,7 @@ class UpdateAccount(generics.UpdateAPIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
-# -------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 
 class DeleteAccount(generics.DestroyAPIView):
@@ -147,7 +147,7 @@ class DeleteAccount(generics.DestroyAPIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
-# -------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 
 class ListAccounts(APIView):
@@ -171,7 +171,7 @@ class ListAccounts(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
-# -------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 
 class ListAccountsByEmail(APIView):
@@ -195,7 +195,7 @@ class ListAccountsByEmail(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
-# -------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 
 class AddType(APIView):
@@ -225,7 +225,7 @@ class AddType(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
-# -------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 
 class UpdateType(generics.UpdateAPIView):
@@ -268,7 +268,7 @@ class UpdateType(generics.UpdateAPIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
-# -------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 
 class ListTypes(APIView):

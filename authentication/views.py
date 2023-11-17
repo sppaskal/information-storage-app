@@ -19,7 +19,7 @@ class TestConnection(APIView):
             status=status.HTTP_200_OK
         )
 
-# -------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 
 class LoginInitial(APIView):
@@ -31,7 +31,9 @@ class LoginInitial(APIView):
             password = request.data.get("password")
             user = authenticate(username=username, password=password)
             if user is not None:
-                access_code = AccessCodeHelper.get_access_code_instance_by_user_id(user.id)
+                access_code = AccessCodeHelper.get_access_code_instance_by_user_id(
+                    user_id=user.id
+                )
                 random_code = Other.random_integer(10000, 99999)
                 # update AccessCode entry with new code if it exists
                 if access_code is not None:
@@ -57,7 +59,7 @@ class LoginInitial(APIView):
                 # email code to user
                 email_response = Email.send_email(
                     title="Your Information Storage App Access Code",
-                    message="Your code is: " + str(random_code),
+                    message="Your access code is: " + str(random_code),
                     recipients=[user.email]
                 )
 
@@ -76,7 +78,7 @@ class LoginInitial(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
-# -------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 
 class LoginFinal(APIView):
@@ -95,7 +97,9 @@ class LoginFinal(APIView):
                     status=status.HTTP_401_UNAUTHORIZED
                 )
 
-            access_code = AccessCodeHelper.get_access_code_instance_by_user_id(user.id)
+            access_code = AccessCodeHelper.get_access_code_instance_by_user_id(
+                user_id=user.id
+            )
 
             if access_code is not None:
                 if int(access_code.code) == int(code):

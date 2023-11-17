@@ -25,7 +25,7 @@ class AccountViewTest(APITestCase):
         access_token = str(refresh.access_token)
         self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {access_token}")
 
-    # -------------------------------------------------------------------
+    # ----------------------------------------------------------------------------
 
     def test_add_account(self):
         url = reverse("accounts:add_account")
@@ -96,7 +96,7 @@ class AccountViewTest(APITestCase):
             "object does not exist.', code='does_not_exist')]}"
         )
 
-    # -------------------------------------------------------------------
+    # ----------------------------------------------------------------------------
 
     def test_update_account(self):
         url = reverse(
@@ -171,7 +171,7 @@ class AccountViewTest(APITestCase):
             "object does not exist.', code='does_not_exist')]}"
         )
 
-    # -------------------------------------------------------------------
+    # ----------------------------------------------------------------------------
 
     def test_delete_account(self):
         account_id = 1
@@ -205,7 +205,7 @@ class AccountViewTest(APITestCase):
             "No Account matches the given query."
         )
 
-    # -------------------------------------------------------------------
+    # ----------------------------------------------------------------------------
 
     def test_list_accounts(self):
         url = reverse("accounts:list_accounts")
@@ -222,7 +222,7 @@ class AccountViewTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(actual_response, expected_response)
 
-    # -------------------------------------------------------------------
+    # ----------------------------------------------------------------------------
 
     def test_list_accounts_by_email(self):
         url = reverse(
@@ -242,7 +242,7 @@ class AccountViewTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(actual_response, expected_response)
 
-    # -------------------------------------------------------------------
+    # ----------------------------------------------------------------------------
 
     def test_add_type(self):
         url = reverse("accounts:add_type")
@@ -256,7 +256,7 @@ class AccountViewTest(APITestCase):
         self.assertEqual(response.data["message"], "Added Type")
         self.assertEqual(response.data["type"]["name"], "test")
 
-    # -------------------------------------------------------------------
+    # ----------------------------------------------------------------------------
 
     def test_update_type(self):
         url = reverse(
@@ -273,7 +273,7 @@ class AccountViewTest(APITestCase):
         self.assertEqual(response.data["message"], "Updated Type")
         self.assertEqual(response.data["type"]["name"], "test-updated")
 
-    # -------------------------------------------------------------------
+    # ----------------------------------------------------------------------------
 
     def test_list_types(self):
         url = reverse("accounts:list_types")
@@ -289,3 +289,5 @@ class AccountViewTest(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(actual_response, expected_response)
+
+    # ----------------------------------------------------------------------------

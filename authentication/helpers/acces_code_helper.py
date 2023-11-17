@@ -1,5 +1,4 @@
 from ..models import AccessCode
-from django.core.exceptions import ObjectDoesNotExist
 
 
 class AccessCodeHelper():

@@ -4,7 +4,7 @@ from .models import (
     Type
 )
 
-# -------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 
 class AccountSerializer(serializers.ModelSerializer):
@@ -26,7 +26,7 @@ class AccountUpdateSerializer(serializers.ModelSerializer):
             'type',
         )
 
-# -------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 
 class TypeSerializer(serializers.ModelSerializer):
@@ -40,4 +40,4 @@ class TypeUpdateSerializer(serializers.ModelSerializer):
         model = Type
         fields = ('name',)
 
-# -------------------------------------------------------------------
+# -------------------------------------------------------------------------------

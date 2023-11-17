@@ -17,7 +17,7 @@ class ModelTest(TestCase):
     def setUp(self):
         pass
 
-    # -------------------------------------------------------------------
+    # ----------------------------------------------------------------------------
 
     def test_account_creation(self):
         type_inst = TypeHelper.get_type_instance_by_id(
@@ -44,7 +44,7 @@ class ModelTest(TestCase):
         self.assertEqual(saved_instance.description, 'test description')
         self.assertEqual(saved_instance.type, type_inst)
 
-    # -------------------------------------------------------------------
+    # ----------------------------------------------------------------------------
 
     def test_type_creation(self):
         instance = Type.objects.create(
@@ -55,4 +55,4 @@ class ModelTest(TestCase):
 
         self.assertEqual(saved_instance.name, 'test')
 
-    # -------------------------------------------------------------------
+    # ----------------------------------------------------------------------------

@@ -5,7 +5,7 @@ from django_cryptography.fields import encrypt
 class Type(models.Model):
     name = models.CharField(max_length=254, unique=True)
 
-# -------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 
 class Account(models.Model):
@@ -20,4 +20,4 @@ class Account(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
 
-# -------------------------------------------------------------------
+# -------------------------------------------------------------------------------
