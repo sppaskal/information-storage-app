@@ -27,6 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0']
 
+DEV_BASE_URL = 'http://127.0.0.1:8000/'
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -40,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'authentication',
     'accounts',
+    'user_interface',
 ]
 
 MIDDLEWARE = [

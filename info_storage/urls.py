@@ -22,4 +22,5 @@ urlpatterns = [
     path('csrf_token/', get_token, name='get_csrf_token'),
     path('authentication/', include('authentication.urls')),
     path('accounts/', include('accounts.urls')),
+    path('user_interface/', include('user_interface.urls'))
 ]
