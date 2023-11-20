@@ -8,14 +8,19 @@ from .helpers.acces_code_helper import AccessCodeHelper
 from utils.other import Other
 from utils.notifications import Email
 from .serializers import AccessCodeSerializer
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class TestConnection(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
+        msg = "Connection Successful"
+        logger.info(msg)
         return Response(
-            {"message": "Connection Successful"},
+            {"message": msg},
             status=status.HTTP_200_OK
         )
 
@@ -64,6 +69,7 @@ class LoginInitial(APIView):
                 )
 
                 if not email_response.get("sent"):
+                    logger.error(email_response.get("error"))
                     return Response(
                         data=email_response.get("error"),
                         status=status.HTTP_400_BAD_REQUEST
@@ -73,6 +79,7 @@ class LoginInitial(APIView):
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
         except Exception as e:
+            logger.error(str(e))
             return Response(
                 {"error": str(e)},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -124,11 +131,13 @@ class LoginFinal(APIView):
             else:
                 error_msg = "access code does not exist"
 
+            logger.error(error_msg)
             return Response(
                 {"error": error_msg},
                 status=status.HTTP_401_UNAUTHORIZED
             )
         except Exception as e:
+            logger.error(str(e))
             return Response(
                 {"error": str(e)},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR

@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 import os
 from datetime import timedelta
+from pathlib import Path
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -153,6 +154,59 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
     'SLIDING_TOKEN_LIFETIME': timedelta(days=1),
+}
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+LOGGING_DIR = os.path.join(BASE_DIR, 'logs')
+
+# Ensure the logs directory exists
+LOGGING_DIR = os.path.join(BASE_DIR, 'logs')
+Path(LOGGING_DIR).mkdir(parents=True, exist_ok=True)
+
+# Ensure logs/logs.log exists
+LOG_FILE_PATH = os.path.join(LOGGING_DIR, 'logs.log')
+Path(LOG_FILE_PATH).touch()
+
+# Ensure logs/django-requests.log exists
+DJANGO_REQUESTS_LOG_PATH = os.path.join(LOGGING_DIR, 'django-requests.log')
+Path(DJANGO_REQUESTS_LOG_PATH).touch()
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "standard": {"format": "%(asctime)s [%(levelname)s] %(name)s: %(message)s"},
+    },
+    "handlers": {
+        "default": {
+            "level": "DEBUG",
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": os.path.join(BASE_DIR, "logs/logs.log"),
+            "maxBytes": 1024 * 1024 * 5,
+            "backupCount": 5,
+            "formatter": "standard",
+        },
+        "request_handler": {
+            "level": "DEBUG",
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": os.path.join(BASE_DIR, "logs/django-requests.log"),
+            "maxBytes": 1024 * 1024 * 5,
+            "backupCount": 5,
+            "formatter": "standard",
+        },
+    },
+    "loggers": {
+        "": {
+            "handlers": ["default"],
+            "level": "DEBUG",
+            "propagate": True,
+        },
+        "django.server": {  # Capture Django request logs
+            "handlers": ["request_handler"],
+            "level": "DEBUG",
+            "propagate": True,
+        },
+    },
 }
 
 # Email settings for Yahoo
