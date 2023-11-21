@@ -1,0 +1,111 @@
+<!-- user_interface/templates/user_interface/login_initial.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<body>
+
+    <h1>Login</h1>
+
+    <form id="login_initial-form">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+
+        <div id="access-code-container" style="display: none;">
+            <!-- Add a new input for the access code -->
+            <label for="access-code">Access Code:</label>
+            <input type="text" id="access-code" name="access_code" required>
+        </div>
+
+        <button type="button" id="login-button" onclick="submitCredentials()">Login</button>
+        <button type="button" id="validate-button" style="display: none;" onclick="submitLogin()">Validate</button>
+    </form>
+
+    <div id="error-message" style="color: red;"></div>
+    <div id="valid-credentials-message" style="color: green; display: none;">Credentials were valid. Check your email for your access code.</div>
+    <div id="login-success-message" style="color: green; display: none;">Login successful!</div>
+
+    <script>
+        const baseApiUrl = "{{ base_api_url }}";
+
+        function submitCredentials() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Make a POST request to API endpoint to validate username and password
+            fetch(`${baseApiUrl}authentication/login-initial/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: username,
+                    password: password,
+                }),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Invalid username or password');
+                }
+
+                // Show the access code input box and validate button
+                document.getElementById('login-button').style.display = 'none'
+                document.getElementById('valid-credentials-message').style.display = 'block';
+                document.getElementById('access-code-container').style.display = 'block';
+                document.getElementById('validate-button').style.display = 'block';
+            })
+            .catch(error => {
+                // Display error message
+                document.getElementById('error-message').textContent = error.message;
+            });
+        }
+
+        function submitLogin() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const accessCode = document.getElementById('access-code').value;
+
+            // Make a POST request to API endpoint to complete the login process
+            fetch(`${baseApiUrl}authentication/login-final/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: username,
+                    password: password,
+                    access_code: accessCode,
+                }),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Invalid access code');
+                }
+
+                // Parse JSON response
+                return response.json();
+            })
+            .then(data => {
+                // Handle successful login
+                // Assuming the response contains 'access_token' and 'refresh_token'
+                document.getElementById('valid-credentials-message').style.display = 'none';
+                document.getElementById('login-success-message').style.display = 'block';
+                console.log('Access Token:', data.access_token);
+                console.log('Refresh Token:', data.refresh_token);
+            })
+            .catch(error => {
+                // Display error message
+                document.getElementById('error-message').textContent = error.message;
+            });
+        }
+    </script>
+
+</body>
+</html>
