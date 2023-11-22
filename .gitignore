@@ -19,3 +19,7 @@ docker-compose.yml
 .python-version
 venv/
 env
+
+# SSL Certificates and Keys
+cert.pem
+key.pem

@@ -3,3 +3,6 @@ djangorestframework==3.14.0
 django-cryptography==1.1
 mysqlclient==2.2.0
 djangorestframework-simplejwt==5.3.0
+django-extensions==3.2.3
+pyOpenSSL==23.3.0
+werkzeug==3.0.1
