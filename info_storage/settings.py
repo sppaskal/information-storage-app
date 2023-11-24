@@ -222,3 +222,9 @@ EMAIL_USE_TLS = True  # Use TLS for encryption
 EMAIL_USE_SSL = False
 EMAIL_HOST_USER = 'information.storage.app@gmail.com'
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+
+# Static files (CSS, JavaScript, images)
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'user_interface', 'static'),
+]

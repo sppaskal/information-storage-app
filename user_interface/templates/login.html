@@ -1,110 +1,31 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #222;
-            color: #fff;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-
-        #login-container {
-            text-align: center;
-        }
-
-        #login-form {
-            background-color: #333;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-            padding: 20px;
-            width: 300px;
-            display: inline-block; /* Center the box containing username and password */
-        }
-
-        h1 {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-        }
-
-        input {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 16px;
-            box-sizing: border-box;
-            border: 1px solid #504848;
-            border-radius: 4px;
-            color: #e6bebe;
-            background-color: #252525;
-        }
-
-        button {
-            background-color: #18611b;
-            color: #fff;
-            border: none;
-            padding: 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            width: 100%; /* Make the button full width */
-            align-self: center;
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
-
-        #access-code-container {
-            display: none;
-        }
-
-        #error-message,
-        #valid-credentials-message,
-        #login-success-message {
-            margin-top: 16px;
-        }
-
-        #valid-credentials-message,
-        #login-success-message {
-            display: none;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/login.css' %}">
 </head>
-<body>
 
+<body>
     <div id="login-container">
         <div id="login-div">
             <h1>Login</h1>
-
             <form id="login-form">
                 <label for="username">Username:</label>
                 <input type="text" id="username" name="username" required>
-
                 <label for="password">Password:</label>
                 <input type="password" id="password" name="password" required>
-
                 <div id="access-code-container">
                     <!-- Add a new input for the access code -->
                     <label for="access-code">Access Code:</label>
                     <input type="text" id="access-code" name="access_code" required>
                 </div>
-
                 <button type="button" id="login-button" onclick="submitCredentials()">Login</button>
                 <button type="button" id="validate-button" style="display: none;" onclick="submitLogin()">Validate</button>
             </form>
-
             <div id="error-message" style="color: red;"></div>
             <div id="valid-credentials-message" style="color: green; display: none;">Credentials were valid. Check your email for your access code.</div>
             <div id="login-success-message" style="color: green; display: none;">Login successful!</div>
