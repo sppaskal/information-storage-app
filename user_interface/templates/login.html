@@ -203,8 +203,8 @@
                 document.getElementById('login-success-message').style.display = 'block';
 
                 // Store tokens as cookies with an expiration time
-                setCookie('access_token', data.access_token, 1, SameSite=False);
-                setCookie('refresh_token', data.refresh_token, 7, SameSite=False);
+                setCookie('access_token', data.access_token, 1);
+                setCookie('refresh_token', data.refresh_token, 7);
 
                 console.log('Access Token:', data.access_token);
                 console.log('Refresh Token:', data.refresh_token);
