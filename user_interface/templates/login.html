@@ -114,6 +114,30 @@
     <script>
         const baseApiUrl = "{{ base_api_url }}";
 
+        function setCookie(name, value, days) {
+            const expires = new Date();
+            expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+            const cookieString = `${name}=${value};` +
+                `expires=${expires.toUTCString()};` +
+                `path=/;` +
+                `secure;` +
+                `HttpOnly`;
+
+            document.cookie = cookieString;
+        }
+
+        function getCookie(name) {
+            const cookieName = `${name}=`;
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                let cookie = cookies[i].trim();
+                if (cookie.indexOf(cookieName) === 0) {
+                    return cookie.substring(cookieName.length, cookie.length);
+                }
+            }
+            return null;
+        }
+
         function submitCredentials() {
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
@@ -175,9 +199,13 @@
             })
             .then(data => {
                 // Handle successful login
-                // Assuming the response contains 'access_token' and 'refresh_token'
                 document.getElementById('valid-credentials-message').style.display = 'none';
                 document.getElementById('login-success-message').style.display = 'block';
+
+                // Store tokens as cookies with an expiration time
+                setCookie('access_token', data.access_token, 1, SameSite=False);
+                setCookie('refresh_token', data.refresh_token, 7, SameSite=False);
+
                 console.log('Access Token:', data.access_token);
                 console.log('Refresh Token:', data.refresh_token);
             })
@@ -186,6 +214,24 @@
                 document.getElementById('error-message').textContent = error.message;
             });
         }
+
+        // Function to retrieve stored tokens when needed
+        function getStoredTokens() {
+            console.log('test')
+            const access_token = getCookie('access_token');
+            const refresh_token = getCookie('refresh_token');
+            if (access_token && refresh_token) {
+                // Tokens are available, use them in your API calls
+                console.log('Using stored Access Token:', access_token);
+                console.log('Using stored Refresh Token:', refresh_token);
+            } else {
+                // Tokens are not available or expired, handle accordingly
+                console.log('Tokens not available or expired.');
+            }
+        }
+
+        // Call this function when the page loads to check for stored tokens
+        window.onload = getStoredTokens;
     </script>
 
 </body>
