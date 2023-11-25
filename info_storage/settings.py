@@ -24,6 +24,11 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+
+if DEBUG:
+    import mimetypes
+    mimetypes.add_type("application/javascript", ".js", True)
+
 SECURE_SSL_REDIRECT = False  # Disable SSL redirect for development
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0']
@@ -147,6 +152,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'user_interface', 'static'),
+]
+
+SECURE_CONTENT_TYPE_NOSNIFF = True
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -222,9 +232,3 @@ EMAIL_USE_TLS = True  # Use TLS for encryption
 EMAIL_USE_SSL = False
 EMAIL_HOST_USER = 'information.storage.app@gmail.com'
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
-
-# Static files (CSS, JavaScript, images)
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'user_interface', 'static'),
-]
