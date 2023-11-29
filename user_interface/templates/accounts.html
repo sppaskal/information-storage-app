@@ -1,0 +1,70 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account List</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+</head>
+<body>
+
+<h1>Account List</h1>
+
+<ul id="account-list"></ul>
+
+<script>
+    const baseApiUrl = "{{ base_api_url }}";
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var accessToken = getCookie('access_token');
+        console.log(accessToken)
+
+        if (!accessToken) {
+            console.error('Access token not found.');
+            return;
+        }
+        console.log(accessToken)
+
+        fetch(`${baseApiUrl}accounts/list/`, {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + accessToken,
+                'Content-Type': 'application/json'
+            },
+            credentials: 'same-origin', // Include this line
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Handle the successful response
+            displayAccountList(data);
+        })
+        .catch(error => {
+            // Handle any errors
+            console.error('Error fetching data:', error);
+        });
+
+        // Function to display the list of accounts
+        function displayAccountList(accounts) {
+            var accountList = document.getElementById('account-list');
+            
+            // Iterate through the accounts and append them to the list
+            accounts.forEach(function (account) {
+                var listItem = document.createElement('li');
+                listItem.textContent = 'ID: ' + account.id + ', Email: ' + account.email + ', Username: ' + account.username;
+                accountList.appendChild(listItem);
+            });
+        }
+
+        // Function to get the value of a cookie by name
+        function getCookie(name) {
+            var value = "; " + document.cookie;
+            var parts = value.split("; " + name + "=");
+            if (parts.length === 2) return parts.pop().split(";").shift();
+        }
+    });
+</script>
+
+</body>
+</html>

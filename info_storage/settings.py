@@ -33,7 +33,7 @@ SECURE_SSL_REDIRECT = False  # Disable SSL redirect for development
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0']
 
-DEV_BASE_URL = 'https://127.0.0.1:8000/'
+DEV_BASE_URL = 'http://127.0.0.1:8000/'
 
 # Application definition
 
