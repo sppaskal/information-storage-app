@@ -7,25 +7,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Account List</title>
     <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+    <style>
+        body {
+            font-family: 'Helvetica', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: rgb(21, 21, 31);
+            color: rgb(127, 127, 155);
+        }
+
+        h1 {
+            text-align: center;
+            background-color: #010114;
+            color: #ededf0;
+            padding: 1em;
+            margin: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px;
+        }
+
+        th, td {
+            border: 1px solid #030314;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #010114;
+            color: #ededf0;
+        }
+
+        tr:nth-child(even) {
+            background-color: #122129;
+        }
+    </style>
+    <script src="{% static 'javascript/cookie_utils.js' %}"></script>
 </head>
 <body>
 
 <h1>Account List</h1>
 
-<ul id="account-list"></ul>
+<table>
+    <thead>
+        <tr id="header-row"></tr>
+    </thead>
+    <tbody id="account-list"></tbody>
+</table>
 
 <script>
     const baseApiUrl = "{{ base_api_url }}";
 
     document.addEventListener('DOMContentLoaded', function () {
         var accessToken = getCookie('access_token');
-        console.log(accessToken)
 
         if (!accessToken) {
             console.error('Access token not found.');
             return;
         }
-        console.log(accessToken)
 
         fetch(`${baseApiUrl}accounts/list/`, {
             method: 'GET',
@@ -33,35 +75,39 @@
                 'Authorization': 'Bearer ' + accessToken,
                 'Content-Type': 'application/json'
             },
-            credentials: 'same-origin', // Include this line
+            credentials: 'same-origin',
         })
         .then(response => response.json())
         .then(data => {
-            // Handle the successful response
             displayAccountList(data);
         })
         .catch(error => {
-            // Handle any errors
             console.error('Error fetching data:', error);
         });
 
-        // Function to display the list of accounts
         function displayAccountList(accounts) {
+            var headerRow = document.getElementById('header-row');
             var accountList = document.getElementById('account-list');
-            
-            // Iterate through the accounts and append them to the list
-            accounts.forEach(function (account) {
-                var listItem = document.createElement('li');
-                listItem.textContent = 'ID: ' + account.id + ', Email: ' + account.email + ', Username: ' + account.username;
-                accountList.appendChild(listItem);
-            });
-        }
 
-        // Function to get the value of a cookie by name
-        function getCookie(name) {
-            var value = "; " + document.cookie;
-            var parts = value.split("; " + name + "=");
-            if (parts.length === 2) return parts.pop().split(";").shift();
+            // Create header row
+            var headerInfo = '';
+            for (var key in accounts[0]) {
+                if (accounts[0].hasOwnProperty(key)) {
+                    headerInfo += '<th>' + key + '</th>';
+                }
+            }
+            headerRow.innerHTML = headerInfo;
+
+            // Populate table body
+            accounts.forEach(function (account, index) {
+                var row = accountList.insertRow(index);
+                for (var key in account) {
+                    if (account.hasOwnProperty(key)) {
+                        var cell = row.insertCell();
+                        cell.textContent = account[key];
+                    }
+                }
+            });
         }
     });
 </script>
