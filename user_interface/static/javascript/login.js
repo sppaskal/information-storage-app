@@ -65,11 +65,7 @@ function submitLogin(baseApiUrl) {
         setSecureCookie('access_token', data.access_token, 1);
         setSecureCookie('refresh_token', data.refresh_token, 7);
 
-        test()
-        alert(getCookie("access_token"))
-        
-        console.log('Access Token:', data.access_token);
-        console.log('Refresh Token:', data.refresh_token);
+        window.location.href = `${baseApiUrl}user_interface/accounts/`;
     })
     .catch(error => {
         // Display error message
