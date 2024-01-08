@@ -4,6 +4,10 @@ from ..models import Account
 class AccountHelper:
 
     @staticmethod
+    def select_related_fields(queryset):
+        return queryset.select_related('type')
+
+    @staticmethod
     def get_all_accounts():
         return Account.objects.all()
 

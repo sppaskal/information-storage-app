@@ -8,6 +8,12 @@ from .models import (
 
 
 class AccountSerializer(serializers.ModelSerializer):
+    type_name = serializers.SlugRelatedField(
+        source='type',
+        slug_field='name',
+        read_only=True
+    )
+
     class Meta:
         model = Account
         fields = '__all__'

@@ -169,7 +169,9 @@ class ListAccounts(APIView):
 
     def get(self, request):
         try:
-            accounts = AccountHelper.get_all_accounts()
+            accounts = AccountHelper.select_related_fields(
+                    AccountHelper.get_all_accounts()
+                )
             serializer = AccountSerializer(
                 accounts,
                 many=True,
@@ -194,7 +196,10 @@ class ListAccountsByEmail(APIView):
 
     def get(self, request, email):
         try:
-            accounts = AccountHelper.get_account_qs_by_email(email)
+            accounts = AccountHelper.select_related_fields(
+                    AccountHelper.get_account_qs_by_email(
+                        email)
+                )
             serializer = AccountSerializer(
                 accounts,
                 many=True,
