@@ -1,8 +1,14 @@
-from django.urls import path
+from rest_framework.routers import DefaultRouter
+from django.urls import path, include
 from . import views
 
-app_name = 'accounts'
+app_name = 'accounts-api'
 
+# Create a routers and register them with viewsets
+router = DefaultRouter()
+router.register(r'types', views.TypeViewSet)
+
+# Define url patterns
 urlpatterns = [
     path(
         'connection-test/', views.TestConnection.as_view(),
@@ -27,20 +33,5 @@ urlpatterns = [
         'list/by-email/<str:email>', views.ListAccountsByEmail.as_view(),
         name='list_accounts_by_email'
     ),
-    path(
-        'add/type/', views.AddType.as_view(),
-        name='add_type'
-    ),
-    path(
-        'update/type/<int:id>/', views.UpdateType.as_view(),
-        name='update_type'
-    ),
-    path(
-        'delete/type/<int:id>/', views.DeleteType.as_view(),
-        name='delete_type'
-    ),
-    path(
-        'list/type/', views.ListTypes.as_view(),
-        name='list_types'
-    ),
+    path('', include(router.urls)),
 ]

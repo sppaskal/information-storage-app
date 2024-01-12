@@ -5,7 +5,6 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 import json
 from ..helpers.account_helper import AccountHelper
-from ..helpers.type_helper import TypeHelper
 
 # NOTE: Test command: python manage.py test accounts.tests.test_views
 # NOTE: To run all test modules: python manage.py run_accounts_tests
@@ -30,7 +29,7 @@ class AccountViewTest(APITestCase):
     # ----------------------------------------------------------------------------
 
     def test_add_account(self):
-        url = reverse("accounts:add_account")
+        url = reverse("accounts-api:add_account")
         data = {
             "email": "test-auto@gmail.com",
             "username": "test-auto",
@@ -78,7 +77,7 @@ class AccountViewTest(APITestCase):
         )
 
     def test_add_account_with_invalid_type(self):
-        url = reverse("accounts:add_account")
+        url = reverse("accounts-api:add_account")
         data = {
             "email": "test-auto@gmail.com",
             "username": "test-auto",
@@ -102,7 +101,7 @@ class AccountViewTest(APITestCase):
 
     def test_update_account(self):
         url = reverse(
-            "accounts:update_account",
+            "accounts-api:update_account",
             kwargs={"id": 1}
         )
 
@@ -150,7 +149,7 @@ class AccountViewTest(APITestCase):
 
     def test_update_account_with_invalid_type(self):
         url = reverse(
-            "accounts:update_account",
+            "accounts-api:update_account",
             kwargs={"id": 1}
         )
 
@@ -178,7 +177,7 @@ class AccountViewTest(APITestCase):
     def test_delete_account(self):
         account_id = 1
         url = reverse(
-            "accounts:delete_account",
+            "accounts-api:delete_account",
             kwargs={"id": account_id}
         )
 
@@ -195,7 +194,7 @@ class AccountViewTest(APITestCase):
 
     def test_delete_account_with_invalid_id(self):
         url = reverse(
-            "accounts:delete_account",
+            "accounts-api:delete_account",
             kwargs={"id": 999999}
         )
 
@@ -210,7 +209,7 @@ class AccountViewTest(APITestCase):
     # ----------------------------------------------------------------------------
 
     def test_list_accounts(self):
-        url = reverse("accounts:list_accounts")
+        url = reverse("accounts-api:list_accounts")
 
         response = self.client.get(url)
         actual_response = json.loads(response.content)
@@ -228,7 +227,7 @@ class AccountViewTest(APITestCase):
 
     def test_list_accounts_by_email(self):
         url = reverse(
-            "accounts:list_accounts_by_email",
+            "accounts-api:list_accounts_by_email",
             kwargs={"email": "testt@gmail.com"}
         )
 
@@ -247,7 +246,7 @@ class AccountViewTest(APITestCase):
     # ----------------------------------------------------------------------------
 
     def test_add_type(self):
-        url = reverse("accounts:add_type")
+        url = reverse("accounts-api:type-list")
         data = {
             "name": "test"
         }
@@ -255,47 +254,41 @@ class AccountViewTest(APITestCase):
         response = self.client.post(url, data, format="json")
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data["message"], "Added Type")
-        self.assertEqual(response.data["type"]["name"], "test")
+        self.assertEqual(response.data["name"], "test")
 
     # ----------------------------------------------------------------------------
 
     def test_update_type(self):
         url = reverse(
-            "accounts:update_type",
+            "accounts-api:type-detail",
             kwargs={"id": 1}
         )
         data = {
             "name": "test-updated"
         }
 
-        response = self.client.patch(url, data, format="json")
+        response = self.client.put(url, data, format="json")
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["message"], "Updated Type")
-        self.assertEqual(response.data["type"]["name"], "test-updated")
+        self.assertEqual(response.data["name"], "test-updated")
 
     # ----------------------------------------------------------------------------
 
     def test_delete_type(self):
         type_id = 1
         url = reverse(
-            "accounts:delete_type",
+            "accounts-api:type-detail",
             kwargs={"id": type_id}
         )
 
-        type_inst = TypeHelper.get_type_instance_by_id(type_id)
-        expected_msg = "Deleted Type: " + str(type_inst.name)
-
         response = self.client.delete(url)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["message"], expected_msg)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     # ----------------------------------------------------------------------------
 
     def test_list_types(self):
-        url = reverse("accounts:list_types")
+        url = reverse("accounts-api:type-list")
 
         response = self.client.get(url)
         actual_response = json.loads(response.content)
