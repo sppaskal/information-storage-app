@@ -101,7 +101,7 @@ class AccountViewTest(APITestCase):
 
     def test_update_account(self):
         url = reverse(
-            "accounts-api:update_account",
+            "accounts-api:manage_account",
             kwargs={"id": 1}
         )
 
@@ -115,7 +115,7 @@ class AccountViewTest(APITestCase):
             "type": 2
         }
 
-        response = self.client.patch(url, data, format='json')
+        response = self.client.put(url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(
@@ -149,7 +149,7 @@ class AccountViewTest(APITestCase):
 
     def test_update_account_with_invalid_type(self):
         url = reverse(
-            "accounts-api:update_account",
+            "accounts-api:manage_account",
             kwargs={"id": 1}
         )
 
@@ -163,7 +163,7 @@ class AccountViewTest(APITestCase):
             "type": -1
         }
 
-        response = self.client.patch(url, data, format="json")
+        response = self.client.put(url, data, format="json")
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(
@@ -177,7 +177,7 @@ class AccountViewTest(APITestCase):
     def test_delete_account(self):
         account_id = 1
         url = reverse(
-            "accounts-api:delete_account",
+            "accounts-api:manage_account",
             kwargs={"id": account_id}
         )
 
@@ -194,7 +194,7 @@ class AccountViewTest(APITestCase):
 
     def test_delete_account_with_invalid_id(self):
         url = reverse(
-            "accounts-api:delete_account",
+            "accounts-api:manage_account",
             kwargs={"id": 999999}
         )
 
