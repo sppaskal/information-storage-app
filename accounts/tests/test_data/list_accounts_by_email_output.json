@@ -1,6 +1,7 @@
 [
     {
         "id": 1,
+        "type_name": "school",
         "email": "testt@gmail.com",
         "username": "testt",
         "password": "testpass",
