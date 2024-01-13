@@ -85,7 +85,7 @@ class AddAccount(APIView):
 # -------------------------------------------------------------------------------
 
 
-class UpdateAccount(generics.UpdateAPIView):
+class ManageAccount(generics.UpdateAPIView, generics.DestroyAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
@@ -126,20 +126,6 @@ class UpdateAccount(generics.UpdateAPIView):
                 {"error": str(e)},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
-
-# -------------------------------------------------------------------------------
-
-
-class DeleteAccount(generics.DestroyAPIView):
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
-
-    serializer_class = AccountSerializer
-    lookup_field = 'id'
-
-    def get_queryset(self):
-        account_id = self.kwargs.get('id')
-        return AccountHelper.get_account_qs_by_id(account_id)
 
     def destroy(self, request, *args, **kwargs):
         try:
