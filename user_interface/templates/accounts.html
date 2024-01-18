@@ -45,7 +45,7 @@
             background-color: #122129;
         }
     </style>
-    <script src="{% static 'javascript/constants.js' %}"></script>
+    <script type="module" src="{% static 'javascript/constants.js' %}"></script>
     <script src="{% static 'javascript/cookie_utils.js' %}"></script>
 </head>
 <body>
@@ -59,7 +59,9 @@
     <tbody id="account-list"></tbody>
 </table>
 
-<script>
+<script type="module">
+    import * as constants from "{% static 'javascript/constants.js' %}";
+
     const baseApiUrl = "{{ base_api_url }}";
 
     document.addEventListener('DOMContentLoaded', function () {
@@ -95,10 +97,12 @@
             var headerRow = document.getElementById('header-row');
             var accountList = document.getElementById('account-list');
 
+            console.log(constants.accountFields)
+
             // Create header row
             var headerInfo = '';
             for (var key in accounts[0]) {
-                if (accountFields.includes(key)) {
+                if (constants.accountFields.includes(key)) {
                     headerInfo += '<th>' + key + '</th>';
                 }
             }
@@ -108,7 +112,7 @@
             accounts.forEach(function (account, index) {
                 var row = accountList.insertRow(index);
                 for (var key in account) {
-                    if (accountFields.includes(key)) {
+                    if (constants.accountFields.includes(key)) {
                         var cell = row.insertCell();
                         cell.textContent = account[key];
                     }

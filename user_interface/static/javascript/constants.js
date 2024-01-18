@@ -9,3 +9,5 @@ const accountFields = [
     'date_created',
     'date_updated'
 ];
+
+export { accountFields };
