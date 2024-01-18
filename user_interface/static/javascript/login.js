@@ -1,3 +1,5 @@
+// Requires cookie_utils.js
+
 function submitCredentials(baseApiUrl) {
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;

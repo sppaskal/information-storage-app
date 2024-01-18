@@ -45,6 +45,7 @@
             background-color: #122129;
         }
     </style>
+    <script src="{% static 'javascript/constants.js' %}"></script>
     <script src="{% static 'javascript/cookie_utils.js' %}"></script>
 </head>
 <body>
@@ -69,6 +70,9 @@
             return;
         }
 
+        // ---------------------------------------------------------------
+
+        // Get account data
         fetch(`${baseApiUrl}accounts-api/accounts`, {
             method: 'GET',
             headers: {
@@ -85,6 +89,8 @@
             console.error('Error fetching data:', error);
         });
 
+        // ---------------------------------------------------------------
+
         function displayAccountList(accounts) {
             var headerRow = document.getElementById('header-row');
             var accountList = document.getElementById('account-list');
@@ -92,7 +98,7 @@
             // Create header row
             var headerInfo = '';
             for (var key in accounts[0]) {
-                if (accounts[0].hasOwnProperty(key)) {
+                if (accountFields.includes(key)) {
                     headerInfo += '<th>' + key + '</th>';
                 }
             }
@@ -102,7 +108,7 @@
             accounts.forEach(function (account, index) {
                 var row = accountList.insertRow(index);
                 for (var key in account) {
-                    if (account.hasOwnProperty(key)) {
+                    if (accountFields.includes(key)) {
                         var cell = row.insertCell();
                         cell.textContent = account[key];
                     }
