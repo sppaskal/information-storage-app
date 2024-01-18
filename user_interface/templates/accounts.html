@@ -69,7 +69,7 @@
             return;
         }
 
-        fetch(`${baseApiUrl}accounts/list/`, {
+        fetch(`${baseApiUrl}accounts-api/accounts`, {
             method: 'GET',
             headers: {
                 'Authorization': 'Bearer ' + accessToken,
