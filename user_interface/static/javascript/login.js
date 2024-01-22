@@ -92,7 +92,7 @@ export function submitLogin() {
         setSecureCookie('access_token', data.access_token, 1);
         setSecureCookie('refresh_token', data.refresh_token, 7);
 
-        window.location.href = `${baseApiUrl}user_interface/accounts/`;
+        window.location.href = `${baseApiUrl}user-interface/accounts/`;
     })
     .catch(error => {
         // Display error message
