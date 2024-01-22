@@ -1,8 +1,22 @@
-// Requires cookie_utils.js
+import { setSecureCookie } from './cookie_utils.js';
 
-function submitCredentials(baseApiUrl) {
+// -------------------------------------------------------------------
+
+// Function to get data attribute value
+function getBaseApiUrl() {
+    const scriptTag = document.querySelector('script[src*="login.js"]');
+    return scriptTag ? scriptTag.getAttribute('base-api-url') : null;
+}
+
+// -------------------------------------------------------------------
+
+export function submitCredentials() {
+    const baseApiUrl = getBaseApiUrl();
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
+
+    console.log(baseApiUrl)
+    console.log(`${baseApiUrl}authentication/login-initial/`)
 
     // Make a POST request to API endpoint to validate username and password
     fetch(`${baseApiUrl}authentication/login-initial/`, {
@@ -33,7 +47,18 @@ function submitCredentials(baseApiUrl) {
     });
 }
 
-function submitLogin(baseApiUrl) {
+// Add event listener to the login button
+document.addEventListener('DOMContentLoaded', function() {
+    const loginButton = document.getElementById('login-button');
+    loginButton.addEventListener('click', function() {
+        submitCredentials();
+    });
+});
+
+// -------------------------------------------------------------------
+
+export function submitLogin() {
+    const baseApiUrl = getBaseApiUrl();
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
     const accessCode = document.getElementById('access-code').value;
@@ -74,3 +99,13 @@ function submitLogin(baseApiUrl) {
         document.getElementById('error-message').textContent = error.message;
     });
 }
+
+// Add event listener to the validate button
+document.addEventListener('DOMContentLoaded', function() {
+    const validateButton = document.getElementById('validate-button');
+    validateButton.addEventListener('click', function() {
+        submitLogin();
+    });
+});
+
+// -------------------------------------------------------------------

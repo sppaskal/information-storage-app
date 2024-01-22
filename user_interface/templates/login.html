@@ -8,8 +8,8 @@
     <title>Login</title>
     <link rel="stylesheet" type="text/css" href="{% static 'styles/login.css' %}">
     <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
-    <script src="{% static 'javascript/login.js' %}"></script>
-    <script src="{% static 'javascript/cookie_utils.js' %}"></script>
+    <script type="module" src="{% static 'javascript/login.js' %}" base-api-url="{{ base_api_url }}"></script>
+    <script type="module" src="{% static 'javascript/cookie_utils.js' %}"></script>
 </head>
 
 <body>
@@ -26,8 +26,8 @@
                     <label for="access-code">Access Code:</label>
                     <input type="text" id="access-code" name="access_code" required>
                 </div>
-                <button type="button" id="login-button" onclick="submitCredentials('{{ base_api_url }}')">Login</button>
-                <button type="button" id="validate-button" style="display: none;" onclick="submitLogin('{{ base_api_url }}')">Validate</button>
+                <button type="button" id="login-button">Login</button>
+                <button type="button" id="validate-button" style="display: none;">Validate</button>
             </form>
             <div id="error-message" style="color: red;"></div>
             <div id="valid-credentials-message" style="color: green; display: none;">Credentials were valid. Check your email for your access code.</div>

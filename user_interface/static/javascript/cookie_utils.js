@@ -1,4 +1,4 @@
-function setCookie(name, value, days) {
+export function setCookie(name, value, days) {
     const expires = new Date();
     expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
     const cookieString = `${name}=${value};` +
@@ -8,7 +8,7 @@ function setCookie(name, value, days) {
     document.cookie = cookieString;
 }
 
-function setSecureCookie(name, value, days) {
+export function setSecureCookie(name, value, days) {
     // Clear existing cookie
     document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;`;
 
@@ -23,7 +23,7 @@ function setSecureCookie(name, value, days) {
     document.cookie = cookieString;
 }
 
-function getCookie(name) {
+export function getCookie(name) {
     const cookieName = `${name}=`;
     const cookies = document.cookie.split(';');
     for (let i = 0; i < cookies.length; i++) {
