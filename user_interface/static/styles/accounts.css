@@ -31,6 +31,14 @@ th {
     color: #ededf0;
 }
 
+td {
+    max-width: 200px;
+    max-height: 100px;
+    overflow: auto;
+    text-overflow: ellipsis; /* Display an ellipsis (...) for truncated text */
+    white-space: nowrap; /* Prevent text from wrapping to the next line */
+}
+
 tr:nth-child(even) {
     background-color: #122129;
 }
