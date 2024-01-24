@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from utils.formatting import Formatting
 from .models import (
     Account,
     Type
@@ -17,6 +18,12 @@ class AccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
         fields = '__all__'
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['date_created'] = Formatting.format_date(instance.date_created)
+        representation['date_updated'] = Formatting.format_date(instance.date_updated)
+        return representation
 
 
 class AccountUpdateSerializer(serializers.ModelSerializer):
