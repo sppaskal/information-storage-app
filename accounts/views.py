@@ -43,6 +43,7 @@ class Test(APIView):
         try:
             # Enter test code here
             return Response(status=status.HTTP_200_OK)
+        
         except Exception as e:
             logger.error(str(e))
             return Response(
@@ -63,6 +64,9 @@ class AddAccount(APIView):
             serializer = AccountSerializer(data=request.data)
             if serializer.is_valid():
                 serializer.save()
+
+                Caching.delete_cache_value("accounts")
+
                 return Response(
                     {
                         "message": "Added Account",
@@ -70,12 +74,14 @@ class AddAccount(APIView):
                     },
                     status=status.HTTP_201_CREATED
                 )
+
             else:
                 logger.error(str(serializer.errors))
                 return Response(
                     {"error": str(serializer.errors)},
                     status=status.HTTP_400_BAD_REQUEST
                 )
+
         except Exception as e:
             logger.error(str(e))
             return Response(
