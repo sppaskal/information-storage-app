@@ -6,6 +6,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
+from django.core.cache import cache
 from .helpers.account_helper import AccountHelper
 from .helpers.type_helper import TypeHelper
 from .serializers import (
@@ -155,17 +156,31 @@ class ListAccounts(APIView):
 
     def get(self, request):
         try:
-            accounts = AccountHelper.select_related_fields(
-                    AccountHelper.get_all_accounts()
+            cached_data = cache.get("accounts")
+            if cached_data is not None:
+                return Response(
+                    cached_data,
+                    status=status.HTTP_200_OK
                 )
+
+            accounts = AccountHelper.select_related_fields(
+                AccountHelper.get_all_accounts()
+            )
             serializer = AccountSerializer(
                 accounts,
                 many=True,
             )
+            cache.set(
+                key='accounts',
+                value=serializer.data,
+                timeout=3600
+            )
+
             return Response(
                 serializer.data,
                 status=status.HTTP_200_OK
             )
+
         except Exception as e:
             logger.error(str(e))
             return Response(
@@ -183,17 +198,18 @@ class ListAccountsByEmail(APIView):
     def get(self, request, email):
         try:
             accounts = AccountHelper.select_related_fields(
-                    AccountHelper.get_account_qs_by_email(
-                        email)
-                )
+                AccountHelper.get_account_qs_by_email(email)
+            )
             serializer = AccountSerializer(
                 accounts,
                 many=True,
             )
+
             return Response(
                 serializer.data,
                 status=status.HTTP_200_OK
             )
+
         except Exception as e:
             logger.error(str(e))
             return Response(

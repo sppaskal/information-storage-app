@@ -115,6 +115,13 @@ DATABASES = {
 
 CRYPTOGRAPHY_KEY = os.environ.get("CRYPTOGRAPHY_KEY")
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'dev-cache'
+    }
+}
+
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
