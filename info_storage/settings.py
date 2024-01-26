@@ -115,6 +115,9 @@ DATABASES = {
 
 CRYPTOGRAPHY_KEY = os.environ.get("CRYPTOGRAPHY_KEY")
 
+# Disable in production
+DEV_CACHE = True
+
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',

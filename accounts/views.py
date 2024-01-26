@@ -6,9 +6,9 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
-from django.core.cache import cache
 from .helpers.account_helper import AccountHelper
 from .helpers.type_helper import TypeHelper
+from utils.caching import Caching
 from .serializers import (
     AccountSerializer,
     AccountUpdateSerializer,
@@ -156,7 +156,8 @@ class ListAccounts(APIView):
 
     def get(self, request):
         try:
-            cached_data = cache.get("accounts")
+            cache_key = "accounts"
+            cached_data = Caching.get_cache_value(cache_key)
             if cached_data is not None:
                 return Response(
                     cached_data,
@@ -170,10 +171,9 @@ class ListAccounts(APIView):
                 accounts,
                 many=True,
             )
-            cache.set(
-                key='accounts',
-                value=serializer.data,
-                timeout=3600
+            Caching.set_cache_value(
+                key=cache_key,
+                value=serializer.data
             )
 
             return Response(
