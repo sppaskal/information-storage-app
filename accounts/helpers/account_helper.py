@@ -29,7 +29,7 @@ class AccountHelper:
     def get_account_qs_by_email(email):
         return Account.objects.filter(email=email)
 
-    # In memory data filtering methods
+    # In memory data methods
 
     @staticmethod
     def filter_accounts_by_email(data, email):

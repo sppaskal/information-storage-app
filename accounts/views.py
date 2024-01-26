@@ -108,6 +108,9 @@ class ManageAccount(generics.UpdateAPIView, generics.DestroyAPIView):
             )
             serializer.is_valid(raise_exception=True)
             self.perform_update(serializer)
+
+            Caching.delete_cache_value("accounts")
+
             return Response(
                 {
                     "message": "Updated Account",
@@ -115,12 +118,14 @@ class ManageAccount(generics.UpdateAPIView, generics.DestroyAPIView):
                 },
                 status=status.HTTP_200_OK
             )
+
         except ValidationError as e:
             logger.error(str(e))
             return Response(
                 {"error": str(e)},
                 status=status.HTTP_400_BAD_REQUEST
             )
+
         except Exception as e:
             logger.error(str(e))
             return Response(
@@ -133,6 +138,9 @@ class ManageAccount(generics.UpdateAPIView, generics.DestroyAPIView):
             instance = self.get_object()
             account_email = instance.email
             self.perform_destroy(instance)
+
+            Caching.delete_cache_value("accounts")
+
             return Response(
                 {
                     "message": "Deleted Account: " + str(account_email),

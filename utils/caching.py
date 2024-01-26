@@ -31,3 +31,15 @@ class Caching():
         else:
             # Production logic
             return False
+
+    @staticmethod
+    def delete_cache_value(key):
+        # Dev mode
+        if settings.DEV_CACHE:
+            cache.delete(key)
+            return True
+
+        # Prod mode
+        else:
+            # Production logic
+            return False
