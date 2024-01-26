@@ -156,6 +156,7 @@ class ListAccounts(APIView):
 
     def get(self, request):
         try:
+            # Check cache
             cache_key = "accounts"
             cached_data = Caching.get_cache_value(cache_key)
             if cached_data is not None:
@@ -164,6 +165,7 @@ class ListAccounts(APIView):
                     status=status.HTTP_200_OK
                 )
 
+            # If no cache then pull and process from db
             accounts = AccountHelper.select_related_fields(
                 AccountHelper.get_all_accounts()
             )
@@ -197,6 +199,18 @@ class ListAccountsByEmail(APIView):
 
     def get(self, request, email):
         try:
+            # Check cache
+            cache_key = "accounts"
+            cached_data = Caching.get_cache_value(cache_key)
+            if cached_data is not None:
+                return Response(
+                    AccountHelper.filter_accounts_by_email(
+                        data=cached_data,
+                        email=email
+                    ),
+                    status=status.HTTP_200_OK
+                )
+
             accounts = AccountHelper.select_related_fields(
                 AccountHelper.get_account_qs_by_email(email)
             )

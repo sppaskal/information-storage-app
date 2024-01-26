@@ -3,6 +3,8 @@ from ..models import Account
 
 class AccountHelper:
 
+    # Database methods
+
     @staticmethod
     def select_related_fields(queryset):
         return queryset.select_related('type')
@@ -26,3 +28,9 @@ class AccountHelper:
     @staticmethod
     def get_account_qs_by_email(email):
         return Account.objects.filter(email=email)
+
+    # In memory data filtering methods
+
+    @staticmethod
+    def filter_accounts_by_email(data, email):
+        return [item for item in data if item.get("email") == email]
