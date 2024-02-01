@@ -314,7 +314,25 @@ class TypeViewSet(viewsets.ModelViewSet):
             Caching.delete_cache_value("types")
 
             return Response(
-                serializer.data)
+                serializer.data,
+                status=status.HTTP_200_OK
+            )
+
+        except Exception as e:
+            logger.error(str(e))
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+    def destroy(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+            instance.delete()
+            Caching.delete_cache_value("types")
+
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
         except Exception as e:
             logger.error(str(e))
             return Response(
