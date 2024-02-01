@@ -3,6 +3,8 @@ from django.conf import settings
 
 base_url = settings.DEV_BASE_URL
 
+# -------------------------------------------------------------------------------
+
 
 def login_view(request):
     return render(
@@ -11,10 +13,22 @@ def login_view(request):
         context={'base_api_url': base_url}
     )
 
+# -------------------------------------------------------------------------------
+
 
 def accounts_view(request):
     return render(
         request=request,
         template_name='accounts.html',
+        context={'base_api_url': base_url}
+    )
+
+# -------------------------------------------------------------------------------
+
+
+def details_view(request):
+    return render(
+        request=request,
+        template_name='details.html',
         context={'base_api_url': base_url}
     )
