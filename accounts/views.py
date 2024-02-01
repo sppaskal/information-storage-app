@@ -274,7 +274,10 @@ class TypeViewSet(viewsets.ModelViewSet):
                     value=serializer.data
                 )
 
-            return Response(serializer.data)
+            return Response(
+                serializer.data,
+                status=status.HTTP_200_OK
+            )
 
         except Exception as e:
             logger.error(str(e))
