@@ -8,8 +8,8 @@
         "company": "Slav-Co",
         "website": "https://www.example.com",
         "description": "A place for all things slav.",
-        "date_created": "2023-10-03T18:08:42.569391Z",
-        "date_updated": "2023-10-20T23:40:01.720727Z",
+        "date_created": "2023-10-03 18:08:42",
+        "date_updated": "2023-10-20 23:40:01",
         "type": 2
     },
     {
@@ -21,8 +21,8 @@
         "company": "Slav-Co",
         "website": "https://www.example.com",
         "description": "A place for all things slav.",
-        "date_created": "2023-10-03T18:08:50.645146Z",
-        "date_updated": "2023-10-03T18:08:50.645433Z",
+        "date_created": "2023-10-03 18:08:50",
+        "date_updated": "2023-10-03 18:08:50",
         "type": null
     },
     {
@@ -34,8 +34,8 @@
         "company": "Slav-Co",
         "website": "https://www.example.com",
         "description": "A place for all things slav.",
-        "date_created": "2023-10-03T18:19:42.442407Z",
-        "date_updated": "2023-10-03T18:19:42.442407Z",
+        "date_created": "2023-10-03 18:19:42",
+        "date_updated": "2023-10-03 18:19:42",
         "type": null
     },
     {
@@ -47,8 +47,8 @@
         "company": "Slav-Co",
         "website": "https://www.example.com",
         "description": "A place for all things slav.",
-        "date_created": "2023-10-25T00:01:53.473749Z",
-        "date_updated": "2023-10-25T00:01:53.473749Z",
+        "date_created": "2023-10-25 00:01:53",
+        "date_updated": "2023-10-25 00:01:53",
         "type": null
     },
     {
@@ -60,8 +60,8 @@
         "company": "Slav-Co",
         "website": "https://www.example.com",
         "description": "A place for all things slav.",
-        "date_created": "2023-10-25T00:02:19.890684Z",
-        "date_updated": "2023-10-27T01:50:58.326856Z",
+        "date_created": "2023-10-25 00:02:19",
+        "date_updated": "2023-10-27 01:50:58",
         "type": 1
     },
     {
@@ -73,8 +73,8 @@
         "company": "Slav-Co",
         "website": "https://www.example.com",
         "description": "A place for all things slav.",
-        "date_created": "2023-10-25T00:45:44.978663Z",
-        "date_updated": "2023-10-25T00:45:44.979664Z",
+        "date_created": "2023-10-25 00:45:44",
+        "date_updated": "2023-10-25 00:45:44",
         "type": 1
     }
 ]
