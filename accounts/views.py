@@ -43,7 +43,7 @@ class Test(APIView):
         try:
             # Enter test code here
             return Response(status=status.HTTP_200_OK)
-        
+
         except Exception as e:
             logger.error(str(e))
             return Response(
@@ -254,5 +254,33 @@ class TypeViewSet(viewsets.ModelViewSet):
     serializer_class = TypeSerializer
     queryset = TypeHelper.get_all_types()
     lookup_field = 'id'
+
+    def list(self, request, *args, **kwargs):
+        try:
+            # Check cache
+            cache_key = "types"
+            cached_data = Caching.get_cache_value(cache_key)
+            if cached_data is not None:
+                return Response(
+                    cached_data,
+                    status=status.HTTP_200_OK
+                )
+
+            # If no cache then pull and process from db
+            queryset = TypeHelper.get_all_types()
+            serializer = self.get_serializer(queryset, many=True)
+            Caching.set_cache_value(
+                    key=cache_key,
+                    value=serializer.data
+                )
+
+            return Response(serializer.data)
+
+        except Exception as e:
+            logger.error(str(e))
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 # -------------------------------------------------------------------------------
