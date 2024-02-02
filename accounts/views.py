@@ -248,6 +248,47 @@ class ListAccountsByEmail(APIView):
 # -------------------------------------------------------------------------------
 
 
+class GetAccountByID(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, account_id):
+        try:
+            # Check cache
+            cache_key = "accounts"
+            cached_data = Caching.get_cache_value(cache_key)
+            if cached_data is not None:
+                return Response(
+                    AccountHelper.filter_accounts_by_id(
+                        data=cached_data,
+                        id=account_id
+                    ),
+                    status=status.HTTP_200_OK
+                )
+
+            accounts = AccountHelper.select_related_fields(
+                AccountHelper.get_account_qs_by_id(account_id)
+            )
+            serializer = AccountSerializer(
+                accounts,
+                many=True,
+            )
+
+            return Response(
+                serializer.data,
+                status=status.HTTP_200_OK
+            )
+
+        except Exception as e:
+            logger.error(str(e))
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+# -------------------------------------------------------------------------------
+
+
 class TypeViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]

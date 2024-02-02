@@ -26,9 +26,12 @@ def accounts_view(request):
 # -------------------------------------------------------------------------------
 
 
-def details_view(request):
+def account_details_view(request, account_id):
     return render(
         request=request,
-        template_name='details.html',
-        context={'base_api_url': base_url}
+        template_name='account_details.html',
+        context={
+            'base_api_url': base_url,
+            'account_id': account_id
+        }
     )

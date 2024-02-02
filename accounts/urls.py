@@ -30,5 +30,9 @@ urlpatterns = [
         'accounts/by-email/<str:email>', views.ListAccountsByEmail.as_view(),
         name='list_accounts_by_email'
     ),
+    path(
+        'accounts/by-id/<int:account_id>', views.GetAccountByID.as_view(),
+        name='get_account_by_id'
+    ),
     path('', include(router.urls)),
 ]

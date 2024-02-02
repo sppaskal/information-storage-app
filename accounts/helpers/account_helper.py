@@ -34,3 +34,7 @@ class AccountHelper:
     @staticmethod
     def filter_accounts_by_email(data, email):
         return [item for item in data if item.get("email") == email]
+
+    @staticmethod
+    def filter_accounts_by_id(data, id):
+        return [item for item in data if item.get("id") == id]
