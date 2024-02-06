@@ -10,4 +10,13 @@ const accountFields = [
     'date_updated'
 ];
 
-export { accountFields };
+const editableAccountFields = [
+    'email',
+    'username',
+    'password',
+    'company',
+    'website',
+    'description'
+]
+
+export { accountFields, editableAccountFields };

@@ -1,0 +1,27 @@
+button {
+    border-radius: 50%;
+    padding: 5px;
+    margin-right: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* Styles for Save button */
+button.save-button {
+    background-color: #38803a;
+    color: white;
+}
+
+button.save-button:hover {
+    background-color: #4eb353;
+}
+
+/* Styles for Delete button */
+button.delete-button {
+    background-color: #9e2e26;
+    color: white;
+}
+
+button.delete-button:hover {
+    background-color: #e23434;
+}
