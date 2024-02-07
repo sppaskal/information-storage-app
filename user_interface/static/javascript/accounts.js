@@ -6,6 +6,50 @@ function getBaseApiUrl() {
     return scriptTag ? scriptTag.getAttribute('base-api-url') : null;
 }
 
+function saveAction(rowIndex, accountId, baseApiUrl, accessToken) {
+    // Find the row in the table
+    const accountList = document.getElementById('account-list');
+    const row = accountList.rows[rowIndex];
+
+    // Create an object to hold the updated account data
+    const updatedAccount = {};
+
+    // Iterate through the cells and update the data
+    for (let i = 1; i < row.cells.length; i++) {  // Start from 1 to skip the "Actions" column
+        const key = constants.accountFields[i - 1];
+        const cell = row.cells[i];
+
+        // If the cell is editable, update the value in the updatedAccount object
+        if (constants.editableAccountFields.includes(key)) {
+            updatedAccount[key] = cell.textContent.trim();
+        }
+    }
+
+    // Convert the updated account object to a JSON string
+    const updatedAccountJson = JSON.stringify(updatedAccount);
+
+    // Fetch API call with the updated data
+    fetch(`${baseApiUrl}accounts-api/accounts/` + accountId.toString() + '/', {
+        method: 'PUT',
+        headers: {
+            'Authorization': 'Bearer ' + accessToken,
+            'Content-Type': 'application/json'
+        },
+        credentials: 'same-origin',
+        body: updatedAccountJson,
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Update successful');
+        console.log(data);
+    })
+    .catch(error => {
+        console.error('Error fetching data:', error);
+    });
+}
+
+// -------------------------------------------------------------------
+
 document.addEventListener('DOMContentLoaded', function () {
     var baseApiUrl = getBaseApiUrl();
     var accessToken = getCookie('access_token');
@@ -61,8 +105,9 @@ document.addEventListener('DOMContentLoaded', function () {
             saveIcon.src = '/static/images/save-floppy-disk.svg';
             saveButton.appendChild(saveIcon);
             saveButton.addEventListener('click', function () {
-                // Handle edit functionality here
-                console.log('Save button clicked for account:', account);
+                // Get the row index by finding the index of the parent row
+                var rowIndex = Array.from(accountList.rows).indexOf(this.parentNode.parentNode);
+                saveAction(rowIndex, account.id, baseApiUrl, accessToken)
             });
             actionsCell.appendChild(saveButton);
 
