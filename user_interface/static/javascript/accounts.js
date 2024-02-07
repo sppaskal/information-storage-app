@@ -40,11 +40,11 @@ function saveAction(rowIndex, accountId, baseApiUrl, accessToken) {
     })
     .then(response => response.json())
     .then(data => {
-        console.log('Update successful');
-        console.log(data);
+        alert('Account ID: ' + accountId.toString() + ' successfully updated!')
     })
     .catch(error => {
         console.error('Error fetching data:', error);
+        alert('Error updating account ID: ' + accountId.toString())
     });
 }
 
@@ -99,17 +99,6 @@ document.addEventListener('DOMContentLoaded', function () {
     
             // Add buttons to the "Actions" column
             var actionsCell = row.insertCell();
-            var saveButton = document.createElement('button');
-            saveButton.className = 'save-button';
-            var saveIcon = document.createElement('img');
-            saveIcon.src = '/static/images/save-floppy-disk.svg';
-            saveButton.appendChild(saveIcon);
-            saveButton.addEventListener('click', function () {
-                // Get the row index by finding the index of the parent row
-                var rowIndex = Array.from(accountList.rows).indexOf(this.parentNode.parentNode);
-                saveAction(rowIndex, account.id, baseApiUrl, accessToken)
-            });
-            actionsCell.appendChild(saveButton);
 
             var deleteButton = document.createElement('button');
             deleteButton.className = 'delete-button';
@@ -121,6 +110,18 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.log('Delete button clicked for account:', account);
             });
             actionsCell.appendChild(deleteButton);
+
+            var saveButton = document.createElement('button');
+            saveButton.className = 'save-button';
+            var saveIcon = document.createElement('img');
+            saveIcon.src = '/static/images/save-floppy-disk.svg';
+            saveButton.appendChild(saveIcon);
+            saveButton.addEventListener('click', function () {
+                // Get the row index by finding the index of the parent row
+                var rowIndex = Array.from(accountList.rows).indexOf(this.parentNode.parentNode);
+                saveAction(rowIndex, account.id, baseApiUrl, accessToken)
+            });
+            actionsCell.appendChild(saveButton);
                 
             // Populate other cells based on account data
             for (var key in account) {

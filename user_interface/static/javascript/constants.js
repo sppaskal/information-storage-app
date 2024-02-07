@@ -1,4 +1,5 @@
 const accountFields = [
+    'id',
     'type_name',
     'email',
     'username',
