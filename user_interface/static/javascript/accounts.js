@@ -74,8 +74,12 @@ function saveAction(rowIndex, accountId, baseApiUrl, accessToken) {
         body: updatedAccountJson,
     })
     .then(response => response.json())
-    .then(data => {
-        alert('Account ID: ' + accountId.toString() + ' successfully updated!')
+    .then(response => {
+        if (response.status === 200) {
+            alert('Account ID: ' + accountId.toString() + ' successfully updated!')
+        } else {
+            alert('Error updating account ID: ' + accountId.toString());
+        }
     })
     .catch(error => {
         console.error('Error fetching data:', error);
