@@ -6,6 +6,39 @@ function getBaseApiUrl() {
     return scriptTag ? scriptTag.getAttribute('base-api-url') : null;
 }
 
+function deleteAction(rowIndex, accountId, baseApiUrl, accessToken) {
+    // Add confirmation popup
+    var confirm_msg = 'Are you sure you want to delete account ID: ' + accountId.toString() + '?'
+    var userConfirmed = window.confirm(confirm_msg);
+
+    // If user confirmed, proceed with the deletion
+    if (userConfirmed) {
+        fetch(`${baseApiUrl}accounts-api/accounts/` + accountId.toString() + '/', {
+            method: 'DELETE',
+            headers: {
+                'Authorization': 'Bearer ' + accessToken,
+                'Content-Type': 'application/json'
+            },
+            credentials: 'same-origin',
+        })
+        .then(response => {
+            if (response.status === 204) {
+                alert('Account ID: ' + accountId.toString() + ' successfully deleted!');
+                // Delete the row from the table
+                const accountList = document.getElementById('account-list');
+                accountList.deleteRow(rowIndex);
+            } else {
+                alert('Error deleting account ID: ' + accountId.toString());
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+            alert('Error deleting account ID: ' + accountId.toString());
+        });
+    }
+    // If user canceled, do nothing
+}
+
 function saveAction(rowIndex, accountId, baseApiUrl, accessToken) {
     // Find the row in the table
     const accountList = document.getElementById('account-list');
@@ -15,11 +48,13 @@ function saveAction(rowIndex, accountId, baseApiUrl, accessToken) {
     const updatedAccount = {};
 
     // Iterate through the cells and update the data
-    for (let i = 1; i < row.cells.length; i++) {  // Start from 1 to skip the "Actions" column
+    // Start from 1 to skip the "Actions" column
+    for (let i = 1; i < row.cells.length; i++) {
         const key = constants.accountFields[i - 1];
         const cell = row.cells[i];
 
-        // If the cell is editable, update the value in the updatedAccount object
+        // If the cell is editable, update the value
+        // in the updatedAccount object
         if (constants.editableAccountFields.includes(key)) {
             updatedAccount[key] = cell.textContent.trim();
         }
@@ -96,7 +131,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Populate table body
         accounts.forEach(function (account, index) {
             var row = accountList.insertRow(index);
-    
+
             // Add buttons to the "Actions" column
             var actionsCell = row.insertCell();
 
@@ -106,8 +141,7 @@ document.addEventListener('DOMContentLoaded', function () {
             deleteIcon.src = '/static/images/trash.svg';
             deleteButton.appendChild(deleteIcon);
             deleteButton.addEventListener('click', function () {
-                // Handle delete functionality here
-                console.log('Delete button clicked for account:', account);
+                deleteAction(index, account.id, baseApiUrl, accessToken)
             });
             actionsCell.appendChild(deleteButton);
 
@@ -119,7 +153,7 @@ document.addEventListener('DOMContentLoaded', function () {
             saveButton.addEventListener('click', function () {
                 // Get the row index by finding the index of the parent row
                 var rowIndex = Array.from(accountList.rows).indexOf(this.parentNode.parentNode);
-                saveAction(rowIndex, account.id, baseApiUrl, accessToken)
+                saveAction(index, account.id, baseApiUrl, accessToken)
             });
             actionsCell.appendChild(saveButton);
                 
