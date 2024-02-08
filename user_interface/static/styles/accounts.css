@@ -24,6 +24,9 @@ th, td {
     border: 1px solid #030314;
     padding: 10px;
     text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 th {
@@ -32,9 +35,8 @@ th {
 }
 
 td {
-    max-width: 200px; /* Set a max width for the cells */
-    overflow-x: auto; /* Enable horizontal scrolling */
-    white-space: nowrap; /* Prevent content from breaking into multiple lines */
+    max-width: 200px;
+    height: 40px;
 }
 
 tr:nth-child(even) {
