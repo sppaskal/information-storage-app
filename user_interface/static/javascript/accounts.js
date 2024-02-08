@@ -1,5 +1,6 @@
 import * as constants from './constants.js';
 import { getCookie } from './cookie_utils.js';
+import { createEditablePopup } from './popups.js';
 
 function getBaseApiUrl() {
     const scriptTag = document.querySelector('script[src*="accounts.js"]');
@@ -155,8 +156,6 @@ document.addEventListener('DOMContentLoaded', function () {
             saveIcon.src = '/static/images/save-floppy-disk.svg';
             saveButton.appendChild(saveIcon);
             saveButton.addEventListener('click', function () {
-                // Get the row index by finding the index of the parent row
-                var rowIndex = Array.from(accountList.rows).indexOf(this.parentNode.parentNode);
                 saveAction(index, account.id, baseApiUrl, accessToken)
             });
             actionsCell.appendChild(saveButton);
@@ -167,7 +166,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     var cell = row.insertCell();
                     cell.textContent = account[key];
                     if (constants.editableAccountFields.includes(key)) {
-                        cell.contentEditable = true;
+                        cell.addEventListener('click', function (clickedCell) {
+                            return function () {
+                                createEditablePopup(clickedCell);
+                            };
+                        }(cell));
                     }
                 }
             }
