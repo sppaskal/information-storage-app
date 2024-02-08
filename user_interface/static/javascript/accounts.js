@@ -138,6 +138,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Add buttons to the "Actions" column
             var actionsCell = row.insertCell();
+            actionsCell.className = 'button-cell'
 
             var deleteButton = document.createElement('button');
             deleteButton.className = 'delete-button';
@@ -172,5 +173,33 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
         });
+
+        // Initialize a blank row at the end
+        var blankRow = accountList.insertRow(accounts.length);
+
+        // Add buttons to the "Actions" column
+        var blankActionsCell = blankRow.insertCell();
+        blankActionsCell.className = 'button-cell'
+
+        var addButton = document.createElement('button');
+        addButton.className = 'add-button';
+        var addIcon = document.createElement('img');
+        addIcon.src = '/static/images/add.svg';
+        addButton.appendChild(addIcon);
+        addButton.addEventListener('click', function () {
+            // addAction(baseApiUrl, accessToken, blankRow);
+            alert('Add button pressed')
+        });
+        blankActionsCell.appendChild(addButton);
+
+        // Add empty cells based on the structure of your accounts
+        for (var key in accounts[0]) {
+            if (constants.accountFields.includes(key)) {
+                var cell = blankRow.insertCell();
+                if (constants.editableAccountFields.includes(key)) {
+                    cell.contentEditable = true;
+                }
+            }
+        }
     }
 });

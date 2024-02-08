@@ -4,6 +4,13 @@ button {
     margin-right: 10px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    width: 40px;
+    height: 40px;
+    border: 2px solid white;
+}
+
+.button-cell {
+    text-align: center;
 }
 
 /* Styles for Save button */
@@ -24,4 +31,14 @@ button.delete-button {
 
 button.delete-button:hover {
     background-color: #e23434;
+}
+
+/* Styles for Add button */
+button.add-button {
+    background-color: #7e71f3;
+    color: white;
+}
+
+button.add-button:hover {
+    background-color: #a8b0fa;
 }
