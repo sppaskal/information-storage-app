@@ -73,7 +73,6 @@ function saveAction(rowIndex, accountId, baseApiUrl, accessToken) {
         credentials: 'same-origin',
         body: updatedAccountJson,
     })
-    .then(response => response.json())
     .then(response => {
         if (response.status === 200) {
             alert('Account ID: ' + accountId.toString() + ' successfully updated!')
