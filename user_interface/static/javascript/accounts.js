@@ -101,8 +101,8 @@ document.addEventListener('DOMContentLoaded', function () {
         blankActionsCell.className = 'button-cell'
         var addButton = createAddButton(document)
         addButton.addEventListener('click', function () {
-            // addAction(baseApiUrl, accessToken, blankRow);
-            alert('Add button pressed')
+            addAction(accounts.length, baseApiUrl, accessToken)
+            // console.log(accounts.length)
         });
         blankActionsCell.appendChild(addButton);
 
