@@ -111,7 +111,11 @@ document.addEventListener('DOMContentLoaded', function () {
             if (constants.accountFields.includes(key)) {
                 var cell = blankRow.insertCell();
                 if (constants.editableAccountFields.includes(key)) {
-                    cell.contentEditable = true;
+                    cell.addEventListener('click', function (clickedCell) {
+                        return function () {
+                            createEditablePopup(clickedCell);
+                        };
+                    }(cell));
                 }
             }
         }
