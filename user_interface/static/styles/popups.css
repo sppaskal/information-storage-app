@@ -21,3 +21,29 @@
     overflow: auto;
     text-align: left;
 }
+
+.popup-select {
+    position: absolute;
+    min-height: 60px;
+    min-width: 100px;
+    max-width: 600px;
+    width: auto;
+    z-index: 9999;
+    background-color: #122129;
+    color: #ededf0;
+    border: none;
+    padding: 10px;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.popup-select option {
+    background-color: #122129;
+    color: #ededf0;
+}
+
+.popup-select:hover,
+.popup-select:focus {
+    background-color: #1d2b38;
+    outline: none;
+}

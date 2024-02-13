@@ -12,6 +12,7 @@ const accountFields = [
 ];
 
 const editableAccountFields = [
+    'type_name',
     'email',
     'username',
     'password',

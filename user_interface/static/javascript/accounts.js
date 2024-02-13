@@ -1,6 +1,6 @@
 import * as constants from './constants.js';
 import { getCookie } from './cookie_utils.js';
-import { createEditablePopup } from './popups.js';
+import { createInputPopup } from './popups.js';
 import { createDeleteButton,
         createSaveButton,
         createAddButton,
@@ -9,9 +9,25 @@ import { createDeleteButton,
         addAction
     } from './buttons.js';
 
+// -------------------------------------------------------------------
+
 function getBaseApiUrl() {
     const scriptTag = document.querySelector('script[src*="accounts.js"]');
     return scriptTag ? scriptTag.getAttribute('base-api-url') : null;
+}
+
+// -------------------------------------------------------------------
+
+function getCurrentKey(clickedCell, accounts) {
+    // Determine the column index of the clicked cell
+    var columnIndex = Array.from(clickedCell.parentElement.cells)
+        .filter(cell => cell.cellIndex !== 0) // Exclude non-data cells
+        .indexOf(clickedCell);
+    // Get the corresponding keys from the headers (excluding non-data keys)
+    var keys = Object.keys(accounts[0])
+        .filter(key => constants.accountFields.includes(key));
+    // Get the current key based on the columnIndex
+    return keys[columnIndex];
 }
 
 // -------------------------------------------------------------------
@@ -85,7 +101,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     if (constants.editableAccountFields.includes(key)) {
                         cell.addEventListener('click', function (clickedCell) {
                             return function () {
-                                createEditablePopup(clickedCell);
+                                createInputPopup(
+                                    baseApiUrl,
+                                    accessToken,
+                                    clickedCell,
+                                    getCurrentKey(clickedCell, accounts)
+                                );
                             };
                         }(cell));
                     }
@@ -102,7 +123,6 @@ document.addEventListener('DOMContentLoaded', function () {
         var addButton = createAddButton(document)
         addButton.addEventListener('click', function () {
             addAction(accounts.length, baseApiUrl, accessToken)
-            // console.log(accounts.length)
         });
         blankActionsCell.appendChild(addButton);
 
@@ -113,7 +133,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (constants.editableAccountFields.includes(key)) {
                     cell.addEventListener('click', function (clickedCell) {
                         return function () {
-                            createEditablePopup(clickedCell);
+                            createInputPopup(
+                                baseApiUrl,
+                                accessToken,
+                                clickedCell,
+                                getCurrentKey(clickedCell, accounts)
+                            );
                         };
                     }(cell));
                 }
