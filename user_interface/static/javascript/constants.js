@@ -1,4 +1,4 @@
-const accountFields = [
+const viewableAccountFields = [
     'id',
     'type_name',
     'email',
@@ -21,4 +21,7 @@ const editableAccountFields = [
     'description'
 ]
 
-export { accountFields, editableAccountFields };
+export {
+    viewableAccountFields,
+    editableAccountFields
+};

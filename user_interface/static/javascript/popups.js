@@ -1,5 +1,4 @@
 export function createInputPopup(baseApiUrl, accessToken, cell, key) {
-    console.log(key)
     if (key === 'type_name') {
         createTypeOptionsPopup(baseApiUrl, accessToken, cell);
     } else {
@@ -32,13 +31,12 @@ function createTypeOptionsPopup(baseApiUrl, accessToken, cell) {
         defaultOption.disabled = true;
         select.add(defaultOption);
 
-        console.log(options)
-
         // Add options to the select element
         options.forEach(option => {
             const optionElement = document.createElement('option');
             optionElement.value = option.name;
             optionElement.text = option.name;
+            optionElement.dataset.id = option.id;
             select.add(optionElement);
         });
 
@@ -63,6 +61,11 @@ function createTypeOptionsPopup(baseApiUrl, accessToken, cell) {
         select.addEventListener('change', function () {
             // Save the selected option when the user makes a selection
             cell.textContent = select.value;
+            // Retrieve the id from the selected option
+            const selectedOption = select.options[select.selectedIndex];
+            const id = selectedOption.dataset.id;
+            // Store the id in a custom attribute of the cell
+            cell.setAttribute('data-id', id);
             // Remove the select from the DOM
             document.body.removeChild(select);
         });

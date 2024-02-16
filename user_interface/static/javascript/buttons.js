@@ -69,23 +69,7 @@ export function saveAction(rowIndex, accountId, baseApiUrl, accessToken) {
     const row = accountList.rows[rowIndex];
 
     // Create an object to hold the updated account data
-    const updatedAccount = {};
-
-    // Iterate through the cells and update the data
-    // Start from 1 to skip the "Actions" column
-    for (let i = 1; i < row.cells.length; i++) {
-        const key = constants.accountFields[i - 1];
-        const cell = row.cells[i];
-
-        // If the cell is editable, update the value
-        // in the updatedAccount object
-        if (constants.editableAccountFields.includes(key)) {
-            updatedAccount[key] = cell.textContent.trim();
-        }
-    }
-
-    // Convert the updated account object to a JSON string
-    const updatedAccountJson = JSON.stringify(updatedAccount);
+    const updatedAccountJson = createAccountJson(row)
 
     // Fetch API call with the updated data
     fetch(`${baseApiUrl}accounts-api/accounts/` + accountId + '/', {
@@ -153,13 +137,18 @@ function createAccountJson(row) {
     // Iterate through the cells and update the data
     // Start from 1 to skip the "Actions" column
     for (let i = 1; i < row.cells.length; i++) {
-        const key = constants.accountFields[i - 1];
         const cell = row.cells[i];
+        const key = cell.getAttribute('header')
 
-        // If the cell is editable, update the value
+        // If the cell is editable, add the value
         // in the accountData object
         if (constants.editableAccountFields.includes(key)) {
-            accountData[key] = cell.textContent.trim();
+            if (key == 'type_name') { // Special case for type_name
+                accountData['type'] = cell.getAttribute('data-id');
+            }
+            else { // Non special case
+                accountData[key] = cell.textContent.trim();
+            }
         }
     }
 

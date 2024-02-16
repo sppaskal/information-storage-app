@@ -25,7 +25,7 @@ function getCurrentKey(clickedCell, accounts) {
         .indexOf(clickedCell);
     // Get the corresponding keys from the headers (excluding non-data keys)
     var keys = Object.keys(accounts[0])
-        .filter(key => constants.accountFields.includes(key));
+        .filter(key => constants.viewableAccountFields.includes(key));
     // Get the current key based on the columnIndex
     return keys[columnIndex];
 }
@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Create header row
         var headerInfo = '<th>Actions</th>';  // Add the Actions header
         for (var key in accounts[0]) {
-            if (constants.accountFields.includes(key)) {
+            if (constants.viewableAccountFields.includes(key)) {
                 headerInfo += '<th>' + key + '</th>';
             }
         }
@@ -88,16 +88,22 @@ document.addEventListener('DOMContentLoaded', function () {
                 deleteAction(index, account.id, baseApiUrl, accessToken)
             });
             saveButton.addEventListener('click', function () {
-                saveAction(index, account.id, baseApiUrl, accessToken)
+                saveAction(
+                    index,
+                    account.id,
+                    baseApiUrl,
+                    accessToken
+                )
             });
             actionsCell.appendChild(deleteButton);
             actionsCell.appendChild(saveButton);
                 
             // Populate other cells based on account data
             for (var key in account) {
-                if (constants.accountFields.includes(key)) {
+                if (constants.viewableAccountFields.includes(key)) {
                     var cell = row.insertCell();
                     cell.textContent = account[key];
+                    cell.setAttribute('header', key);
                     if (constants.editableAccountFields.includes(key)) {
                         cell.addEventListener('click', function (clickedCell) {
                             return function () {
@@ -122,14 +128,19 @@ document.addEventListener('DOMContentLoaded', function () {
         blankActionsCell.className = 'button-cell'
         var addButton = createAddButton(document)
         addButton.addEventListener('click', function () {
-            addAction(accounts.length, baseApiUrl, accessToken)
+            addAction(
+                accounts.length,
+                baseApiUrl,
+                accessToken
+            )
         });
         blankActionsCell.appendChild(addButton);
 
-        // Add empty cells based on the structure of your accounts
+        // Add empty cells at end of table for adding new account
         for (var key in accounts[0]) {
-            if (constants.accountFields.includes(key)) {
+            if (constants.viewableAccountFields.includes(key)) {
                 var cell = blankRow.insertCell();
+                cell.setAttribute('header', key);
                 if (constants.editableAccountFields.includes(key)) {
                     cell.addEventListener('click', function (clickedCell) {
                         return function () {
