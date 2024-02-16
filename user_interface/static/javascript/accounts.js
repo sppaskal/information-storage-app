@@ -1,4 +1,5 @@
 import * as constants from './constants.js';
+import { getCurrentAccountKey } from './tableOps.js';
 import { getCookie } from './cookie_utils.js';
 import { createInputPopup } from './popups.js';
 import { createDeleteButton,
@@ -14,20 +15,6 @@ import { createDeleteButton,
 function getBaseApiUrl() {
     const scriptTag = document.querySelector('script[src*="accounts.js"]');
     return scriptTag ? scriptTag.getAttribute('base-api-url') : null;
-}
-
-// -------------------------------------------------------------------
-
-function getCurrentKey(clickedCell, accounts) {
-    // Determine the column index of the clicked cell
-    var columnIndex = Array.from(clickedCell.parentElement.cells)
-        .filter(cell => cell.cellIndex !== 0) // Exclude non-data cells
-        .indexOf(clickedCell);
-    // Get the corresponding keys from the headers (excluding non-data keys)
-    var keys = Object.keys(accounts[0])
-        .filter(key => constants.viewableAccountFields.includes(key));
-    // Get the current key based on the columnIndex
-    return keys[columnIndex];
 }
 
 // -------------------------------------------------------------------
@@ -111,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                     baseApiUrl,
                                     accessToken,
                                     clickedCell,
-                                    getCurrentKey(clickedCell, accounts)
+                                    getCurrentAccountKey(clickedCell, accounts)
                                 );
                             };
                         }(cell));
@@ -148,7 +135,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 baseApiUrl,
                                 accessToken,
                                 clickedCell,
-                                getCurrentKey(clickedCell, accounts)
+                                getCurrentAccountKey(clickedCell, accounts)
                             );
                         };
                     }(cell));
