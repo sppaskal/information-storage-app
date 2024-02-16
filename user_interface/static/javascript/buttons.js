@@ -121,6 +121,7 @@ export function addAction(rowIndex, baseApiUrl, accessToken) {
     .then(data => {
         const accountId = data.account.id;
         alert('Account ID: ' + accountId + ' successfully added!');
+        displayNewAccount(data)
     })
     .catch(error => {
         console.error('Error adding account:', error);
@@ -154,4 +155,47 @@ function createAccountJson(row) {
 
     // Convert the updated account object to a JSON string
     return JSON.stringify(accountData);
+}
+
+function displayNewAccount(data) {
+    const accountList = document.getElementById('account-list');
+    const accounts = data.account;
+
+    // Create a new row for the added account
+    const newRow = accountList.insertRow(accountList.rows.length - 1);
+
+    // Add buttons to the "Actions" column
+    const actionsCell = newRow.insertCell();
+    actionsCell.className = 'button-cell';
+    const deleteButton = createDeleteButton(document);
+    const saveButton = createSaveButton(document);
+    deleteButton.addEventListener('click', function () {
+        deleteAction(accounts.length, accounts.id, baseApiUrl, accessToken);
+    });
+    saveButton.addEventListener('click', function () {
+        saveAction(accounts.length, accounts.id, baseApiUrl, accessToken);
+    });
+    actionsCell.appendChild(deleteButton);
+    actionsCell.appendChild(saveButton);
+
+    // Populate other cells based on account data
+    for (const key in accounts) {
+        if (constants.viewableAccountFields.includes(key)) {
+            const cell = newRow.insertCell();
+            cell.textContent = accounts[key];
+            cell.setAttribute('header', key);
+            if (constants.editableAccountFields.includes(key)) {
+                cell.addEventListener('click', function (clickedCell) {
+                    return function () {
+                        createInputPopup(
+                            baseApiUrl,
+                            accessToken,
+                            clickedCell,
+                            getCurrentKey(clickedCell, accounts)
+                        );
+                    };
+                }(cell));
+            }
+        }
+    }
 }
