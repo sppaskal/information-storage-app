@@ -122,6 +122,7 @@ export function addAction(rowIndex, baseApiUrl, accessToken) {
         const accountId = data.account.id;
         alert('Account ID: ' + accountId + ' successfully added!');
         displayNewAccount(data)
+        clearLastRow()
     })
     .catch(error => {
         console.error('Error adding account:', error);
@@ -196,6 +197,21 @@ function displayNewAccount(data) {
                     };
                 }(cell));
             }
+        }
+    }
+}
+
+function clearLastRow() {
+    const accountList = document.getElementById('account-list');
+    const lastRowIndex = accountList.rows.length - 1;
+
+    if (lastRowIndex >= 0) {
+        const lastRow = accountList.rows[lastRowIndex];
+
+        // Start from 1 to skip actions column
+        for (let i = 1; i < lastRow.cells.length; i++) {
+            const cell = lastRow.cells[i];
+            cell.textContent = '';
         }
     }
 }
