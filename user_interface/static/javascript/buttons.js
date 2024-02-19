@@ -152,7 +152,9 @@ function createAccountJson(row) {
         // in the accountData object
         if (constants.editableAccountFields.includes(key)) {
             if (key == 'type_name') { // Special case for type_name
-                accountData['type'] = cell.getAttribute('data-id');
+                if (cell.getAttribute('data-id')) {
+                    accountData['type'] = cell.getAttribute('data-id');
+                }
             }
             else { // Non special case
                 accountData[key] = cell.textContent.trim();
