@@ -1,4 +1,7 @@
 import * as constants from './constants.js';
+import { findRowIndexById } from './accountsTableOps.js';
+import { createInputPopup } from './popups.js';
+import { getCurrentAccountKey } from './accountsTableOps.js';
 
 
 export function createDeleteButton(document, ) {
@@ -30,7 +33,7 @@ export function createAddButton(document) {
 
 // -------------------------------------------------------------------
 
-export function deleteAction(rowIndex, accountId, baseApiUrl, accessToken) {
+export function deleteAction(accountId, baseApiUrl, accessToken) {
     // Add confirmation popup
     var confirm_msg = 'Are you sure you want to delete account ID: ' + accountId + '?'
     var userConfirmed = window.confirm(confirm_msg);
@@ -50,7 +53,7 @@ export function deleteAction(rowIndex, accountId, baseApiUrl, accessToken) {
                 alert('Account ID: ' + accountId + ' successfully deleted!');
                 // Delete the row from the table
                 const accountList = document.getElementById('account-list');
-                accountList.deleteRow(rowIndex);
+                accountList.deleteRow(findRowIndexById(accountList, accountId));
             } else {
                 alert('Error deleting account ID: ' + accountId);
             }
@@ -63,10 +66,10 @@ export function deleteAction(rowIndex, accountId, baseApiUrl, accessToken) {
     // If user canceled, do nothing
 }
 
-export function saveAction(rowIndex, accountId, baseApiUrl, accessToken) {
+export function saveAction(accountId, baseApiUrl, accessToken) {
     // Find the row in the table
     const accountList = document.getElementById('account-list');
-    const row = accountList.rows[rowIndex];
+    const row = accountList.rows[findRowIndexById(accountList, accountId)];
 
     // Create an object to hold the updated account data
     const updatedAccountJson = createAccountJson(row)
@@ -94,11 +97,10 @@ export function saveAction(rowIndex, accountId, baseApiUrl, accessToken) {
     });
 }
 
-export function addAction(rowIndex, baseApiUrl, accessToken) {
+export function addAction(baseApiUrl, accessToken) {
     // Find the row in the table
     const accountList = document.getElementById('account-list');
-    const row = accountList.rows[rowIndex];
-
+    const row = accountList.rows[accountList.rows.length - 1];
     const newAccountJson = createAccountJson(row)
 
     // Fetch API call with the new data
@@ -121,7 +123,11 @@ export function addAction(rowIndex, baseApiUrl, accessToken) {
     .then(data => {
         const accountId = data.account.id;
         alert('Account ID: ' + accountId + ' successfully added!');
-        displayNewAccount(data)
+        displayNewAccount(
+            data,
+            baseApiUrl,
+            accessToken
+        )
         clearLastRow()
     })
     .catch(error => {
@@ -158,9 +164,9 @@ function createAccountJson(row) {
     return JSON.stringify(accountData);
 }
 
-function displayNewAccount(data) {
+function displayNewAccount(data, baseApiUrl, accessToken) {
     const accountList = document.getElementById('account-list');
-    const accounts = data.account;
+    const account = data.account;
 
     // Create a new row for the added account
     const newRow = accountList.insertRow(accountList.rows.length - 1);
@@ -171,19 +177,27 @@ function displayNewAccount(data) {
     const deleteButton = createDeleteButton(document);
     const saveButton = createSaveButton(document);
     deleteButton.addEventListener('click', function () {
-        deleteAction(accounts.length, accounts.id, baseApiUrl, accessToken);
+        deleteAction(
+            account.id,
+            baseApiUrl,
+            accessToken
+        );
     });
     saveButton.addEventListener('click', function () {
-        saveAction(accounts.length, accounts.id, baseApiUrl, accessToken);
+        saveAction(
+            account.id,
+            baseApiUrl,
+            accessToken
+        );
     });
     actionsCell.appendChild(deleteButton);
     actionsCell.appendChild(saveButton);
 
     // Populate other cells based on account data
-    for (const key in accounts) {
+    for (const key in account) {
         if (constants.viewableAccountFields.includes(key)) {
             const cell = newRow.insertCell();
-            cell.textContent = accounts[key];
+            cell.textContent = account[key];
             cell.setAttribute('header', key);
             if (constants.editableAccountFields.includes(key)) {
                 cell.addEventListener('click', function (clickedCell) {
@@ -192,7 +206,7 @@ function displayNewAccount(data) {
                             baseApiUrl,
                             accessToken,
                             clickedCell,
-                            getCurrentKey(clickedCell, accounts)
+                            getCurrentAccountKey(clickedCell, account)
                         );
                     };
                 }(cell));

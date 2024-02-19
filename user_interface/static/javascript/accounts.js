@@ -1,5 +1,5 @@
 import * as constants from './constants.js';
-import { getCurrentAccountKey } from './tableOps.js';
+import { getCurrentAccountKey } from './accountsTableOps.js';
 import { getCookie } from './cookie_utils.js';
 import { createInputPopup } from './popups.js';
 import { createDeleteButton,
@@ -72,11 +72,14 @@ document.addEventListener('DOMContentLoaded', function () {
             var deleteButton = createDeleteButton(document)
             var saveButton = createSaveButton(document)
             deleteButton.addEventListener('click', function () {
-                deleteAction(index, account.id, baseApiUrl, accessToken)
+                deleteAction(
+                    account.id,
+                    baseApiUrl,
+                    accessToken
+                )
             });
             saveButton.addEventListener('click', function () {
                 saveAction(
-                    index,
                     account.id,
                     baseApiUrl,
                     accessToken
@@ -98,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                     baseApiUrl,
                                     accessToken,
                                     clickedCell,
-                                    getCurrentAccountKey(clickedCell, accounts)
+                                    getCurrentAccountKey(clickedCell, account)
                                 );
                             };
                         }(cell));
@@ -116,10 +119,9 @@ document.addEventListener('DOMContentLoaded', function () {
         var addButton = createAddButton(document)
         addButton.addEventListener('click', function () {
             addAction(
-                accounts.length,
                 baseApiUrl,
-                accessToken
-            )
+                accessToken,
+            );
         });
         blankActionsCell.appendChild(addButton);
 
@@ -135,7 +137,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 baseApiUrl,
                                 accessToken,
                                 clickedCell,
-                                getCurrentAccountKey(clickedCell, accounts)
+                                getCurrentAccountKey(clickedCell, accounts[0])
                             );
                         };
                     }(cell));
