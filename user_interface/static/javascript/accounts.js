@@ -17,6 +17,104 @@ function getBaseApiUrl() {
     return scriptTag ? scriptTag.getAttribute('base-api-url') : null;
 }
 
+function addHeaderRow(account) {
+    var headerRow = document.getElementById('header-row');
+    var headerInfo = '<th>Actions</th>';  // Add the Actions header
+    for (var key in account) {
+        if (constants.viewableAccountFields.includes(key)) {
+            headerInfo += '<th>' + key + '</th>';
+        }
+    }
+    headerRow.innerHTML = headerInfo;
+}
+
+function addDataRows(accountList, accounts, baseApiUrl, accessToken) {
+    // Populate table body
+    accounts.forEach(function (account, index) {
+        var row = accountList.insertRow(index);
+
+        // Add buttons to the "Actions" column
+        var actionsCell = row.insertCell();
+        actionsCell.className = 'button-cell'
+        var deleteButton = createDeleteButton(document)
+        var saveButton = createSaveButton(document)
+        deleteButton.addEventListener('click', function () {
+            deleteAction(
+                account.id,
+                baseApiUrl,
+                accessToken
+            )
+        });
+        saveButton.addEventListener('click', function () {
+            saveAction(
+                account.id,
+                baseApiUrl,
+                accessToken
+            )
+        });
+        actionsCell.appendChild(deleteButton);
+        actionsCell.appendChild(saveButton);
+            
+        // Populate other cells based on account data
+        for (var key in account) {
+            if (constants.viewableAccountFields.includes(key)) {
+                var cell = row.insertCell();
+                cell.textContent = account[key];
+                cell.setAttribute('header', key);
+                if (constants.editableAccountFields.includes(key)) {
+                    cell.addEventListener('click', function (clickedCell) {
+                        return function () {
+                            createInputPopup(
+                                baseApiUrl,
+                                accessToken,
+                                clickedCell,
+                                getCurrentAccountKey(clickedCell, account)
+                            );
+                        };
+                    }(cell));
+                }
+            }
+        }
+    });
+}
+
+function addInputRow(accountList, accounts, baseApiUrl, accessToken) {
+    // Initialize a blank row at the end
+    var blankRow = accountList.insertRow(accounts.length);
+
+    // Add buttons to the "Actions" column
+    var blankActionsCell = blankRow.insertCell();
+    blankActionsCell.className = 'button-cell'
+    var addButton = createAddButton(document)
+    addButton.addEventListener('click', function () {
+        addAction(
+            baseApiUrl,
+            accessToken,
+        );
+    });
+    blankActionsCell.appendChild(addButton);
+
+    // Add empty cells at end of table for adding new account
+    for (var key in accounts[0]) {
+        if (constants.viewableAccountFields.includes(key)) {
+            var cell = blankRow.insertCell();
+            cell.setAttribute('header', key);
+            if (constants.editableAccountFields.includes(key)) {
+                cell.addEventListener('click', function (clickedCell) {
+                    return function () {
+                        createInputPopup(
+                            baseApiUrl,
+                            accessToken,
+                            clickedCell,
+                            getCurrentAccountKey(clickedCell, accounts[0])
+                        );
+                    };
+                }(cell));
+            }
+        }
+    }
+}
+
 // -------------------------------------------------------------------
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -50,99 +148,25 @@ document.addEventListener('DOMContentLoaded', function () {
     // ---------------------------------------------------------------
 
     function displayAccountList(accounts) {
-        var headerRow = document.getElementById('header-row');
         var accountList = document.getElementById('account-list');
     
         // Create header row
-        var headerInfo = '<th>Actions</th>';  // Add the Actions header
-        for (var key in accounts[0]) {
-            if (constants.viewableAccountFields.includes(key)) {
-                headerInfo += '<th>' + key + '</th>';
-            }
-        }
-        headerRow.innerHTML = headerInfo;
+        addHeaderRow(accounts[0])
     
-        // Populate table body
-        accounts.forEach(function (account, index) {
-            var row = accountList.insertRow(index);
+        // Add table body rows with db data
+        addDataRows(
+            accountList,
+            accounts,
+            baseApiUrl,
+            accessToken
+        )
 
-            // Add buttons to the "Actions" column
-            var actionsCell = row.insertCell();
-            actionsCell.className = 'button-cell'
-            var deleteButton = createDeleteButton(document)
-            var saveButton = createSaveButton(document)
-            deleteButton.addEventListener('click', function () {
-                deleteAction(
-                    account.id,
-                    baseApiUrl,
-                    accessToken
-                )
-            });
-            saveButton.addEventListener('click', function () {
-                saveAction(
-                    account.id,
-                    baseApiUrl,
-                    accessToken
-                )
-            });
-            actionsCell.appendChild(deleteButton);
-            actionsCell.appendChild(saveButton);
-                
-            // Populate other cells based on account data
-            for (var key in account) {
-                if (constants.viewableAccountFields.includes(key)) {
-                    var cell = row.insertCell();
-                    cell.textContent = account[key];
-                    cell.setAttribute('header', key);
-                    if (constants.editableAccountFields.includes(key)) {
-                        cell.addEventListener('click', function (clickedCell) {
-                            return function () {
-                                createInputPopup(
-                                    baseApiUrl,
-                                    accessToken,
-                                    clickedCell,
-                                    getCurrentAccountKey(clickedCell, account)
-                                );
-                            };
-                        }(cell));
-                    }
-                }
-            }
-        });
-
-        // Initialize a blank row at the end
-        var blankRow = accountList.insertRow(accounts.length);
-
-        // Add buttons to the "Actions" column
-        var blankActionsCell = blankRow.insertCell();
-        blankActionsCell.className = 'button-cell'
-        var addButton = createAddButton(document)
-        addButton.addEventListener('click', function () {
-            addAction(
-                baseApiUrl,
-                accessToken,
-            );
-        });
-        blankActionsCell.appendChild(addButton);
-
-        // Add empty cells at end of table for adding new account
-        for (var key in accounts[0]) {
-            if (constants.viewableAccountFields.includes(key)) {
-                var cell = blankRow.insertCell();
-                cell.setAttribute('header', key);
-                if (constants.editableAccountFields.includes(key)) {
-                    cell.addEventListener('click', function (clickedCell) {
-                        return function () {
-                            createInputPopup(
-                                baseApiUrl,
-                                accessToken,
-                                clickedCell,
-                                getCurrentAccountKey(clickedCell, accounts[0])
-                            );
-                        };
-                    }(cell));
-                }
-            }
-        }
+        // Add input row at end of table
+        addInputRow(
+            accountList,
+            accounts,
+            baseApiUrl,
+            accessToken
+        )
     }
 });
