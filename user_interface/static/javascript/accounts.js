@@ -1,7 +1,6 @@
 import * as constants from './constants.js';
-import { getCurrentAccountKey } from './accountsTableOps.js';
+import { populateRowCells } from './accounts_utils.js';
 import { getCookie } from './cookie_utils.js';
-import { createInputPopup } from './popups.js';
 import { createDeleteButton,
         createSaveButton,
         createAddButton,
@@ -56,25 +55,12 @@ function addDataRows(accountList, accounts, baseApiUrl, accessToken) {
         actionsCell.appendChild(saveButton);
             
         // Populate other cells based on account data
-        for (var key in account) {
-            if (constants.viewableAccountFields.includes(key)) {
-                var cell = row.insertCell();
-                cell.textContent = account[key];
-                cell.setAttribute('header', key);
-                if (constants.editableAccountFields.includes(key)) {
-                    cell.addEventListener('click', function (clickedCell) {
-                        return function () {
-                            createInputPopup(
-                                baseApiUrl,
-                                accessToken,
-                                clickedCell,
-                                getCurrentAccountKey(clickedCell, account)
-                            );
-                        };
-                    }(cell));
-                }
-            }
-        }
+        populateRowCells(
+            row,
+            account,
+            baseApiUrl,
+            accessToken
+        )
     });
 }
 
@@ -95,24 +81,13 @@ function addInputRow(accountList, accounts, baseApiUrl, accessToken) {
     blankActionsCell.appendChild(addButton);
 
     // Add empty cells at end of table for adding new account
-    for (var key in accounts[0]) {
-        if (constants.viewableAccountFields.includes(key)) {
-            var cell = blankRow.insertCell();
-            cell.setAttribute('header', key);
-            if (constants.editableAccountFields.includes(key)) {
-                cell.addEventListener('click', function (clickedCell) {
-                    return function () {
-                        createInputPopup(
-                            baseApiUrl,
-                            accessToken,
-                            clickedCell,
-                            getCurrentAccountKey(clickedCell, accounts[0])
-                        );
-                    };
-                }(cell));
-            }
-        }
-    }
+    populateRowCells(
+        blankRow,
+        accounts[0],
+        baseApiUrl,
+        accessToken,
+        true
+    )
 }
 
 // -------------------------------------------------------------------

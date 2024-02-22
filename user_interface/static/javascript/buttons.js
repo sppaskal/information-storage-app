@@ -1,7 +1,9 @@
 import * as constants from './constants.js';
-import { findRowIndexById } from './accountsTableOps.js';
+import { findRowIndexById } from './accounts_utils.js';
 import { createInputPopup } from './popups.js';
-import { getCurrentAccountKey } from './accountsTableOps.js';
+import { getCurrentAccountKey,
+        populateRowCells
+    } from './accounts_utils.js';
 
 
 export function createDeleteButton(document, ) {
@@ -196,25 +198,12 @@ function displayNewAccount(data, baseApiUrl, accessToken) {
     actionsCell.appendChild(saveButton);
 
     // Populate other cells based on account data
-    for (const key in account) {
-        if (constants.viewableAccountFields.includes(key)) {
-            const cell = newRow.insertCell();
-            cell.textContent = account[key];
-            cell.setAttribute('header', key);
-            if (constants.editableAccountFields.includes(key)) {
-                cell.addEventListener('click', function (clickedCell) {
-                    return function () {
-                        createInputPopup(
-                            baseApiUrl,
-                            accessToken,
-                            clickedCell,
-                            getCurrentAccountKey(clickedCell, account)
-                        );
-                    };
-                }(cell));
-            }
-        }
-    }
+    populateRowCells(
+        newRow,
+        account,
+        baseApiUrl,
+        accessToken
+    )
 }
 
 function clearLastRow() {

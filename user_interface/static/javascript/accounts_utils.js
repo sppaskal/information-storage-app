@@ -1,4 +1,6 @@
 import * as constants from './constants.js';
+import { createInputPopup } from './popups.js';
+
 
 export function getCurrentAccountKey(clickedCell, account) {
     // Determine the column index of the clicked cell
@@ -26,4 +28,30 @@ export function findRowIndexById(accountList, accountId) {
     }
 
     return -1; // Return -1 if not found
+}
+
+// -------------------------------------------------------------------
+
+export function populateRowCells(row, account, baseApiUrl, accessToken, empty=false) {
+    for (var key in account) {
+        if (constants.viewableAccountFields.includes(key)) {
+            var cell = row.insertCell();
+            if (!(empty)) {
+                cell.textContent = account[key];
+            }
+            cell.setAttribute('header', key);
+            if (constants.editableAccountFields.includes(key)) {
+                cell.addEventListener('click', function (clickedCell) {
+                    return function () {
+                        createInputPopup(
+                            baseApiUrl,
+                            accessToken,
+                            clickedCell,
+                            getCurrentAccountKey(clickedCell, account)
+                        );
+                    };
+                }(cell));
+            }
+        }
+    }
 }
