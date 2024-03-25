@@ -101,6 +101,8 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
     }
 
+    // ---------------------------------------------------------------
+
     // Get account data
     fetch(`${baseApiUrl}accounts-api/accounts`, {
         method: 'GET',
@@ -117,6 +119,8 @@ document.addEventListener('DOMContentLoaded', function () {
     .catch(error => {
         console.error('Error fetching data:', error);
     });
+
+    // ---------------------------------------------------------------
 
     function displayAccountList(accounts) {
         var accountList = document.getElementById('account-list');
