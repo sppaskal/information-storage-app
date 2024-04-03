@@ -31,7 +31,8 @@ if DEBUG:
 
 SECURE_SSL_REDIRECT = False  # Disable SSL redirect for development
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0']
+ALLOWED_HOSTS = ['*']
+# ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0']
 
 DEV_BASE_URL = 'http://127.0.0.1:8000/'
 
@@ -82,7 +83,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'info_storage.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
@@ -98,18 +98,18 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'auth_db',
         'USER': 'sppaskal',
-        'PASSWORD': '6D%Rjf2sppaskal',
-        'HOST': 'localhost',
-        'PORT': '3306'
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': os.environ.get('AUTH_DB_HOST'),
+        'PORT': '3306',
     },
     'account_information':
     {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'account_information',
         'USER': 'sppaskal',
-        'PASSWORD': '6D%Rjf2sppaskal',
-        'HOST': 'localhost',
-        'PORT': '3306'
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': os.environ.get('ACCOUNT_INFO_DB_HOST'),
+        'PORT': '3306',
     }
 }
 
