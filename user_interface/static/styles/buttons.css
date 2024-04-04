@@ -13,6 +13,23 @@ button {
     text-align: center;
 }
 
+/* Styles for Logout button */
+button.logout-button {
+    background-color: #12315c;
+    border-radius: 5px; /* Adjust the border-radius to control the roundness of the edges */
+    padding: 5px 10px; /* Adjust the padding to fit the text properly */
+    margin-right: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border: 2px solid rgb(255, 255, 255); /* Add border */
+    color: white; /* Add text color */
+    width: auto; /* Adjust width dynamically to fit content */
+}
+
+button.logout-button:hover {
+    background-color: #2154ba;
+}
+
 /* Styles for Save button */
 button.save-button {
     background-color: #38803a;

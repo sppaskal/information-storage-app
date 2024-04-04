@@ -6,12 +6,19 @@ body {
     color: rgb(127, 127, 155);
 }
 
-h1 {
-    text-align: center;
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     background-color: #010114;
-    color: #ededf0;
     padding: 1em;
+}
+
+.header-container h1 {
+    width: 100%;
+    text-align: center !important;
     margin: 0;
+    color: #ededf0;
 }
 
 table {
