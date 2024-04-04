@@ -17,11 +17,11 @@ services:
       MYSQL_DATABASE: auth_db
       MYSQL_USER: sppaskal
       MYSQL_PASSWORD: mysqlpass
-      MYSQL_DEFAULT_AUTHENTICATION_PLUGIN: mysql_native_password
     ports:
       - "3307:3306"
     volumes:
       - ./db_dumps/auth_db.sql:/docker-entrypoint-initdb.d/auth_db.sql
+    command: --default-authentication-plugin=mysql_native_password
 
   mysql_account_information:
     image: mysql:8.0.34
@@ -31,11 +31,11 @@ services:
       MYSQL_DATABASE: account_information
       MYSQL_USER: sppaskal
       MYSQL_PASSWORD: mysqlpass
-      MYSQL_DEFAULT_AUTHENTICATION_PLUGIN: mysql_native_password
     ports:
       - "3308:3306"
     volumes:
       - ./db_dumps/account_information.sql:/docker-entrypoint-initdb.d/account_information.sql
+    command: --default-authentication-plugin=mysql_native_password
 
   django:
     build:
