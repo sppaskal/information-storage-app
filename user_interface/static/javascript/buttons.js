@@ -1,9 +1,7 @@
 import * as constants from './constants.js';
+import { deleteCookies } from './cookie_utils.js';
 import { findRowIndexById } from './accounts_utils.js';
-import { createInputPopup } from './popups.js';
-import { getCurrentAccountKey,
-        populateRowCells
-    } from './accounts_utils.js';
+import { populateRowCells } from './accounts_utils.js';
 
 
 export function createDeleteButton(document, ) {
@@ -34,6 +32,11 @@ export function createAddButton(document) {
 }
 
 // -------------------------------------------------------------------
+
+export function logoutAction(baseApiUrl) {
+    deleteCookies(['access_token', 'refresh_token']);
+    window.location.href = `${baseApiUrl}user-interface/login/`;
+}
 
 export function deleteAction(accountId, baseApiUrl, accessToken) {
     // Add confirmation popup

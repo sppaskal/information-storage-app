@@ -4,6 +4,7 @@ import { getCookie } from './cookie_utils.js';
 import { createDeleteButton,
         createSaveButton,
         createAddButton,
+        logoutAction,
         deleteAction,
         saveAction,
         addAction
@@ -101,7 +102,17 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
     }
 
-    // ---------------------------------------------------------------
+    // Add functionality to logout button
+    console.log("test");
+    var logoutButton = document.getElementById('logout-button');
+    console.log(logoutButton); // Check if logoutButton is found
+    if (logoutButton) {
+        logoutButton.addEventListener('click', function () {
+            logoutAction(baseApiUrl);
+        });
+    } else {
+        console.error('Logout button not found.');
+    }
 
     // Get account data
     fetch(`${baseApiUrl}accounts-api/accounts`, {
