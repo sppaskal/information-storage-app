@@ -23,6 +23,13 @@ export function setSecureCookie(name, value, days) {
     document.cookie = cookieString;
 }
 
+export function deleteCookies(names) {
+    // Clear existing cookies
+    names.forEach(name => {
+        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;`;
+    });
+}
+
 export function getCookie(name) {
     const cookieName = `${name}=`;
     const cookies = document.cookie.split(';');
