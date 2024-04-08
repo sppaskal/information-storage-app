@@ -8,15 +8,24 @@ function getBaseApiUrl() {
     return scriptTag ? scriptTag.getAttribute('base-api-url') : null;
 }
 
+function handleSuccessfulLogin(baseApiUrl, data) {
+    // Manage UI messages
+    document.getElementById('valid-credentials-message').style.display = 'none';
+    document.getElementById('login-success-message').style.display = 'block';
+
+    // Store tokens as cookies with an expiration time
+    setSecureCookie('access_token', data.access_token, 1);
+    setSecureCookie('refresh_token', data.refresh_token, 7);
+
+    window.location.href = `${baseApiUrl}user-interface/accounts/`;
+}
+
 // -------------------------------------------------------------------
 
 export function submitCredentials() {
     const baseApiUrl = getBaseApiUrl();
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
-
-    console.log(baseApiUrl)
-    console.log(`${baseApiUrl}authentication/login-initial/`)
 
     // Make a POST request to API endpoint to validate username and password
     fetch(`${baseApiUrl}authentication/login-initial/`, {
@@ -40,6 +49,14 @@ export function submitCredentials() {
         document.getElementById('valid-credentials-message').style.display = 'block';
         document.getElementById('access-code-container').style.display = 'block';
         document.getElementById('validate-button').style.display = 'block';
+
+        // Parse JSON response
+        return response.json();
+    })
+    .then(data => {
+        if (data.demo_mode) { // Bypass multifactor auth
+            handleSuccessfulLogin(baseApiUrl, data)
+        }
     })
     .catch(error => {
         document.getElementById('valid-credentials-message').style.display = 'none';
@@ -84,15 +101,7 @@ export function submitLogin() {
         return response.json();
     })
     .then(data => {
-        // Handle successful login
-        document.getElementById('valid-credentials-message').style.display = 'none';
-        document.getElementById('login-success-message').style.display = 'block';
-
-        // Store tokens as cookies with an expiration time
-        setSecureCookie('access_token', data.access_token, 1);
-        setSecureCookie('refresh_token', data.refresh_token, 7);
-
-        window.location.href = `${baseApiUrl}user-interface/accounts/`;
+        handleSuccessfulLogin(baseApiUrl, data)
     })
     .catch(error => {
         // Display error message
