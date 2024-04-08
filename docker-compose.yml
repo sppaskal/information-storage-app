@@ -10,7 +10,6 @@
 version: '3'
 services:
   mysql_auth_db:
-    image: mysql:8.0.34
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: mysqlpass
@@ -22,9 +21,9 @@ services:
     volumes:
       - ./db_dumps/auth_db.sql:/docker-entrypoint-initdb.d/auth_db.sql
     command: --default-authentication-plugin=mysql_native_password
+    image: mysql:8.0.34
 
   mysql_account_information:
-    image: mysql:8.0.34
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: mysqlpass
@@ -36,6 +35,7 @@ services:
     volumes:
       - ./db_dumps/account_information.sql:/docker-entrypoint-initdb.d/account_information.sql
     command: --default-authentication-plugin=mysql_native_password
+    image: mysql:8.0.34
 
   django:
     build:
@@ -45,6 +45,7 @@ services:
     volumes:
       - .:/app
     command: python manage.py runserver 0.0.0.0:8000
+    image: info-app-django:v1.0
 
 volumes:
   mysql_auth_db_data:
