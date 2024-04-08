@@ -25,14 +25,17 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# Disable in production
+DEMO_MODE = True
+
 if DEBUG:
     import mimetypes
     mimetypes.add_type("application/javascript", ".js", True)
 
 SECURE_SSL_REDIRECT = False  # Disable SSL redirect for development
 
+# Only allow secure hosts in production
 ALLOWED_HOSTS = ['*']
-# ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0']
 
 DEV_BASE_URL = 'http://127.0.0.1:8000/'
 
@@ -234,7 +237,7 @@ LOGGING = {
     },
 }
 
-# Email settings for Yahoo
+# Email settings for Gmail
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587  # Use 587 for TLS encryption
