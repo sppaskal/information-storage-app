@@ -1,6 +1,5 @@
 from django.urls import path
 from . import views
-from rest_framework_simplejwt.views import TokenObtainPairView
 
 app_name = 'authentication'
 
@@ -17,5 +16,9 @@ urlpatterns = [
     path(
         'login-final/', views.LoginFinal.as_view(),
         name='login-final'
+    ),
+    path(
+        'user/', views.UpdateUser.as_view(),
+        name='update_user'
     ),
 ]
