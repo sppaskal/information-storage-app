@@ -125,7 +125,7 @@ CREATE TABLE `auth_user` (
 
 LOCK TABLES `auth_user` WRITE;
 /*!40000 ALTER TABLE `auth_user` DISABLE KEYS */;
-INSERT INTO `auth_user` VALUES (1,'pbkdf2_sha256$600000$B7cinIiTKSWIweu4fmZexU$5aRcBRVPHIsLqpFRp06GdK7ZXQBAl8mQnV0azrSC+F4=','2023-09-28 05:31:17.000872',1,'sppaskal','','','paskalevs@yahoo.ca',1,1,'2023-09-28 05:04:17.832467');
+INSERT INTO `auth_user` VALUES (1,'pbkdf2_sha256$600000$9sSuw8Jvw4UVsROWubqHfL$dMX+XC751rj2aqkd3jJhEF5FxlrEGb1ttlIYBDN9+FM=','2023-09-28 05:31:17.000872',1,'Demo-User','Demo','User','paskalevs@yahoo.ca',1,1,'2023-09-28 05:04:17.832467');
 /*!40000 ALTER TABLE `auth_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -362,4 +362,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-03-29 16:40:38
+-- Dump completed on 2024-04-08 20:23:59
