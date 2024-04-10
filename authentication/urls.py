@@ -18,6 +18,10 @@ urlpatterns = [
         name='login-final'
     ),
     path(
+        'user/', views.CreateUser.as_view(),
+        name='create_user'
+    ),
+    path(
         'user/', views.UpdateUser.as_view(),
         name='update_user'
     ),

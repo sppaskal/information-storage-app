@@ -10,7 +10,10 @@ from .helpers.acces_code_helper import AccessCodeHelper
 from .helpers.user_helper import UserHelper
 from utils.other import Other
 from utils.notifications import Email
-from .serializers import AccessCodeSerializer
+from .serializers import (
+    AccessCodeSerializer,
+    UserSerializer
+)
 import json
 import logging
 
@@ -51,50 +54,50 @@ class LoginInitial(APIView):
                         },
                         status=status.HTTP_200_OK
                     )
+
+                access_code = AccessCodeHelper.get_access_code_instance_by_user_id(
+                    user_id=user.id
+                )
+                random_code = Other.random_integer(10000, 99999)
+                # update AccessCode entry with new code if it exists
+                if access_code is not None:
+                    access_code.code = random_code
+                    access_code.used = False
+                    access_code.save()
+                # create AccessCode entry for user if it doesn't exist
                 else:
-                    access_code = AccessCodeHelper.get_access_code_instance_by_user_id(
-                        user_id=user.id
-                    )
-                    random_code = Other.random_integer(10000, 99999)
-                    # update AccessCode entry with new code if it exists
-                    if access_code is not None:
-                        access_code.code = random_code
-                        access_code.used = False
-                        access_code.save()
-                    # create AccessCode entry for user if it doesn't exist
+                    access_code_data = {
+                        "user": user.id,
+                        "code": random_code
+                    }
+                    serializer = AccessCodeSerializer(data=access_code_data)
+
+                    if serializer.is_valid():
+                        serializer.save()
                     else:
-                        access_code_data = {
-                            "user": user.id,
-                            "code": random_code
-                        }
-                        serializer = AccessCodeSerializer(data=access_code_data)
-
-                        if serializer.is_valid():
-                            serializer.save()
-                        else:
-                            return Response(
-                                serializer.errors,
-                                status=status.HTTP_400_BAD_REQUEST
-                            )
-
-                    # email code to user
-                    email_response = Email.send_email(
-                        title="Your Information Storage App Access Code",
-                        message="Your access code is: " + str(random_code),
-                        recipients=[user.email]
-                    )
-
-                    if not email_response.get("sent"):
-                        logger.error(email_response.get("error"))
                         return Response(
-                            data=email_response.get("error"),
+                            serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST
                         )
 
+                # email code to user
+                email_response = Email.send_email(
+                    title="Your Information Storage App Access Code",
+                    message="Your access code is: " + str(random_code),
+                    recipients=[user.email]
+                )
+
+                if not email_response.get("sent"):
+                    logger.error(email_response.get("error"))
                     return Response(
-                            {"demo_mode": settings.DEMO_MODE},
-                            status=status.HTTP_200_OK
-                        )
+                        data=email_response.get("error"),
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+
+                return Response(
+                        {"demo_mode": settings.DEMO_MODE},
+                        status=status.HTTP_200_OK
+                    )
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
         except Exception as e:
@@ -156,6 +159,32 @@ class LoginFinal(APIView):
                 {"error": error_msg},
                 status=status.HTTP_401_UNAUTHORIZED
             )
+        except Exception as e:
+            logger.error(str(e))
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+# -------------------------------------------------------------------------------
+
+
+class CreateUser(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        try:
+            serializer = UserSerializer(data=request.data)
+            if serializer.is_valid():
+                # If username and email are unique -> Create user
+                UserHelper.create_user(serializer.validated_data)
+                return Response(status=status.HTTP_201_CREATED)
+            else:
+                return Response(
+                    serializer.errors,
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
         except Exception as e:
             logger.error(str(e))
             return Response(
