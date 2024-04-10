@@ -74,6 +74,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // -------------------------------------------------------------------
 
+function singup() {
+    const baseApiUrl = getBaseApiUrl();
+    window.location.href = `${baseApiUrl}user-interface/signup/`;
+}
+
+// Add event listener to the singup button
+document.addEventListener('DOMContentLoaded', function() {
+    const singupButton = document.getElementById('signup-button');
+    singupButton.addEventListener('click', function() {
+        singup();
+    });
+});
+
+// -------------------------------------------------------------------
+
 export function submitLogin() {
     const baseApiUrl = getBaseApiUrl();
     const username = document.getElementById('username').value;

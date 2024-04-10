@@ -16,6 +16,17 @@ def login_view(request):
 # -------------------------------------------------------------------------------
 
 
+def singup_view(request):
+    return render(
+        request=request,
+        template_name='singup.html',
+        context={'base_api_url': base_url}
+
+    )
+
+# -------------------------------------------------------------------------------
+
+
 def accounts_view(request):
     return render(
         request=request,
