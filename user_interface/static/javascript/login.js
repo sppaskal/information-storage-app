@@ -10,14 +10,45 @@ function getBaseApiUrl() {
 
 function handleSuccessfulLogin(baseApiUrl, data) {
     // Manage UI messages
-    document.getElementById('valid-credentials-message').style.display = 'none';
-    document.getElementById('login-success-message').style.display = 'block';
+    showSuccess("Login successful!")
 
     // Store tokens as cookies with an expiration time
     setSecureCookie('access_token', data.access_token, 1);
     setSecureCookie('refresh_token', data.refresh_token, 7);
 
     window.location.href = `${baseApiUrl}user-interface/accounts/`;
+}
+
+function showValidationComponents() {
+    showSuccess("Credentials were valid. Check your email for your access code.")
+    document.getElementById('access-code-container').style.display = 'block';
+    document.getElementById('validate-button').style.display = 'inline';
+}
+
+function hideValidationComponents() {
+    document.getElementById('success-message').style.display = 'none';
+    document.getElementById('access-code-container').style.display = 'none';
+    document.getElementById('validate-button').style.display = 'none';
+}
+
+function showSuccess(msg) {
+    hideError()
+    document.getElementById('success-message').textContent = msg;
+    document.getElementById('success-message').style.display = 'block';
+}
+
+function hideSuccess(msg) {
+    document.getElementById('success-message').style.display = 'none';
+}
+
+function showError(msg) {
+    hideSuccess()
+    document.getElementById('error-message').textContent = msg;
+    document.getElementById('error-message').style.display = 'block';
+}
+
+function hideError() {
+    document.getElementById('error-message').style.display = 'none';
 }
 
 // -------------------------------------------------------------------
@@ -43,12 +74,7 @@ export function submitCredentials() {
             throw new Error('Invalid username or password');
         }
 
-        // Show the access code input box and validate button
-        document.getElementById('error-message').style.display = 'none'
-        document.getElementById('login-button').style.display = 'none'
-        document.getElementById('valid-credentials-message').style.display = 'block';
-        document.getElementById('access-code-container').style.display = 'block';
-        document.getElementById('validate-button').style.display = 'block';
+        showValidationComponents()
 
         // Parse JSON response
         return response.json();
@@ -59,8 +85,8 @@ export function submitCredentials() {
         }
     })
     .catch(error => {
-        document.getElementById('valid-credentials-message').style.display = 'none';
-        document.getElementById('error-message').textContent = error.message;
+        hideValidationComponents()
+        showError(error.message)
     });
 }
 
@@ -119,8 +145,7 @@ export function submitLogin() {
         handleSuccessfulLogin(baseApiUrl, data)
     })
     .catch(error => {
-        // Display error message
-        document.getElementById('error-message').textContent = error.message;
+        showError(error.message)
     });
 }
 
