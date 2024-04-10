@@ -1,5 +1,5 @@
 import * as constants from './constants.js';
-import { createInputPopup } from './popups.js';
+import { createInputPopup } from './accounts_popups.js';
 
 
 export function getCurrentAccountKey(clickedCell, account) {

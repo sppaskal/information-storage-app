@@ -8,7 +8,7 @@ import { createDeleteButton,
         deleteAction,
         saveAction,
         addAction
-    } from './buttons.js';
+    } from './accounts_buttons.js';
 
 // -------------------------------------------------------------------
 
