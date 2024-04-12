@@ -3,6 +3,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.response import Response
 from rest_framework import status
+from django.forms.models import model_to_dict
 from ..helpers.user_helper import UserHelper
 from ..serializers import (
     UserSerializer
@@ -47,19 +48,24 @@ class UpdateUser(APIView):
 
     def put(self, request):
         try:
-            user = request.user
-            data = json.loads(request.body)
-
             # update the user object
             updated_user = UserHelper.update_user(
-                user_obj=user,
-                update_data=data
+                user_obj=request.user,
+                update_data=json.loads(request.body)
             )
 
-            # save the updated user object into the db
-            updated_user.save()
+            # check for validity
+            serializer = UserSerializer(data=model_to_dict(updated_user))
+            if serializer.is_valid():
+                # save the updated user object into the db
+                updated_user.save()
+                return Response(status=status.HTTP_200_OK)
+            else:
+                return Response(
+                    serializer.errors,
+                    status=status.HTTP_400_BAD_REQUEST
+                )
 
-            return Response(status=status.HTTP_200_OK)
         except Exception as e:
             logger.error(str(e))
             return Response(

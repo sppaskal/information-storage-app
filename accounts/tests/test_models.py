@@ -9,7 +9,7 @@ from ..models import (
 # NOTE: To run all test modules: python manage.py run_accounts_tests
 
 
-class ModelTest(TestCase):
+class ModelTests(TestCase):
     databases = "__all__"
     fixtures = [
         "accounts/tests/fixtures/types.json",

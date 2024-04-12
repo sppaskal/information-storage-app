@@ -1,0 +1,13 @@
+[
+  {
+    "model": "authentication.AccessCode",
+    "pk": 1,
+    "fields": {
+      "code": "12345",
+      "used": 0,
+      "user": 1,
+      "date_created": "2023-10-03T18:08:42.569391Z",
+      "date_updated": "2023-10-20T23:40:01.720727Z"
+    }
+  }
+]
