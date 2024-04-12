@@ -10,7 +10,7 @@ from ..helpers.account_helper import AccountHelper
 # NOTE: To run all test modules: python manage.py run_accounts_tests
 
 
-class AccountViewTest(APITestCase):
+class ViewTests(APITestCase):
     databases = "__all__"
     fixtures = [
         "accounts/tests/fixtures/types.json",
