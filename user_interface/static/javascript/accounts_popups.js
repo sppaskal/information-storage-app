@@ -66,23 +66,7 @@ function createTypeOptionsPopup(baseApiUrl, accessToken, cell) {
             const id = selectedOption.dataset.id;
             // Store the id in a custom attribute of the cell
             cell.setAttribute('data-id', id);
-            // Remove the select from the DOM
-            document.body.removeChild(select);
         });
-
-        // Add event listener to handle clicks outside the dropdown
-        const closePopup = function (event) {
-            if (!select.contains(event.target)) {
-                document.removeEventListener('click', closePopup);
-                // Check if the select is still a child before removing
-                if (document.body.contains(select)) {
-                    document.body.removeChild(select);
-                }
-            }
-        };
-
-        // Add event listener to handle clicks outside the dropdown
-        document.addEventListener('click', closePopup);
     })
     .catch(error => {
         console.error('Error fetching options:', error);
