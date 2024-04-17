@@ -40,29 +40,17 @@ export function populateRowCells(row, account, baseApiUrl, accessToken, empty=fa
                 cell.textContent = account[key];
             }
             cell.setAttribute('header', key);
-
             if (constants.editableAccountFields.includes(key)) {
-                // Add popup for column when page loads
-                if (constants.popupOnLoadFields.includes(key)) {
-                    createInputPopup(
-                        baseApiUrl,
-                        accessToken,
-                        cell,
-                        getCurrentAccountKey(cell, account)
-                    );
-                // For other cells, attach a click event listener
-                } else {
-                    cell.addEventListener('click', function (clickedCell) {
-                        return function () {
-                            createInputPopup(
-                                baseApiUrl,
-                                accessToken,
-                                clickedCell,
-                                getCurrentAccountKey(clickedCell, account)
-                            );
-                        };
-                    }(cell));
-                }
+                cell.addEventListener('click', function (clickedCell) {
+                    return function () {
+                        createInputPopup(
+                            baseApiUrl,
+                            accessToken,
+                            clickedCell,
+                            getCurrentAccountKey(clickedCell, account)
+                        );
+                    };
+                }(cell));
             }
         }
     }

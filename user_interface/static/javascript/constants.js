@@ -21,13 +21,7 @@ const editableAccountFields = [
     'description'
 ]
 
-// Fields that need a popup on page load
-const popupOnLoadFields = [
-    'type_name'
-]
-
 export {
     viewableAccountFields,
-    editableAccountFields,
-    popupOnLoadFields
+    editableAccountFields
 };
