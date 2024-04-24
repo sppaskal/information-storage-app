@@ -6,7 +6,7 @@ Running with Docker:
 2. Run Docker
 3. Clone Information-Storage-App repo locally
 4. Open a terminal in the root dir of the project
-5. Execute the command: docker-compose build (Alternatively you can pull the images from Docker Hub: https://hub.docker.com/r/slavoid/information-storage-app)
+5. Execute the command: docker-compose build (Alternatively you can pull the latest Django server and MySQL images from Docker Hub: https://hub.docker.com/r/slavoid/information-storage-app)
 6. Execute the command: docker-compose up
 7. The server should now be up
 8. Open a browser and go to: http://127.0.0.1:8000/user-interface/login/
