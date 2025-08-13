@@ -1,12 +1,3 @@
-# Comments are provided throughout this file to help you get started.
-# If you need more help, visit the Docker compose reference guide at
-# https://docs.docker.com/compose/compose-file/
-
-# Here the instructions define your application as a service called "server".
-# This service is built from the Dockerfile in the current directory.
-# You can add other services your application may depend on here, such as a
-# database or a cache. For examples, see the Awesome Compose repository:
-# https://github.com/docker/awesome-compose
 version: '3'
 services:
   mysql_auth_db:
@@ -20,6 +11,7 @@ services:
       - "3307:3306"
     volumes:
       - ./db_dumps/auth_db.sql:/docker-entrypoint-initdb.d/auth_db.sql
+      - mysql_auth_db_data:/var/lib/mysql
     command: --default-authentication-plugin=mysql_native_password
     image: mysql:8.0.34
 
@@ -34,18 +26,31 @@ services:
       - "3308:3306"
     volumes:
       - ./db_dumps/account_information.sql:/docker-entrypoint-initdb.d/account_information.sql
+      - mysql_account_information_data:/var/lib/mysql
     command: --default-authentication-plugin=mysql_native_password
     image: mysql:8.0.34
 
   django:
-    build:
-      context: .
+    image: slavoid/information-storage-app:latest
     ports:
       - 8000:8000
     volumes:
       - .:/app
     command: python manage.py runserver 0.0.0.0:8000
-    image: info-app-django:v1.0
+    depends_on:
+      - mysql_auth_db
+      - mysql_account_information
+    environment:
+      - SECRET_KEY=k7vh_p+pe_oe^*&6^er(n0twv8rdx34-%1xqhg&2zs%_g_(owf
+      - CRYPTOGRAPHY_KEY=k1fg_p+pe_oe^*&9^er(n0twv8rdx34-%7xqhg&3pp%_g_(axf
+      - EMAIL_HOST_PASSWORD=fbtw veyw gjfa sdfw
+      - DB_PASSWORD=mysqlpass
+      - DB_HOST_AUTH=mysql_auth_db
+      - DB_HOST_ACCOUNT=mysql_account_information
+      - DB_USER=sppaskal
+      - DB_NAME_AUTH=auth_db
+      - DB_NAME_ACCOUNT=account_information
+      - DB_PORT=3306
 
 volumes:
   mysql_auth_db_data:
