@@ -1,0 +1,66 @@
+# *** FOR DEVELOPMENT USE ONLY ***
+# Build new image: docker-compose -f docker-compose-dev.yml build
+# Start the service: docker-compose -f docker-compose-dev.yml up -d
+# Apply migrations (if needed): docker-compose -f docker-compose-dev.yml exec django python manage.py migrate
+# Stop dev environment: docker-compose -f docker-compose-dev.yml down
+
+version: '3'
+services:
+  mysql_auth_db:
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: mysqlpass
+      MYSQL_DATABASE: auth_db
+      MYSQL_USER: sppaskal
+      MYSQL_PASSWORD: mysqlpass
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./db_dumps/auth_db.sql:/docker-entrypoint-initdb.d/auth_db.sql
+      - mysql_auth_db_data:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password
+    image: mysql:8.0.34
+
+  mysql_account_information:
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: mysqlpass
+      MYSQL_DATABASE: account_information
+      MYSQL_USER: sppaskal
+      MYSQL_PASSWORD: mysqlpass
+    ports:
+      - "3308:3306"
+    volumes:
+      - ./db_dumps/account_information.sql:/docker-entrypoint-initdb.d/account_information.sql
+      - mysql_account_information_data:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password
+    image: mysql:8.0.34
+
+  django:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: slavoid/information-storage-app:dev
+    ports:
+      - 8000:8000
+    volumes:
+      - .:/app
+    command: python manage.py runserver 0.0.0.0:8000
+    depends_on:
+      - mysql_auth_db
+      - mysql_account_information
+    environment:
+      - SECRET_KEY=k7vh_p+pe_oe^*&6^er(n0twv8rdx34-%1xqhg&2zs%_g_(owf
+      - CRYPTOGRAPHY_KEY=k1fg_p+pe_oe^*&9^er(n0twv8rdx34-%7xqhg&3pp%_g_(axf
+      - EMAIL_HOST_PASSWORD=fbtw veyw gjfa sdfw
+      - DB_PASSWORD=mysqlpass
+      - DB_HOST_AUTH=mysql_auth_db
+      - DB_HOST_ACCOUNT=mysql_account_information
+      - DB_USER=sppaskal
+      - DB_NAME_AUTH=auth_db
+      - DB_NAME_ACCOUNT=account_information
+      - DB_PORT=3306
+
+volumes:
+  mysql_auth_db_data:
+  mysql_account_information_data:
