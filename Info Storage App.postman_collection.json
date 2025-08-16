@@ -1,0 +1,179 @@
+{
+	"info": {
+		"_postman_id": "7ca0a1f4-74ee-4bb6-8ea3-06ca3ac000fa",
+		"name": "Info Storage App",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "15171022"
+	},
+	"item": [
+		{
+			"name": "Auth / User",
+			"item": [
+				{
+					"name": "login initial",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"Demo-User\",\r\n    \"password\": \"demo12345\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}authentication/login-initial/",
+							"host": [
+								"{{host}}authentication"
+							],
+							"path": [
+								"login-initial",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login final",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"Demo-User\",\r\n    \"password\": \"demo12345\",\r\n    \"access_code\": \"123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}authentication/login-final/",
+							"host": [
+								"{{host}}authentication"
+							],
+							"path": [
+								"login-final",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"Demo-User-2\",\r\n    \"password\": \"demo12345\",\r\n    \"email\": \"demo_user_2@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}authentication/user/",
+							"host": [
+								"{{host}}authentication"
+							],
+							"path": [
+								"user",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"Demo-User-2\",\r\n    \"password\": \"demo12345\",\r\n    \"email\": \"demo_user_2@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}authentication/user/",
+							"host": [
+								"{{host}}authentication"
+							],
+							"path": [
+								"user",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Account",
+			"item": [
+				{
+					"name": "account",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"test@yahoo.com\",\r\n    \"username\": \"test-user\",\r\n    \"password\": \"test123\",\r\n    \"company\": \"Yahoo\",\r\n    \"website\": \"https://www.yahoo.com\",\r\n    \"description\": \"An email account\",\r\n    \"type\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}accounts-api/accounts/",
+							"host": [
+								"{{host}}accounts-api"
+							],
+							"path": [
+								"accounts",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "connection test",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}authentication/connection-test/",
+					"host": [
+						"{{host}}authentication"
+					],
+					"path": [
+						"connection-test",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
