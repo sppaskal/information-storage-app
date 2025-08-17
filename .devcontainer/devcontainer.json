@@ -1,0 +1,10 @@
+// tells vscode where to install its server
+// when linking to a docker container
+
+{
+  "name": "Django Dev",
+  "dockerComposeFile": "../docker-compose-dev.yml",
+  "service": "django",
+  "workspaceFolder": "/app",
+  "remoteUser": "appuser"
+}
