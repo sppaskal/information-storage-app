@@ -11,6 +11,7 @@ services:
       - "3307:3306"
     volumes:
       - ./db_dumps/auth_db.sql:/docker-entrypoint-initdb.d/auth_db.sql
+      - ./db_dumps/grants.sql:/docker-entrypoint-initdb.d/grants.sql
       - mysql_auth_db_data:/var/lib/mysql
     command: --default-authentication-plugin=mysql_native_password
     image: mysql:8.0.34
@@ -26,6 +27,7 @@ services:
       - "3308:3306"
     volumes:
       - ./db_dumps/account_information.sql:/docker-entrypoint-initdb.d/account_information.sql
+      - ./db_dumps/grants.sql:/docker-entrypoint-initdb.d/grants.sql
       - mysql_account_information_data:/var/lib/mysql
     command: --default-authentication-plugin=mysql_native_password
     image: mysql:8.0.34
