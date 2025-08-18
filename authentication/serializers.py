@@ -12,6 +12,8 @@ class AccessCodeSerializer(serializers.ModelSerializer):
         model = AccessCode
         fields = '__all__'
 
+# -------------------------------------------------------------------
+
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -27,3 +29,23 @@ class UserSerializer(serializers.ModelSerializer):
             )
 
         return attrs
+
+
+class UserUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['email', 'password']
+        extra_kwargs = {
+            'password': {'write_only': True}
+        }
+
+    def validate_email(self, value):
+        user = self.instance
+        if User.objects.filter(email=value).exclude(pk=user.pk).exists():
+            raise serializers.ValidationError("A user with that email already exists.")
+        return value
+
+    def update(self, instance, validated_data):
+        if 'password' in validated_data:
+            instance.set_password(validated_data.pop('password'))
+        return super().update(instance, validated_data)

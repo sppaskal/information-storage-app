@@ -1,11 +1,15 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 from .views import (
     test_views,
     authentication_views,
-    user_views,
+    user_views
 )
 
 app_name = 'authentication'
+
+router = DefaultRouter()
+router.register(r'user', user_views.UserViewSet, basename='user')
 
 urlpatterns = [
     path(
@@ -14,19 +18,14 @@ urlpatterns = [
         name='test_connection'
     ),
     path(
-        'login-initial/', authentication_views.LoginInitial.as_view(),
+        'login-initial/',
+        authentication_views.LoginInitial.as_view(),
         name='login-initial'
     ),
     path(
-        'login-final/', authentication_views.LoginFinal.as_view(),
+        'login-final/',
+        authentication_views.LoginFinal.as_view(),
         name='login-final'
     ),
-    path(
-        'user/', user_views.CreateUser.as_view(),
-        name='create_user'
-    ),
-    path(
-        'user/update/', user_views.UpdateUser.as_view(),
-        name='update_user'
-    ),
+    path('', include(router.urls)),
 ]
