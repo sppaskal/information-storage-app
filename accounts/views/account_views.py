@@ -1,251 +1,174 @@
-from rest_framework.views import APIView
-from rest_framework import generics
-from rest_framework_simplejwt.authentication import JWTAuthentication
-from rest_framework.permissions import IsAuthenticated
+# Django REST Framework imports for building API views
+from rest_framework import viewsets, status
 from rest_framework.response import Response
-from rest_framework import status
-from rest_framework.exceptions import ValidationError
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.decorators import action
+from django.shortcuts import get_object_or_404
+
+# Local imports for models, serializers, helpers, and caching
+from ..models import Account
+from ..serializers import AccountSerializer, AccountUpdateSerializer
 from ..helpers.account_helper import AccountHelper
 from utils.caching import Caching
-from ..serializers import (
-    AccountSerializer,
-    AccountUpdateSerializer,
-)
-import logging
 
+# Logger setup for error tracking
+import logging
 logger = logging.getLogger(__name__)
 
-# -------------------------------------------------------------------------------
+# ViewSet for managing Account-related API endpoints
+class AccountViewSet(viewsets.ModelViewSet):
+    # Base queryset for all account operations
+    queryset = Account.objects.all()
 
-
-class AddAccount(APIView):
+    # JWT-based authentication and permission enforcement
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
-    def post(self, request):
+    # Default serializer used unless overridden
+    serializer_class = AccountSerializer
+
+    # Use 'id' field for object lookup in path-based endpoints
+    lookup_field = 'id'
+
+    # Dynamically select serializer based on action
+    def get_serializer_class(self):
+        if self.action in ['update', 'partial_update']:
+            return AccountUpdateSerializer
+        return AccountSerializer
+
+    # GET /accounts/ — List all accounts, with caching
+    def list(self, request):
         try:
-            # Deserialize and validate the incoming data
-            serializer = AccountSerializer(data=request.data)
-            if serializer.is_valid():
-                serializer.save()
+            cache_key = "accounts"
+            cached_data = Caching.get_cache_value(cache_key)
+            if cached_data:
+                return Response(cached_data)
 
-                Caching.delete_cache_value("accounts")
-
-                return Response(
-                    {
-                        "message": "Added Account",
-                        "account": serializer.data
-                    },
-                    status=status.HTTP_201_CREATED
-                )
-
-            else:
-                logger.error(str(serializer.errors))
-                return Response(
-                    {"error": str(serializer.errors)},
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-
+            queryset = self.get_queryset()
+            serializer = self.get_serializer(queryset, many=True)
+            Caching.set_cache_value(cache_key, serializer.data)
+            return Response(serializer.data)
         except Exception as e:
-            logger.error(str(e))
+            logger.error(f"Error listing accounts: {str(e)}")
             return Response(
                 {"error": str(e)},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
-# -------------------------------------------------------------------------------
-
-
-class ManageAccount(generics.UpdateAPIView, generics.DestroyAPIView):
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
-
-    serializer_class = AccountUpdateSerializer
-    lookup_field = 'id'
-
-    def get_queryset(self):
-        account_id = self.kwargs.get('id')
-        return AccountHelper.get_account_qs_by_id(account_id)
-
-    def update(self, request, *args, **kwargs):
+    # POST /accounts/ — Create a new account
+    def create(self, request):
         try:
-            partial = kwargs.pop('partial', False)
-            instance = self.get_object()
-            serializer = self.get_serializer(
-                instance,
-                data=request.data,
-                partial=partial
-            )
+            serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
-            self.perform_update(serializer)
-
+            serializer.save()
             Caching.delete_cache_value("accounts")
-
             return Response(
-                {
-                    "message": "Updated Account",
-                    "account": serializer.data
-                },
-                status=status.HTTP_200_OK
+                {"message": "Added Account", "account": serializer.data},
+                status=status.HTTP_201_CREATED
             )
-
-        except ValidationError as e:
-            logger.error(str(e))
+        except Exception as e:
+            logger.error(f"Error creating account: {str(e)}")
             return Response(
                 {"error": str(e)},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        except Exception as e:
-            logger.error(str(e))
-            return Response(
-                {"error": str(e)},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
-
-    def destroy(self, request, *args, **kwargs):
+    # PUT/PATCH /accounts/{id}/ — Update an existing account
+    def update(self, request, *args, **kwargs):
         try:
-            instance = self.get_object()
-            account_email = instance.email
-            self.perform_destroy(instance)
+            account_id = kwargs.get('id')
+            account = get_object_or_404(self.get_queryset(), id=account_id)
+            serializer = AccountUpdateSerializer(
+                account,
+                data=request.data,
+                partial=(request.method == 'PATCH')
+            )
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
 
             Caching.delete_cache_value("accounts")
-
             return Response(
-                {
-                    "message": "Deleted Account: " + str(account_email),
-                },
+                {"message": "Updated Account", "account": serializer.data}
+            )
+        except Exception as e:
+            logger.error(f"Error updating account '{account_id}': {str(e)}")
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+    # DELETE /accounts/{id}/ — Delete an account
+    def destroy(self, request, *args, **kwargs):
+        try:
+            account_id = kwargs.get('id')
+            account = get_object_or_404(self.get_queryset(), id=account_id)
+            email = account.email
+            account.delete()
+
+            Caching.delete_cache_value("accounts")
+            return Response(
+                {"message": f"Deleted Account: {email}"},
                 status=status.HTTP_204_NO_CONTENT
             )
-
         except Exception as e:
-            logger.error(str(e))
+            logger.error(f"Error deleting account '{account_id}': {str(e)}")
             return Response(
                 {"error": str(e)},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                status=status.HTTP_400_BAD_REQUEST
             )
 
-# -------------------------------------------------------------------------------
-
-
-class ListAccounts(APIView):
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request):
+    # GET /accounts/{id}/ — Retrieve a single account, with optional cache lookup
+    def retrieve(self, request, *args, **kwargs):
         try:
-            # Check cache
+            account_id = kwargs.get('id')
             cache_key = "accounts"
             cached_data = Caching.get_cache_value(cache_key)
-            if cached_data is not None:
-                return Response(
+
+            if cached_data:
+                filtered = AccountHelper.filter_accounts_by_id(
                     cached_data,
-                    status=status.HTTP_200_OK
+                    account_id
                 )
+                return Response(filtered)
 
-            # If no cache then pull and process from db
-            accounts = AccountHelper.select_related_fields(
-                AccountHelper.get_all_accounts()
-            )
-            serializer = AccountSerializer(
-                accounts,
-                many=True,
-            )
-            Caching.set_cache_value(
-                key=cache_key,
-                value=serializer.data
-            )
-
-            return Response(
-                serializer.data,
-                status=status.HTTP_200_OK
-            )
+            account = get_object_or_404(self.get_queryset(), id=account_id)
+            serializer = self.get_serializer(account)
+            return Response(serializer.data)
 
         except Exception as e:
-            logger.error(str(e))
+            logger.error(f"Error retrieving account '{account_id}': {str(e)}")
             return Response(
                 {"error": str(e)},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                status=status.HTTP_400_BAD_REQUEST
             )
 
-# -------------------------------------------------------------------------------
-
-
-class ListAccountsByEmail(APIView):
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request, email):
+    # GET /accounts/by-email/?email=... — Filter accounts by email
+    @action(detail=False, methods=['get'], url_path='by-email')
+    def by_email(self, request):
         try:
-            # Check cache
+            email = request.query_params.get('email')
+            if not email:
+                return Response(
+                    {"error": "Missing 'email' query parameter"},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
             cache_key = "accounts"
             cached_data = Caching.get_cache_value(cache_key)
-            if cached_data is not None:
-                return Response(
-                    AccountHelper.filter_accounts_by_email(
-                        data=cached_data,
-                        email=email
-                    ),
-                    status=status.HTTP_200_OK
+            if cached_data:
+                filtered = AccountHelper.filter_accounts_by_email(
+                    cached_data,
+                    email
                 )
+                return Response(filtered)
 
-            accounts = AccountHelper.select_related_fields(
-                AccountHelper.get_account_qs_by_email(email)
-            )
-            serializer = AccountSerializer(
-                accounts,
-                many=True,
-            )
-
-            return Response(
-                serializer.data,
-                status=status.HTTP_200_OK
-            )
-
+            queryset = self.get_queryset().filter(email=email)
+            serializer = self.get_serializer(queryset, many=True)
+            return Response(serializer.data)
         except Exception as e:
-            logger.error(str(e))
+            logger.error(f"Error fetching account by email '{email}': {str(e)}")
             return Response(
                 {"error": str(e)},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
-
-# -------------------------------------------------------------------------------
-
-
-class GetAccountByID(APIView):
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request, account_id):
-        try:
-            # Check cache
-            cache_key = "accounts"
-            cached_data = Caching.get_cache_value(cache_key)
-            if cached_data is not None:
-                return Response(
-                    AccountHelper.filter_accounts_by_id(
-                        data=cached_data,
-                        id=account_id
-                    ),
-                    status=status.HTTP_200_OK
-                )
-
-            accounts = AccountHelper.select_related_fields(
-                AccountHelper.get_account_qs_by_id(account_id)
-            )
-            serializer = AccountSerializer(
-                accounts,
-                many=True,
-            )
-
-            return Response(
-                serializer.data,
-                status=status.HTTP_200_OK
-            )
-
-        except Exception as e:
-            logger.error(str(e))
-            return Response(
-                {"error": str(e)},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                status=status.HTTP_400_BAD_REQUEST
             )

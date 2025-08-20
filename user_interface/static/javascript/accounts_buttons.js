@@ -4,7 +4,7 @@ import { findRowIndexById } from './accounts_utils.js';
 import { populateRowCells } from './accounts_utils.js';
 
 
-export function createDeleteButton(document, ) {
+export function createDeleteButton(document) {
     var deleteButton = document.createElement('button');
     deleteButton.className = 'delete-button';
     var deleteIcon = document.createElement('img');
