@@ -35,10 +35,10 @@ services:
   django:
     image: slavoid/information-storage-app:latest
     ports:
-      - 8000:8000
+      - 8500:8500
     volumes:
       - .:/app
-    command: python manage.py runserver 0.0.0.0:8000
+    command: python manage.py runserver 0.0.0.0:8500
     depends_on:
       - mysql_auth_db
       - mysql_account_information

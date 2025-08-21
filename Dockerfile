@@ -46,5 +46,5 @@ COPY . .
 # Switch to non-root user
 USER appuser
 
-# Expose Django's default port
-EXPOSE 8000
+# Expose Django's non-default port
+EXPOSE 8500
