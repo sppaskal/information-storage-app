@@ -44,7 +44,7 @@ This is a demo Django application showcasing a user authentication and data stor
    Ensure `mysql_auth_db`, `mysql_account_information`, and `django` are in the `Up` state.
 
 8. **Access the App**:
-   Open a browser and go to: [http://127.0.0.1:8000/user-interface/login/](http://127.0.0.1:8000/user-interface/login/).
+   Open a browser and go to: [http://127.0.0.1:8500/user-interface/login/](http://127.0.0.1:8500/user-interface/login/).
 
 9. **Log In**:
    Use the following credentials:
@@ -52,7 +52,7 @@ This is a demo Django application showcasing a user authentication and data stor
    - **Password**: `demo12345`
 
 ## Troubleshooting
-- **Port Conflicts**: If ports `8000`, `3307`, or `3308` are in use, stop conflicting services or edit `docker-compose.yml` to use different ports (e.g., `8001:8000`).
+- **Port Conflicts**: If ports `8500`, `3307`, or `3308` are in use, stop conflicting services or edit `docker-compose.yml` to use different ports (e.g., `8501:8500`).
 - **Database Issues**: If login fails, ensure `db_dumps/auth_db.sql` and `db_dumps/account_information.sql` are in the project root. To reseed the database:
   ```bash
   docker-compose down -v

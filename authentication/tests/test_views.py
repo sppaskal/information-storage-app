@@ -4,7 +4,6 @@ from django.conf import settings
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.urls import reverse
 from django.contrib.auth.models import User
-# import json
 
 # NOTE: Test command: python manage.py test authentication.tests.test_views
 # NOTE: To run all test modules: python manage.py run_authentication_tests
@@ -21,9 +20,19 @@ class ViewTests(APITestCase):
 
     def setUp(self):
         self.user = User.objects.get(username=self.username)
+
+        if not User.objects.filter(username="testuser3").exists():
+            User.objects.create_user(
+                username="testuser3",
+                email="test3@test.com",
+                password="irrelevant"
+            )
+
         refresh = RefreshToken.for_user(self.user)
         access_token = str(refresh.access_token)
-        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {access_token}")
+        self.client.credentials(
+            HTTP_AUTHORIZATION=f"Bearer {access_token}"
+        )
 
     # ----------------------------------------------------------------------------
 
@@ -84,7 +93,7 @@ class ViewTests(APITestCase):
     # ----------------------------------------------------------------------------
 
     def test_create_valid_user(self):
-        url = reverse("authentication:create_user")
+        url = reverse("authentication:user-list")
         username = "testuser2"
         email = "test2@test.com"
         password = self.password
@@ -103,7 +112,7 @@ class ViewTests(APITestCase):
         self.assertTrue(test_user.check_password(password))
 
     def test_create_invalid_username_user(self):
-        url = reverse("authentication:create_user")
+        url = reverse("authentication:user-list")
         username = "testuser"
         email = "test2@test.com"
         password = self.password
@@ -121,7 +130,7 @@ class ViewTests(APITestCase):
             response.data["username"][0])
 
     def test_create_invalid_email_user(self):
-        url = reverse("authentication:create_user")
+        url = reverse("authentication:user-list")
         username = "testuser2"
         email = "test@test.com"
         password = self.password
@@ -141,74 +150,49 @@ class ViewTests(APITestCase):
     # ----------------------------------------------------------------------------
 
     def test_valid_update_user(self):
-        url = reverse("authentication:update_user")
-        username = "testuser2"
+        url = "/authentication/user/me/"
         email = "test2@test.com"
         password = "newpassword"
         data = {
-             "username": username,
              "email": email,
              "password": password,
         }
 
-        response = self.client.put(url, data, format='json')
-        test_user = User.objects.get(pk=1)
+        response = self.client.patch(url, data, format='json')
+        self.user.refresh_from_db()
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(test_user.username, username)
-        self.assertEqual(test_user.email, email)
-        self.assertTrue(test_user.check_password(password))
-
-    def test_duplicate_username_update(self):
-        url = reverse("authentication:update_user")
-        username = "testuser3"
-        email = "test2@test.com"
-        password = "newpassword"
-        data = {
-             "username": username,
-             "email": email,
-             "password": password,
-        }
-
-        response = self.client.put(url, data, format='json')
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(
-                    "A user with that username already exists.",
-                    response.data["username"][0])
+        self.assertEqual(self.user.email, email)
+        self.assertTrue(self.user.check_password(password))
 
     def test_duplicate_email_update(self):
-        url = reverse("authentication:update_user")
-        username = "testuser2"
+        url = "/authentication/user/me/"
         email = "test3@test.com"
         password = "newpassword"
         data = {
-             "username": username,
              "email": email,
              "password": password,
         }
 
-        response = self.client.put(url, data, format='json')
+        response = self.client.patch(url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(
-                    "A user with that email already exists.",
-                    response.data["non_field_errors"][0])
+            "A user with that email already exists.",
+            response.data["email"][0])
 
     def test_invalid_email_update(self):
-        url = reverse("authentication:update_user")
-        username = "testuser2"
+        url = "/authentication/user/me/"
         email = "123"
         password = "newpassword"
         data = {
-             "username": username,
              "email": email,
              "password": password,
         }
 
-        response = self.client.put(url, data, format='json')
+        response = self.client.patch(url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(
-                    "Enter a valid email address.",
-                    response.data["email"][0])
+            "Enter a valid email address.",
+            response.data["email"][0])
