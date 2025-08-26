@@ -7,23 +7,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Account List</title>
     <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+    <link rel="stylesheet" href="{% static 'styles/tabulator.min.css' %}">
+    <script src="{% static 'javascript/tabulator.min.js' %}"></script>
     <script type="module" src="{% static 'javascript/accounts.js' %}" base-api-url="{{ base_api_url }}"></script>
 </head>
 <body>
-
-<div class="header-container">
-    <h1>Account List</h1>
-    <div>
-        <button id="logout-button" class="logout-button">Logout</button>
-    </div>
-</div>
-
-<table>
-    <thead>
-        <tr id="header-row"></tr>
-    </thead>
-    <tbody id="account-list"></tbody>
-</table>
-
+    <div id="accounts-table"></div>
+    <button id="logout-button">Logout</button>
 </body>
 </html>
