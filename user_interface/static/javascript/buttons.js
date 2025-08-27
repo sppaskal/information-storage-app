@@ -38,7 +38,7 @@ export function createAddButton() {
 // Handles the Delete action for a row
 export function deleteAction(id, baseApiUrl, accessToken, table, row) {
     if (id) {
-        fetch(`${baseApiUrl}accounts-api/accounts/${id}`, {
+        fetch(`${baseApiUrl}accounts-api/accounts/${id}/`, {
             method: 'DELETE',
             headers: {
                 'Authorization': 'Bearer ' + accessToken,
@@ -61,7 +61,7 @@ export function deleteAction(id, baseApiUrl, accessToken, table, row) {
 // Handles the Save action for a row (POST for new, PUT for existing)
 export function saveAction(data, baseApiUrl, accessToken, table, row, typeMap) {
     const method = data.id ? 'PUT' : 'POST';
-    const url = data.id ? `${baseApiUrl}accounts-api/accounts/${data.id}` : `${baseApiUrl}accounts-api/accounts`;
+    const url = data.id ? `${baseApiUrl}accounts-api/accounts/${data.id}/` : `${baseApiUrl}accounts-api/accounts/`;
     // Map type_name to type ID for API payload
     const payload = { ...data };
     if (typeMap && data.type_name) {
