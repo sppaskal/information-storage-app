@@ -20,6 +20,13 @@ function getBaseApiUrl() {
 // -------------------------------------------------------------------
 
 document.addEventListener('DOMContentLoaded', function () {
+    // Verify Luxon is loaded
+    if (typeof luxon === 'undefined') {
+        console.error('Luxon.js is not loaded. Datetime sorting will fail.');
+    } else {
+        console.log('Luxon.js loaded:', luxon.DateTime);
+    }
+
     const baseApiUrl = getBaseApiUrl();
     const accessToken = getCookie('access_token');
 
@@ -140,13 +147,17 @@ document.addEventListener('DOMContentLoaded', function () {
                 field: field,
                 editor: editorType,
                 sorter: field.includes('date') ? 'datetime' : 'string',
+                sorterParams: field.includes('date') ? {
+                    format: 'yyyy-MM-dd HH:mm:ss',  // Luxon format for your dates
+                    alignEmptyValues: 'top'  // Place empty dates at top
+                } : undefined,
                 headerFilter: !field.includes('date') && field !== 'description' && field !== 'password',
                 editorParams: field === 'type_name' ? {
                     values: typeNames,  // Simple array of strings
                     defaultValue: '',
-                    autocomplete: true,  // Enable type-ahead for easier selection
-                    listOnEmpty: true,  // Show dropdown even if cell is empty
-                    clearable: true  // Allow clearing the selection
+                    autocomplete: true,  // Enable type-ahead
+                    listOnEmpty: true,  // Show dropdown for empty cells
+                    clearable: true  // Allow clearing selection
                 } : undefined,
                 cellClick: field === 'type_name' ? function(e, cell) {
                     console.log('Clicked type_name cell:', cell.getValue(), 'with editorParams:', typeNames);
