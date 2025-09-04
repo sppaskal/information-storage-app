@@ -1,0 +1,32 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account List</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/accounts.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/buttons.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/popups.css' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+    <script type="module" src="{% static 'javascript/accounts.js' %}" base-api-url="{{ base_api_url }}"></script>
+</head>
+<body>
+
+<div class="header-container">
+    <h1>Account List</h1>
+    <div>
+        <button id="logout-button" class="logout-button">Logout</button>
+    </div>
+</div>
+
+<table>
+    <thead>
+        <tr id="header-row"></tr>
+    </thead>
+    <tbody id="account-list"></tbody>
+</table>
+
+</body>
+</html>

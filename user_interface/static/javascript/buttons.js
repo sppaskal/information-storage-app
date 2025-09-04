@@ -1,0 +1,104 @@
+import { deleteCookies } from './cookie_utils.js';
+
+// GENERIC BUTTON ACTIONS AND CREATORS
+
+// Handles logout action
+export function logoutAction(baseApiUrl) {
+    deleteCookies(['access_token', 'refresh_token']);
+    window.location.href = `${baseApiUrl}user-interface/login/`;
+}
+
+
+// ACCOUNT BUTTON ACTIONS AND CREATORS
+
+// Creates a Delete button for a table row
+export function createDeleteButton() {
+    const deleteBtn = document.createElement('button');
+    deleteBtn.textContent = 'Delete';
+    deleteBtn.className = 'delete-btn';
+    return deleteBtn;
+}
+
+// Creates a Save button for a table row
+export function createSaveButton() {
+    const saveBtn = document.createElement('button');
+    saveBtn.textContent = 'Save';
+    saveBtn.className = 'save-btn';
+    return saveBtn;
+}
+
+// Creates an Add New Account button
+export function createAddButton() {
+    const addButton = document.createElement('button');
+    addButton.textContent = 'Add New Account';
+    addButton.className = 'add-btn';
+    return addButton;
+}
+
+// Handles the Delete action for a row
+export function deleteAction(id, baseApiUrl, accessToken, table, row) {
+    if (id) {
+        fetch(`${baseApiUrl}accounts-api/accounts/${id}/`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': 'Bearer ' + accessToken,
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                row.delete();  // Remove row from Tabulator
+            } else {
+                console.error('Delete failed');
+            }
+        })
+        .catch(error => console.error('Error deleting account:', error));
+    } else {
+        row.delete();  // For new rows without id, remove locally
+    }
+}
+
+// Handles the Save action for a row (POST for new, PUT for existing)
+export function saveAction(data, baseApiUrl, accessToken, table, row, typeMap) {
+    const method = data.id ? 'PUT' : 'POST';
+    const url = data.id ? `${baseApiUrl}accounts-api/accounts/${data.id}/` : `${baseApiUrl}accounts-api/accounts/`;
+    // Map type_name to type ID for API payload
+    const payload = { ...data };
+    if (typeMap && data.type_name) {
+        const typeObj = typeMap.find(t => t.name === data.type_name);
+        payload.type = typeObj ? typeObj.id : null;  // Set type ID
+        delete payload.type_name;  // Remove type_name from payload
+    }
+    fetch(url, {
+        method: method,
+        headers: {
+            'Authorization': 'Bearer ' + accessToken,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Save failed');
+        }
+        return response.json();
+    })
+    .then(updatedData => {
+        // Map type ID back to type_name for display
+        if (typeMap && updatedData.type) {
+            const typeObj = typeMap.find(t => t.id === updatedData.type);
+            updatedData.type_name = typeObj ? typeObj.name : updatedData.type;
+        }
+        row.update(updatedData);  // Update row with server response
+    })
+    .catch(error => console.error('Error saving account:', error));
+}
+
+// Handles the Add action (adds a blank row to the table)
+export function addAction(table, viewableAccountFields) {
+    const newRowData = { id: null };
+    viewableAccountFields.forEach(field => {
+        newRowData[field] = (field === 'type' ? null : '');
+    });
+    table.addRow(newRowData);
+}

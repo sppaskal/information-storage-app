@@ -1,57 +1,128 @@
 import * as constants from './constants.js';
-import { createInputPopup } from './accounts_popups.js';
+import { getCookie } from './cookie_utils.js';
+import { createDeleteButton, createSaveButton, deleteAction, saveAction } from './buttons.js';
 
+// Fetches account types and accounts, maps type IDs to type_name
+export async function fetchData(baseApiUrl, accessToken) {
+  try {
+    const typesResponse = await fetch(`${baseApiUrl}accounts-api/types`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      credentials: 'same-origin',
+    });
+    if (!typesResponse.ok) {
+      throw new Error(`Types API error: ${typesResponse.status}`);
+    }
+    const typeMap = await typesResponse.json();
+    console.log('Fetched types:', typeMap); // Debug: Log types
 
-export function getCurrentAccountKey(clickedCell, account) {
-    // Determine the column index of the clicked cell
-    var columnIndex = Array.from(clickedCell.parentElement.cells)
-        .filter(cell => cell.cellIndex !== 0) // Exclude non-data cells
-        .indexOf(clickedCell);
-    // Get the corresponding keys from the headers (excluding non-data keys)
-    var keys = Object.keys(account)
-        .filter(key => constants.viewableAccountFields.includes(key));
-    // Get the current key (header) based on the columnIndex
-    return keys[columnIndex];
+    const accountsResponse = await fetch(`${baseApiUrl}accounts-api/accounts`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      credentials: 'same-origin',
+    });
+    if (!accountsResponse.ok) {
+      throw new Error(`Accounts API error: ${accountsResponse.status}`);
+    }
+    const accounts = await accountsResponse.json();
+    // Map type IDs to type_name for display
+    accounts.forEach(account => {
+      const typeObj = typeMap.find(t => t.id === account.type);
+      account.type_name = typeObj ? typeObj.name : account.type || 'Unknown';
+    });
+    console.log('Processed accounts:', accounts); // Debug: Log processed data
+    return { accounts, typeMap };
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    document.getElementId('accounts-table').innerHTML = 
+      '<p>Error loading accounts or types. Please try again later.</p>';
+    return null;
+  }
 }
 
-export function findRowIndexById(accountList, accountId) {
-    for (let i = 0; i < accountList.rows.length; i++) {
-        const row = accountList.rows[i];
-        // Assuming the ID cell is at index 1. This should
-        // always be the case as id is always displayed
-        // first after action column.
-        const idCell = row.cells[1]; 
+// Generates Tabulator column definitions
+export function getTableColumns(baseApiUrl, accessToken, typeMap) {
+  const typeNames = typeMap.map(t => t.name);
+  console.log('Type names for dropdown:', typeNames); // Debug: Log dropdown values
 
-        if (idCell.textContent.trim() === accountId.toString()) {
-            return i;
+  const columns = [
+    {
+      title: 'Actions',
+      field: 'actions',
+      hozAlign: 'center',
+      minWidth: 160, // Increased to 160px to ensure both buttons fit
+      formatter: cell => {
+        const deleteBtn = createDeleteButton();
+        const saveBtn = createSaveButton();
+        const span = document.createElement('span');
+        span.style.padding = '0 3px'; // Maintain 3px spacing on each side
+        span.appendChild(deleteBtn);
+        span.appendChild(saveBtn);
+        // Check if element exists before logging
+        if (cell.getElement()) {
+          setTimeout(() => {
+            const style = window.getComputedStyle(cell.getElement());
+            console.log('Actions cell rendered, computed width:', style.width);
+          }, 0);
         }
-    }
-
-    return -1; // Return -1 if not found
-}
-
-// -------------------------------------------------------------------
-
-export function populateRowCells(row, account, baseApiUrl, accessToken, empty=false) {
-    for (var key in account) {
-        if (constants.viewableAccountFields.includes(key)) {
-            var cell = row.insertCell();
-            if (!(empty)) {
-                cell.textContent = account[key];
-            }
-            cell.setAttribute('header', key);
-            if (constants.editableAccountFields.includes(key)) {
-                cell.addEventListener('click', function (clickedCell) {
-                    return function () {
-                        createInputPopup(
-                            baseApiUrl,
-                            accessToken,
-                            clickedCell,
-                            getCurrentAccountKey(clickedCell, account)
-                        );
-                    };
-                }(cell));
-            }
+        return span;
+      },
+      cellClick: (e, cell) => {
+        const row = cell.getRow();
+        const data = row.getData();
+        const table = cell.getTable();
+        if (e.target.classList.contains('delete-btn')) {
+          deleteAction(data.id, baseApiUrl, accessToken, table, row);
+        } else if (e.target.classList.contains('save-btn')) {
+          saveAction(data, baseApiUrl, accessToken, table, row, typeMap);
         }
+      },
+    },
+    { title: 'ID', field: 'id', editor: false, sorter: 'number', minWidth: 80 },
+  ];
+
+  constants.viewableAccountFields.forEach(field => {
+    if (field === 'id') return; // Skip id (already added)
+    let editorType = false; // Default to non-editable
+    if (constants.editableAccountFields.includes(field)) {
+      if (field === 'type_name') {
+        editorType = 'list'; // Use list editor for dropdown
+      } else if (field === 'description') {
+        editorType = 'textarea';
+      } else {
+        editorType = 'input';
+      }
     }
+    columns.push({
+      title: field.charAt(0).toUpperCase() + field.slice(1).replace(/_/g, ' '),
+      field,
+      editor: editorType,
+      sorter: field.includes('date') ? 'datetime' : 'string',
+      sorterParams: field.includes('date') ? {
+        format: 'yyyy-MM-dd HH:mm:ss', // Luxon format
+        alignEmptyValues: 'top',
+      } : undefined,
+      headerFilter: !field.includes('date') && field !== 'description' && field !== 'password',
+      editorParams: field === 'type_name' ? {
+        values: typeNames,
+        defaultValue: '',
+        autocomplete: true,
+        listOnEmpty: true,
+        clearable: true,
+      } : undefined,
+      cellClick: field === 'type_name' ? (e, cell) => {
+        console.log('Clicked type_name cell:', cell.getValue(), 'with editorParams:', typeNames);
+      } : undefined,
+      minWidth: 100, // Minimum width for other columns
+    });
+  });
+
+  console.log('Tabulator columns:', columns); // Debug: Log column configuration
+  return columns;
 }

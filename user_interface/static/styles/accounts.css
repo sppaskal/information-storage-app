@@ -1,51 +1,119 @@
+/* Base page styles */
 body {
-    font-family: 'Helvetica', sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: rgb(21, 21, 31);
-    color: rgb(127, 127, 155);
+  margin: 0;
+  padding: 20px;
+  background-color: #f6f8fa;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: #333;
 }
 
-.header-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #010114;
-    padding: 1em;
+/* Table container with shadow and border */
+.tabulator {
+  background-color: white;
+  border: 1px solid #e1e4e8;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
-.header-container h1 {
-    width: 100%;
-    text-align: center !important;
-    margin: 0;
-    color: #ededf0;
+/* Header styling */
+.tabulator .tabulator-header {
+  background-color: #f6f8fa;
+  border-bottom: 1px solid #e1e4e8;
 }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
+.tabulator .tabulator-header .tabulator-col {
+  font-weight: 600;
+  color: #24292e;
+  padding: 10px 15px;
+  text-align: left;
 }
 
-th, td {
-    border: 1px solid #030314;
+/* Row styling with hover and alternation */
+.tabulator .tabulator-row {
+  border-bottom: 1px solid #e1e4e8;
+}
+
+.tabulator .tabulator-row:hover {
+  background-color: #f6f8fa;
+}
+
+.tabulator .tabulator-row:nth-child(even) {
+  background-color: #fff;
+}
+
+/* Cell styling for readability */
+.tabulator .tabulator-cell {
+  padding: 10px 15px;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden; /* Retain for ellipsis, but check if causing clipping */
+  text-overflow: ellipsis;
+}
+
+/* Actions column buttons */
+.tabulator .tabulator-cell[tabulator-field="actions"] {
+  padding: 10px;
+  text-align: center; /* Center the buttons naturally */
+}
+
+.tabulator .tabulator-cell[tabulator-field="actions"] button {
+  margin: 0; /* Rely on wrapper padding */
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.delete-btn {
+  background-color: #d73a49;
+  color: white;
+}
+
+.save-btn {
+  background-color: #2ea44f;
+  color: white;
+}
+
+.add-btn, #logout-button {
+  background-color: #0366d6;
+  color: white;
+}
+
+.delete-btn:hover {
+  background-color: #cb2431;
+}
+
+.save-btn:hover {
+  background-color: #22863a;
+}
+
+.add-btn:hover, #logout-button:hover {
+  background-color: #005cc5;
+}
+
+/* Footer styling */
+.tabulator .tabulator-footer {
+  background-color: #f6f8fa;
+  padding: 10px 15px;
+  font-size: 14px;
+  color: #24292e;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  body {
     padding: 10px;
-    text-align: left;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
+  }
 
-th {
-    background-color: #010114;
-    color: #ededf0;
-}
+  .tabulator .tabulator-cell {
+    font-size: 13px;
+    padding: 8px 10px;
+  }
 
-td {
-    max-width: 200px;
-    height: 40px;
-}
-
-tr:nth-child(even) {
-    background-color: #122129;
+  .tabulator .tabulator-cell[tabulator-field="actions"] button {
+    padding: 5px 10px;
+    font-size: 12px;
+  }
 }

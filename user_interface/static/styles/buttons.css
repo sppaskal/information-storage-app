@@ -1,61 +1,15 @@
-button {
-    border-radius: 50%;
-    padding: 5px;
-    margin-right: 10px;
+.delete-btn, .save-btn, .add-btn {
+    margin: 0 5px;
+    padding: 5px 10px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
-    width: 40px;
-    height: 40px;
-    border: 2px solid white;
-}
-
-.button-cell {
-    text-align: center;
-}
-
-/* Styles for Logout button */
-button.logout-button {
-    background-color: #12315c;
-    border-radius: 5px; /* Adjust the border-radius to control the roundness of the edges */
-    padding: 5px 10px; /* Adjust the padding to fit the text properly */
-    margin-right: 10px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    border: 2px solid rgb(255, 255, 255); /* Add border */
-    color: white; /* Add text color */
-    width: auto; /* Adjust width dynamically to fit content */
-}
-
-button.logout-button:hover {
-    background-color: #2154ba;
-}
-
-/* Styles for Save button */
-button.save-button {
-    background-color: #38803a;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
     color: white;
 }
-
-button.save-button:hover {
-    background-color: #4eb353;
+.delete-btn {
+    background-color: #dc3545;
 }
-
-/* Styles for Delete button */
-button.delete-button {
-    background-color: #9e2e26;
-    color: white;
-}
-
-button.delete-button:hover {
-    background-color: #e23434;
-}
-
-/* Styles for Add button */
-button.add-button {
-    background-color: #7e71f3;
-    color: white;
-}
-
-button.add-button:hover {
-    background-color: #a8b0fa;
+.delete-btn:hover, .save-btn:hover, .add-btn:hover {
+    opacity: 0.8;
 }
