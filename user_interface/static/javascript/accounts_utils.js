@@ -57,8 +57,8 @@ export function getTableColumns(baseApiUrl, accessToken, typeMap) {
       formatter: cell => {
         const deleteBtn = createDeleteButton();
         const saveBtn = createSaveButton();
+        deleteBtn.style.marginRight = '8px';
         const span = document.createElement('span');
-        span.style.padding = '0 8px';
         span.appendChild(deleteBtn);
         span.appendChild(saveBtn);
         if (cell.getElement()) {

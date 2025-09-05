@@ -7,14 +7,22 @@ body {
   color: #333;
 }
 
-/* Header styling for top right logout button */
+/* Header styling for title and logout button */
 header {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between; /* Title left, logout right */
+  align-items: center;
   padding: 10px 20px;
   background-color: #fff;
   border-bottom: 1px solid #e1e4e8;
   margin-bottom: 20px;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: #24292e;
 }
 
 header #logout-button {
@@ -118,7 +126,7 @@ header #logout-button:active {
 
 /* Add button styling and spacing */
 .add-btn {
-  margin-top: 20px; /* Extra spacing from the table */
+  margin-top: 20px;
   padding: 8px 16px;
   border: 1px solid #0366d6;
   border-radius: 6px;
@@ -165,6 +173,10 @@ header #logout-button:active {
 
   header {
     padding: 5px 10px;
+  }
+
+  header h1 {
+    font-size: 20px;
   }
 
   header #logout-button {
