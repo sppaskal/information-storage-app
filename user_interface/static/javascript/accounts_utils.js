@@ -75,7 +75,7 @@ export function getTableColumns(baseApiUrl, accessToken, typeMap) {
         const data = row.getData();
         const table = cell.getTable();
         if (e.target.classList.contains('delete-btn')) {
-          deleteAction(data.id, baseApiUrl, accessToken, table, row); // Still uses id internally
+          deleteAction(data.id, baseApiUrl, accessToken, table, row);
         } else if (e.target.classList.contains('save-btn')) {
           saveAction(data, baseApiUrl, accessToken, table, row, typeMap);
         }
