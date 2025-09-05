@@ -1,5 +1,4 @@
 const viewableAccountFields = [
-    'id',
     'type_name',
     'email',
     'username',

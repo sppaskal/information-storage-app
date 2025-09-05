@@ -54,7 +54,7 @@ export function getTableColumns(baseApiUrl, accessToken, typeMap) {
       field: 'actions',
       hozAlign: 'center',
       minWidth: 160,
-      maxWidth: 180, // Cap Actions column width
+      maxWidth: 180,
       formatter: cell => {
         const deleteBtn = createDeleteButton();
         const saveBtn = createSaveButton();
@@ -75,17 +75,15 @@ export function getTableColumns(baseApiUrl, accessToken, typeMap) {
         const data = row.getData();
         const table = cell.getTable();
         if (e.target.classList.contains('delete-btn')) {
-          deleteAction(data.id, baseApiUrl, accessToken, table, row);
+          deleteAction(data.id, baseApiUrl, accessToken, table, row); // Still uses id internally
         } else if (e.target.classList.contains('save-btn')) {
           saveAction(data, baseApiUrl, accessToken, table, row, typeMap);
         }
       },
     },
-    { title: 'ID', field: 'id', editor: false, sorter: 'number', minWidth: 80, maxWidth: 100 },
   ];
 
   constants.viewableAccountFields.forEach(field => {
-    if (field === 'id') return;
     let editorType = false;
     if (constants.editableAccountFields.includes(field)) {
       if (field === 'type_name') {
@@ -116,8 +114,8 @@ export function getTableColumns(baseApiUrl, accessToken, typeMap) {
       cellClick: field === 'type_name' ? (e, cell) => {
         console.log('Clicked type_name cell:', cell.getValue(), 'with editorParams:', typeNames);
       } : undefined,
-      minWidth: 50,
-      maxWidth: field === 'description' ? 300 : 200, // Cap description at 300px, others at 200px
+      minWidth: 100,
+      maxWidth: field === 'description' ? 300 : 200,
     });
   });
 
