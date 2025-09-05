@@ -10,7 +10,7 @@ body {
 /* Header styling for title and logout button */
 header {
   display: flex;
-  justify-content: space-between; /* Title left, logout right */
+  justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
   background-color: #fff;
@@ -23,6 +23,15 @@ header h1 {
   font-size: 24px;
   font-weight: 600;
   color: #24292e;
+  display: flex;
+  align-items: center;
+}
+
+header .header-icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 10px; /* Space between icon and text */
+  vertical-align: middle;
 }
 
 header #logout-button {
@@ -177,6 +186,12 @@ header #logout-button:active {
 
   header h1 {
     font-size: 20px;
+  }
+
+  header .header-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
   }
 
   header #logout-button {
