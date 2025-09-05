@@ -43,19 +43,23 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Initialize Tabulator
   const table = new Tabulator('#accounts-table', {
     data: accounts,
-    layout: 'fitColumns',
+    layout: 'fitData',
     pagination: 'local',
     paginationSize: 10,
     movableColumns: true,
     columns: getTableColumns(baseApiUrl, accessToken, typeMap),
     footerElement: '<div>Total Accounts: <span id="total-accounts"></span></div>',
     dataLoaded: data => {
-      document.getElementById('total-accounts').innerText = data.length;
+      if (document.getElementById('total-accounts')) {
+        document.getElementById('total-accounts').innerText = data.length;
+      }
     },
   });
 
   // Add "Add New" button
   const addButton = createAddButton();
-  addButton.addEventListener('click', () => addAction(table, viewableAccountFields));
+  addButton.addEventListener('click', () => {
+    addAction(table, viewableAccountFields);
+  });
   document.body.appendChild(addButton);
 });
