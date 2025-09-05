@@ -13,14 +13,9 @@
     <script type="module" src="{% static 'javascript/accounts.js' %}" base-api-url="{{ base_api_url }}"></script>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Account Management</h1>
-            <button id="logout-button">Logout</button>
-        </header>
-        <main>
-            <div id="accounts-table"></div>
-        </main>
-    </div>
+    <header>
+        <button id="logout-button">Logout</button>
+    </header>
+    <div id="accounts-table"></div>
 </body>
 </html>
