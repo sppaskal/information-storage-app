@@ -54,6 +54,7 @@ export function getTableColumns(baseApiUrl, accessToken, typeMap) {
       field: 'actions',
       hozAlign: 'center',
       minWidth: 160,
+      maxWidth: 180, // Cap Actions column width
       formatter: cell => {
         const deleteBtn = createDeleteButton();
         const saveBtn = createSaveButton();
@@ -80,7 +81,7 @@ export function getTableColumns(baseApiUrl, accessToken, typeMap) {
         }
       },
     },
-    { title: 'ID', field: 'id', editor: false, sorter: 'number', minWidth: 80 },
+    { title: 'ID', field: 'id', editor: false, sorter: 'number', minWidth: 80, maxWidth: 100 },
   ];
 
   constants.viewableAccountFields.forEach(field => {
@@ -115,7 +116,8 @@ export function getTableColumns(baseApiUrl, accessToken, typeMap) {
       cellClick: field === 'type_name' ? (e, cell) => {
         console.log('Clicked type_name cell:', cell.getValue(), 'with editorParams:', typeNames);
       } : undefined,
-      minWidth: 100,
+      minWidth: 50,
+      maxWidth: field === 'description' ? 300 : 200, // Cap description at 300px, others at 200px
     });
   });
 
