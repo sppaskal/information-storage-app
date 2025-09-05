@@ -1,5 +1,4 @@
 import * as constants from './constants.js';
-import { getCookie } from './cookie_utils.js';
 import { createDeleteButton, createSaveButton, deleteAction, saveAction } from './buttons.js';
 
 // Fetches account types and accounts, maps type IDs to type_name
@@ -49,22 +48,19 @@ export async function fetchData(baseApiUrl, accessToken) {
 // Generates Tabulator column definitions
 export function getTableColumns(baseApiUrl, accessToken, typeMap) {
   const typeNames = typeMap.map(t => t.name);
-  console.log('Type names for dropdown:', typeNames); // Debug: Log dropdown values
-
   const columns = [
     {
       title: 'Actions',
       field: 'actions',
       hozAlign: 'center',
-      minWidth: 160, // Increased to 160px to ensure both buttons fit
+      minWidth: 160,
       formatter: cell => {
         const deleteBtn = createDeleteButton();
         const saveBtn = createSaveButton();
         const span = document.createElement('span');
-        span.style.padding = '0 3px'; // Maintain 3px spacing on each side
+        span.style.padding = '0 8px';
         span.appendChild(deleteBtn);
         span.appendChild(saveBtn);
-        // Check if element exists before logging
         if (cell.getElement()) {
           setTimeout(() => {
             const style = window.getComputedStyle(cell.getElement());
@@ -88,11 +84,11 @@ export function getTableColumns(baseApiUrl, accessToken, typeMap) {
   ];
 
   constants.viewableAccountFields.forEach(field => {
-    if (field === 'id') return; // Skip id (already added)
-    let editorType = false; // Default to non-editable
+    if (field === 'id') return;
+    let editorType = false;
     if (constants.editableAccountFields.includes(field)) {
       if (field === 'type_name') {
-        editorType = 'list'; // Use list editor for dropdown
+        editorType = 'list';
       } else if (field === 'description') {
         editorType = 'textarea';
       } else {
@@ -105,7 +101,7 @@ export function getTableColumns(baseApiUrl, accessToken, typeMap) {
       editor: editorType,
       sorter: field.includes('date') ? 'datetime' : 'string',
       sorterParams: field.includes('date') ? {
-        format: 'yyyy-MM-dd HH:mm:ss', // Luxon format
+        format: 'yyyy-MM-dd HH:mm:ss',
         alignEmptyValues: 'top',
       } : undefined,
       headerFilter: !field.includes('date') && field !== 'description' && field !== 'password',
@@ -119,10 +115,10 @@ export function getTableColumns(baseApiUrl, accessToken, typeMap) {
       cellClick: field === 'type_name' ? (e, cell) => {
         console.log('Clicked type_name cell:', cell.getValue(), 'with editorParams:', typeNames);
       } : undefined,
-      minWidth: 100, // Minimum width for other columns
+      minWidth: 100,
     });
   });
 
-  console.log('Tabulator columns:', columns); // Debug: Log column configuration
+  console.log('Tabulator columns:', columns);
   return columns;
 }
