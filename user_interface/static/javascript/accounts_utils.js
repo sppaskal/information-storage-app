@@ -16,7 +16,6 @@ export async function fetchData(baseApiUrl, accessToken) {
       throw new Error(`Types API error: ${typesResponse.status}`);
     }
     const typeMap = await typesResponse.json();
-    console.log('Fetched types:', typeMap); // Debug: Log types
 
     const accountsResponse = await fetch(`${baseApiUrl}accounts-api/accounts`, {
       method: 'GET',
@@ -35,7 +34,6 @@ export async function fetchData(baseApiUrl, accessToken) {
       const typeObj = typeMap.find(t => t.id === account.type);
       account.type_name = typeObj ? typeObj.name : account.type || 'Unknown';
     });
-    console.log('Processed accounts:', accounts); // Debug: Log processed data
     return { accounts, typeMap };
   } catch (error) {
     console.error('Error fetching data:', error);
@@ -53,13 +51,15 @@ export function getTableColumns(baseApiUrl, accessToken, typeMap) {
       title: 'Actions',
       field: 'actions',
       hozAlign: 'center',
-      minWidth: 160,
-      maxWidth: 180,
+      minWidth: 90,  // fits two 36px buttons + 8px gap + minimal padding
+      maxWidth: 110, 
       formatter: cell => {
         const deleteBtn = createDeleteButton();
         const saveBtn = createSaveButton();
         deleteBtn.style.marginRight = '8px';
         const span = document.createElement('span');
+        span.style.display = 'inline-flex';
+        span.style.alignItems = 'center';
         span.appendChild(deleteBtn);
         span.appendChild(saveBtn);
         if (cell.getElement()) {
@@ -74,9 +74,9 @@ export function getTableColumns(baseApiUrl, accessToken, typeMap) {
         const row = cell.getRow();
         const data = row.getData();
         const table = cell.getTable();
-        if (e.target.classList.contains('delete-btn')) {
+        if (e.target.closest('.delete-btn')) {
           deleteAction(data.id, baseApiUrl, accessToken, table, row);
-        } else if (e.target.classList.contains('save-btn')) {
+        } else if (e.target.closest('.save-btn')) {
           saveAction(data, baseApiUrl, accessToken, table, row, typeMap);
         }
       },

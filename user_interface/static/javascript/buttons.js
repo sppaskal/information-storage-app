@@ -14,16 +14,26 @@ export function logoutAction(baseApiUrl) {
 // Creates a Delete button for a table row
 export function createDeleteButton() {
     const deleteBtn = document.createElement('button');
-    deleteBtn.textContent = 'Delete';
     deleteBtn.className = 'delete-btn';
+    const deleteIcon = document.createElement('img');
+    deleteIcon.src = '/static/images/trash.svg';
+    deleteIcon.alt = 'Delete';
+    deleteIcon.style.width = '20px';
+    deleteIcon.style.height = '20px';
+    deleteBtn.appendChild(deleteIcon);
     return deleteBtn;
 }
 
 // Creates a Save button for a table row
 export function createSaveButton() {
     const saveBtn = document.createElement('button');
-    saveBtn.textContent = 'Save';
     saveBtn.className = 'save-btn';
+    const saveIcon = document.createElement('img');
+    saveIcon.src = '/static/images/save-floppy-disk.svg';
+    saveIcon.alt = 'Save';
+    saveIcon.style.width = '20px';
+    saveIcon.style.height = '20px';
+    saveBtn.appendChild(saveIcon);
     return saveBtn;
 }
 
