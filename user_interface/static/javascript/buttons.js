@@ -1,4 +1,5 @@
 import { deleteCookies } from './cookie_utils.js';
+import { showSuccessPopup, showFailurePopup } from './popups.js';
 
 // GENERIC BUTTON ACTIONS AND CREATORS
 
@@ -76,8 +77,8 @@ export function saveAction(data, baseApiUrl, accessToken, table, row, typeMap) {
     const payload = { ...data };
     if (typeMap && data.type_name) {
         const typeObj = typeMap.find(t => t.name === data.type_name);
-        payload.type = typeObj ? typeObj.id : null;  // Set type ID
-        delete payload.type_name;  // Remove type_name from payload
+        payload.type = typeObj ? typeObj.id : null;
+        delete payload.type_name;
     }
     fetch(url, {
         method: method,
@@ -99,9 +100,24 @@ export function saveAction(data, baseApiUrl, accessToken, table, row, typeMap) {
             const typeObj = typeMap.find(t => t.id === updatedData.type);
             updatedData.type_name = typeObj ? typeObj.name : updatedData.type;
         }
-        row.update(updatedData);  // Update row with server response
+        row.update(updatedData);
+        // Show popup for new account creation
+        if (!data.id) {
+            const addButton = document.querySelector('.add-btn');
+            if (addButton) {
+                showSuccessPopup(addButton);
+            }
+        }
     })
-    .catch(error => console.error('Error saving account:', error));
+    .catch(error => {
+        console.error('Error saving account:', error);
+        if (!data.id) { // Only for new account creation
+            const addButton = document.querySelector('.add-btn');
+            if (addButton) {
+                showFailurePopup(addButton);
+            }
+        }
+    });
 }
 
 // Handles the Add action (adds a blank row to the table)
