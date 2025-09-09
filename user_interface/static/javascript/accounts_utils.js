@@ -16,6 +16,7 @@ export async function fetchData(baseApiUrl, accessToken) {
       throw new Error(`Types API error: ${typesResponse.status}`);
     }
     const typeMap = await typesResponse.json();
+    console.log('Fetched types:', typeMap);
 
     const accountsResponse = await fetch(`${baseApiUrl}accounts-api/accounts`, {
       method: 'GET',
@@ -28,16 +29,19 @@ export async function fetchData(baseApiUrl, accessToken) {
     if (!accountsResponse.ok) {
       throw new Error(`Accounts API error: ${accountsResponse.status}`);
     }
-    const accounts = await accountsResponse.json();
-    // Map type IDs to type_name for display
+    const accountsData = await accountsResponse.json();
+    console.log('API response:', accountsData);
+    const accounts = Array.isArray(accountsData.accounts) ? accountsData.accounts : accountsData;
+    console.log('Processed accounts before mapping:', accounts);
     accounts.forEach(account => {
       const typeObj = typeMap.find(t => t.id === account.type);
       account.type_name = typeObj ? typeObj.name : account.type || 'Unknown';
     });
+    console.log('Processed accounts:', accounts);
     return { accounts, typeMap };
   } catch (error) {
     console.error('Error fetching data:', error);
-    document.getElementId('accounts-table').innerHTML = 
+    document.getElementById('accounts-table').innerHTML = 
       '<p>Error loading accounts or types. Please try again later.</p>';
     return null;
   }
@@ -46,13 +50,16 @@ export async function fetchData(baseApiUrl, accessToken) {
 // Generates Tabulator column definitions
 export function getTableColumns(baseApiUrl, accessToken, typeMap) {
   const typeNames = typeMap.map(t => t.name);
+  if (typeNames.length === 0) {
+    console.warn('No type names available for type_name column');
+  }
   const columns = [
     {
       title: 'Actions',
       field: 'actions',
       hozAlign: 'center',
-      minWidth: 90,  // fits two 36px buttons + 8px gap + minimal padding
-      maxWidth: 110, 
+      minWidth: 90,
+      maxWidth: 120,
       formatter: cell => {
         const deleteBtn = createDeleteButton();
         const saveBtn = createSaveButton();
@@ -75,9 +82,9 @@ export function getTableColumns(baseApiUrl, accessToken, typeMap) {
         const data = row.getData();
         const table = cell.getTable();
         if (e.target.closest('.delete-btn')) {
-          deleteAction(data.id, baseApiUrl, accessToken, table, row);
+          deleteAction(data.id, baseApiUrl, accessToken, table, row, table.updateTotalAccounts);
         } else if (e.target.closest('.save-btn')) {
-          saveAction(data, baseApiUrl, accessToken, table, row, typeMap);
+          saveAction(data, baseApiUrl, accessToken, table, row, typeMap, table.updateTotalAccounts);
         }
       },
     },
@@ -101,12 +108,12 @@ export function getTableColumns(baseApiUrl, accessToken, typeMap) {
       sorter: field.includes('date') ? 'datetime' : 'string',
       sorterParams: field.includes('date') ? {
         format: 'yyyy-MM-dd HH:mm:ss',
-        alignEmptyValues: 'top',
+        alignEmptyValues: 'top'
       } : undefined,
       headerFilter: !field.includes('date') && field !== 'description' && field !== 'password',
       editorParams: field === 'type_name' ? {
-        values: typeNames,
-        defaultValue: '',
+        values: typeNames.length > 0 ? typeNames : ['Unknown'],
+        defaultValue: typeNames.length > 0 ? typeNames[0] : 'Unknown',
         autocomplete: true,
         listOnEmpty: true,
         clearable: true,
@@ -121,4 +128,47 @@ export function getTableColumns(baseApiUrl, accessToken, typeMap) {
 
   console.log('Tabulator columns:', columns);
   return columns;
+}
+
+// Configures and initializes the Tabulator table
+export function setupTable(tableElementId, columns, data) {
+  console.log('Setting up table with element ID:', tableElementId, 'and data:', data);
+
+  const table = new Tabulator(`#${tableElementId}`, {
+    data: data,
+    columns: columns,
+    layout: 'fitColumns',
+    resizableColumns: false,
+    height: 'auto',
+    pagination: 'local',
+    paginationSize: 10,
+    footerElement: '<div class="tabulator-footer">Total Accounts: <span id="total-accounts"></span></div>',
+  });
+
+  if (!table) {
+    console.error('Tabulator table initialization failed');
+    return null;
+  }
+
+  // Store the updateTotalAccounts function on the table object
+  table.updateTotalAccounts = function() {
+    console.log('updateTotalAccounts called');
+    const savedRows = this.getData().filter(row => row.id && row.id !== null);
+    const total = savedRows.length;
+    const totalElement = document.getElementById('total-accounts');
+    if (totalElement) {
+      totalElement.textContent = total || '0';
+      console.log('Updated total accounts:', total);
+    } else {
+      console.error('Total element not found:', totalElement);
+    }
+  };
+
+  // Set initial total using tableBuilt event
+  table.on('tableBuilt', () => {
+    console.log('Table built event fired');
+    table.updateTotalAccounts();
+  });
+
+  return table;
 }

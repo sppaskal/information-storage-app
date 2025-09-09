@@ -47,7 +47,7 @@ export function createAddButton() {
 }
 
 // Handles the Delete action for a row
-export function deleteAction(id, baseApiUrl, accessToken, table, row) {
+export function deleteAction(id, baseApiUrl, accessToken, table, row, updateTotalAccounts) {
     if (id) {
         fetch(`${baseApiUrl}accounts-api/accounts/${id}/`, {
             method: 'DELETE',
@@ -58,19 +58,22 @@ export function deleteAction(id, baseApiUrl, accessToken, table, row) {
         })
         .then(response => {
             if (response.ok) {
-                row.delete();  // Remove row from Tabulator
+                const currentTotal = parseInt(document.getElementById('total-accounts').textContent) || 0;
+                row.delete(); // Remove row from Tabulator
+                document.getElementById('total-accounts').textContent = currentTotal - 1;
+                console.log('Deleted row, new total:', currentTotal - 1);
             } else {
                 console.error('Delete failed');
             }
         })
         .catch(error => console.error('Error deleting account:', error));
     } else {
-        row.delete();  // For new rows without id, remove locally
+        row.delete(); // For new rows without id, remove locally
     }
 }
 
 // Handles the Save action for a row (POST for new, PUT for existing)
-export function saveAction(data, baseApiUrl, accessToken, table, row, typeMap) {
+export function saveAction(data, baseApiUrl, accessToken, table, row, typeMap, updateTotalAccounts) {
     const method = data.id ? 'PUT' : 'POST';
     const url = data.id ? `${baseApiUrl}accounts-api/accounts/${data.id}/` : `${baseApiUrl}accounts-api/accounts/`;
     // Map type_name to type ID for API payload
@@ -101,11 +104,14 @@ export function saveAction(data, baseApiUrl, accessToken, table, row, typeMap) {
             updatedData.type_name = typeObj ? typeObj.name : updatedData.type;
         }
         row.update(updatedData);
-        // Show popup for new account creation
+        // Show popup and update total for new account creation
         if (!data.id) {
+            const currentTotal = parseInt(document.getElementById('total-accounts').textContent) || 0;
             const addButton = document.querySelector('.add-btn');
             if (addButton) {
                 showSuccessPopup(addButton);
+                document.getElementById('total-accounts').textContent = currentTotal + 1;
+                console.log('Saved new row, new total:', currentTotal + 1);
             }
         }
     })

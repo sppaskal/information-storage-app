@@ -168,6 +168,7 @@ header #logout-button:active {
   padding: 10px 15px;
   font-size: 14px;
   color: #24292e;
+  border-top: none; /* Remove top border */
 }
 
 /* Success popup styling */
@@ -175,7 +176,7 @@ header #logout-button:active {
   position: absolute;
   background-color: #2ea44f;
   color: white;
-  padding: 0 20px; /* Adjust padding to fit height */
+  padding: 0 20px;
   border-radius: 6px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   font-size: 14px;
@@ -198,7 +199,7 @@ header #logout-button:active {
   position: absolute;
   background-color: #d73a49;
   color: white;
-  padding: 0 20px; /* Adjust padding to fit height */
+  padding: 0 20px;
   border-radius: 6px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   font-size: 14px;

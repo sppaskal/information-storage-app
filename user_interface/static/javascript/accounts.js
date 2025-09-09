@@ -1,7 +1,7 @@
 import { viewableAccountFields } from './constants.js'; 
 import { getCookie } from './cookie_utils.js';
 import { createAddButton, addAction, logoutAction } from './buttons.js';
-import { fetchData, getTableColumns } from './accounts_utils.js';
+import { fetchData, getTableColumns, setupTable } from './accounts_utils.js';
 
 // Gets base API URL from script tag
 function getBaseApiUrl() {
@@ -39,22 +39,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (!data) return;
 
   const { accounts, typeMap } = data;
+  console.log('Fetched accounts:', accounts); // Debug log
 
-  // Initialize Tabulator
-  const table = new Tabulator('#accounts-table', {
-    data: accounts,
-    layout: 'fitData',
-    pagination: 'local',
-    paginationSize: 10,
-    movableColumns: true,
-    columns: getTableColumns(baseApiUrl, accessToken, typeMap),
-    footerElement: '<div>Total Accounts: <span id="total-accounts"></span></div>',
-    dataLoaded: data => {
-      if (document.getElementById('total-accounts')) {
-        document.getElementById('total-accounts').innerText = data.length;
-      }
-    },
-  });
+  // Initialize Tabulator using setupTable
+  const table = setupTable('accounts-table', getTableColumns(baseApiUrl, accessToken, typeMap), accounts);
 
   // Add "Add New" button
   const addButton = createAddButton();
