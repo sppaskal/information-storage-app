@@ -168,7 +168,7 @@ header #logout-button:active {
   padding: 10px 15px;
   font-size: 14px;
   color: #24292e;
-  border-top: none; /* Remove top border */
+  border-top: none;
 }
 
 /* Success popup styling */
@@ -268,4 +268,29 @@ header #logout-button:active {
     font-size: 12px;
     padding: 0 16px;
   }
+}
+
+/* KPI container styling */
+#kpi-container {
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  padding: 10px;
+  background-color: #fff;
+  border: 1px solid #e1e4e8;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+#kpi-container > * {
+  flex: 1 1 300px;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+#type-distribution-chart {
+  height: 300px !important;
+  width: 100% !important;
 }

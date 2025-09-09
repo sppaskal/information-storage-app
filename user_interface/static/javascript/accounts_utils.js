@@ -131,7 +131,7 @@ export function getTableColumns(baseApiUrl, accessToken, typeMap) {
 }
 
 // Configures and initializes the Tabulator table
-export function setupTable(tableElementId, columns, data) {
+export function setupTable(tableElementId, columns, data, onTableBuilt) {
   console.log('Setting up table with element ID:', tableElementId, 'and data:', data);
 
   const table = new Tabulator(`#${tableElementId}`, {
@@ -164,11 +164,32 @@ export function setupTable(tableElementId, columns, data) {
     }
   };
 
-  // Set initial total using tableBuilt event
+  // Set initial total and trigger onTableBuilt callback
   table.on('tableBuilt', () => {
     console.log('Table built event fired');
     table.updateTotalAccounts();
+    generateTypeDistributionChart(table.getData()); // Use table explicitly
+    if (typeof onTableBuilt === 'function') {
+      onTableBuilt();
+    }
   });
+
+  // Generate chart data for type distribution
+  function generateTypeDistributionChart(data) {
+    const typeCounts = data.reduce((acc, row) => {
+      acc[row.type_name] = (acc[row.type_name] || 0) + 1;
+      return acc;
+    }, {});
+    const labels = Object.keys(typeCounts);
+    const values = Object.values(typeCounts);
+
+    if (labels.length === 0 || values.every(v => v === 0)) {
+      console.warn('No valid type distribution data available');
+      return;
+    }
+
+    window.typeDistributionData = { labels, values }; // Expose for accounts.js
+  }
 
   return table;
 }

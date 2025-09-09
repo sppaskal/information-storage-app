@@ -41,13 +41,58 @@ document.addEventListener('DOMContentLoaded', async () => {
   const { accounts, typeMap } = data;
   console.log('Fetched accounts:', accounts); // Debug log
 
-  // Initialize Tabulator using setupTable
-  const table = setupTable('accounts-table', getTableColumns(baseApiUrl, accessToken, typeMap), accounts);
-
-  // Add "Add New" button
-  const addButton = createAddButton();
-  addButton.addEventListener('click', () => {
-    addAction(table, viewableAccountFields);
+  // Initialize Tabulator with a callback for chart setup
+  const table = setupTable('accounts-table', getTableColumns(baseApiUrl, accessToken, typeMap), accounts, () => {
+    // Initialize the pie chart after table is built
+    const ctx = document.getElementById('type-distribution-chart').getContext('2d');
+    if (window.typeDistributionData && window.typeDistributionData.labels) {
+      new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: window.typeDistributionData.labels,
+          datasets: [{
+            data: window.typeDistributionData.values,
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.7)',
+              'rgba(54, 162, 235, 0.7)',
+              'rgba(255, 206, 86, 0.7)',
+              'rgba(75, 192, 192, 0.7)',
+              'rgba(153, 102, 255, 0.7)'
+            ],
+            borderColor: 'rgba(255, 255, 255, 0.8)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                font: { size: 14 },
+                color: '#333'
+              }
+            },
+            title: {
+              display: true,
+              text: 'Account Type Distribution',
+              font: { size: 18 },
+              color: '#24292e'
+            }
+          }
+        }
+      });
+    } else {
+      console.warn('Type distribution data not available for chart.');
+    }
   });
-  document.body.appendChild(addButton);
+
+  if (table) {
+    const addButton = createAddButton();
+    addButton.addEventListener('click', () => {
+      addAction(table, viewableAccountFields);
+    });
+    document.body.appendChild(addButton);
+  }
 });
