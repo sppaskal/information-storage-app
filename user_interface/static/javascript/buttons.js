@@ -1,5 +1,5 @@
 import { deleteCookies } from './cookie_utils.js';
-import { showSuccessPopup, showFailurePopup } from './popups.js';
+import { showSuccessPopup, showFailurePopup, showEditSuccessPopup } from './popups.js';
 
 // GENERIC BUTTON ACTIONS AND CREATORS
 
@@ -8,7 +8,6 @@ export function logoutAction(baseApiUrl) {
     deleteCookies(['access_token', 'refresh_token']);
     window.location.href = `${baseApiUrl}user-interface/login/`;
 }
-
 
 // ACCOUNT BUTTON ACTIONS AND CREATORS
 
@@ -104,7 +103,7 @@ export function saveAction(data, baseApiUrl, accessToken, table, row, typeMap, u
             updatedData.type_name = typeObj ? typeObj.name : updatedData.type;
         }
         row.update(updatedData);
-        // Show popup and update total for new account creation
+        // Show popup based on method
         if (!data.id) {
             const currentTotal = parseInt(document.getElementById('total-accounts').textContent) || 0;
             const addButton = document.querySelector('.add-btn');
@@ -112,6 +111,11 @@ export function saveAction(data, baseApiUrl, accessToken, table, row, typeMap, u
                 showSuccessPopup(addButton);
                 document.getElementById('total-accounts').textContent = currentTotal + 1;
                 console.log('Saved new row, new total:', currentTotal + 1);
+            }
+        } else {
+            const saveButton = row.getCell('actions').getElement().querySelector('.save-btn');
+            if (saveButton) {
+                showEditSuccessPopup(saveButton);
             }
         }
     })
@@ -121,6 +125,11 @@ export function saveAction(data, baseApiUrl, accessToken, table, row, typeMap, u
             const addButton = document.querySelector('.add-btn');
             if (addButton) {
                 showFailurePopup(addButton);
+            }
+        } else {
+            const saveButton = row.getCell('actions').getElement().querySelector('.save-btn');
+            if (saveButton) {
+                showFailurePopup(saveButton);
             }
         }
     });
