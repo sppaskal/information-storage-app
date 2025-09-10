@@ -45,3 +45,27 @@ export function showFailurePopup(addButton) {
         setTimeout(() => popup.remove(), 500); // Match animation duration
     }, 3000);
 }
+
+// Helper function to show edit success popup
+export function showEditSuccessPopup(saveButton) {
+    const popup = document.createElement('div');
+    popup.className = 'success-popup';
+    popup.textContent = 'Account successfully edited';
+    document.body.appendChild(popup);
+
+    // Position popup to the right of the save button
+    const buttonRect = saveButton.getBoundingClientRect();
+    popup.style.position = 'absolute';
+    popup.style.top = `${buttonRect.top + window.scrollY}px`;
+    popup.style.left = `${buttonRect.right + 10}px`;
+    popup.style.height = `${saveButton.offsetHeight}px`; // Match button height
+
+    // Trigger animation
+    setTimeout(() => popup.classList.add('show'), 10);
+
+    // Auto-close after 3 seconds
+    setTimeout(() => {
+        popup.classList.remove('show');
+        setTimeout(() => popup.remove(), 500); // Match animation duration
+    }, 3000);
+}
