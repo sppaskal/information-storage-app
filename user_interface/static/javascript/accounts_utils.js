@@ -118,9 +118,13 @@ export function getTableColumns(baseApiUrl, accessToken, typeMap) {
         listOnEmpty: true,
         clearable: true,
       } : undefined,
-      cellClick: field === 'type_name' ? (e, cell) => {
+      cellClick: field === 'description' ? (e, cell) => {
+        if (cell.getColumn().getDefinition().editor) {
+          cell.edit(true); // Force edit mode on click
+        }
+      } : (field === 'type_name' ? (e, cell) => {
         console.log('Clicked type_name cell:', cell.getValue(), 'with editorParams:', typeNames);
-      } : undefined,
+      } : undefined),
       minWidth: 100,
       maxWidth: field === 'description' ? 300 : 200,
     });
