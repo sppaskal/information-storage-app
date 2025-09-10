@@ -93,6 +93,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     addButton.addEventListener('click', () => {
       addAction(table, viewableAccountFields);
     });
-    document.body.appendChild(addButton);
+    const buttonContainer = document.getElementById('button-container');
+    if (buttonContainer) {
+      buttonContainer.appendChild(addButton);
+    } else {
+      console.error('Button container not found.');
+    }
   }
 });

@@ -294,3 +294,8 @@ header #logout-button:active {
   height: 300px !important;
   width: 100% !important;
 }
+
+/* Button container styling */
+#button-container {
+  margin-bottom: 10px;
+}
