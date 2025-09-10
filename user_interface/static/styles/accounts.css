@@ -94,9 +94,26 @@ header #logout-button:active {
 .tabulator .tabulator-cell {
   padding: 10px 15px;
   font-size: 14px;
-  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap; /* Default to nowrap for compactness */
+}
+
+/* Description column specific styling */
+.tabulator .tabulator-cell[tabulator-field="description"] {
+  max-height: 50px; /* Compact default height */
+  overflow-y: auto; /* Scroll if text overflows */
+  cursor: text; /* Indicate clickability */
+}
+
+/* Ensure textarea is visible and controlled during editing */
+.tabulator .tabulator-cell[tabulator-field="description"] textarea {
+  width: 100%;
+  height: 100px; /* Reasonable editing height */
+  max-height: 200px; /* Maximum height with scrolling */
+  resize: vertical; /* Allow vertical resizing within max height */
+  box-sizing: border-box;
+  padding: 5px;
 }
 
 /* Actions column buttons */
@@ -267,6 +284,15 @@ header #logout-button:active {
   .success-popup, .failure-popup {
     font-size: 12px;
     padding: 0 16px;
+  }
+
+  .tabulator .tabulator-cell[tabulator-field="description"] {
+    max-height: 40px; /* Adjusted for smaller screens */
+  }
+
+  .tabulator .tabulator-cell[tabulator-field="description"] textarea {
+    height: 80px; /* Adjusted editing height */
+    max-height: 150px; /* Adjusted max height */
   }
 }
 
