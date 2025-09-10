@@ -64,7 +64,7 @@ class AccountViewSet(viewsets.ModelViewSet):
             serializer.save()
             Caching.delete_cache_value("accounts")
             return Response(
-                {"message": "Added Account", "account": serializer.data},
+                serializer.data,
                 status=status.HTTP_201_CREATED
             )
         except Exception as e:

@@ -102,9 +102,9 @@ export function saveAction(data, baseApiUrl, accessToken, table, row, typeMap, u
             const typeObj = typeMap.find(t => t.id === updatedData.type);
             updatedData.type_name = typeObj ? typeObj.name : updatedData.type;
         }
-        row.update(updatedData);
-        // Show popup based on method
-        if (!data.id) {
+        row.update(updatedData); // Update row with new data including id
+        // Show popup based on the HTTP method
+        if (method === 'POST') {
             const currentTotal = parseInt(document.getElementById('total-accounts').textContent) || 0;
             const addButton = document.querySelector('.add-btn');
             if (addButton) {
@@ -112,7 +112,7 @@ export function saveAction(data, baseApiUrl, accessToken, table, row, typeMap, u
                 document.getElementById('total-accounts').textContent = currentTotal + 1;
                 console.log('Saved new row, new total:', currentTotal + 1);
             }
-        } else {
+        } else if (method === 'PUT') {
             const saveButton = row.getCell('actions').getElement().querySelector('.save-btn');
             if (saveButton) {
                 showEditSuccessPopup(saveButton);
@@ -121,12 +121,12 @@ export function saveAction(data, baseApiUrl, accessToken, table, row, typeMap, u
     })
     .catch(error => {
         console.error('Error saving account:', error);
-        if (!data.id) { // Only for new account creation
+        if (method === 'POST') {
             const addButton = document.querySelector('.add-btn');
             if (addButton) {
                 showFailurePopup(addButton);
             }
-        } else {
+        } else if (method === 'PUT') {
             const saveButton = row.getCell('actions').getElement().querySelector('.save-btn');
             if (saveButton) {
                 showFailurePopup(saveButton);
