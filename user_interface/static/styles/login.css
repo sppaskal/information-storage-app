@@ -1,9 +1,9 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: hsl(0, 0%, 13%);
-    color: #fff;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #f6f8fa;
+    color: #24292e;
     margin: 0;
-    padding: 0;
+    padding: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -15,22 +15,24 @@ body {
 }
 
 #login-form {
-    background-color: #333;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    background-color: #fff;
+    border: 1px solid #e1e4e8;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     padding: 20px;
     width: 300px;
-    display: inline-block; /* Center the box containing username and password */
+    display: inline-block;
 }
 
 h1 {
     margin-bottom: 20px;
+    font-size: 24px;
+    font-weight: 600;
 }
 
 label {
     display: block;
     margin-bottom: 8px;
-    font-weight: bold;
 }
 
 input {
@@ -38,31 +40,37 @@ input {
     padding: 8px;
     margin-bottom: 16px;
     box-sizing: border-box;
-    border: 1px solid #504848;
+    border: 1px solid #e1e4e8;
     border-radius: 4px;
-    color: #e6bebe;
-    background-color: #252525;
-}
-
-button {
-    background-color: #18611b;
-    color: #fff;
-    border: none;
-    padding: 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    align-self: center;
-    width: calc(50% - 5px); /* Adjust button width to take half space with 5px spacing */
+    color: #24292e;
+    background-color: #fff;
 }
 
 #button-container {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 16px; /* Add margin bottom to create space between buttons and other elements */
+    margin-bottom: 16px;
+}
+
+button {
+    padding: 8px 16px;
+    border: 1px solid #0366d6;
+    border-radius: 6px;
+    background-color: #0077ff;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s, box-shadow 0.2s;
 }
 
 button:hover {
-    background-color: #45a049;
+    background-color: #005cc5;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+button:active {
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 #access-code-container {
