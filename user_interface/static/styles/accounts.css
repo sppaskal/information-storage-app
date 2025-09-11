@@ -39,7 +39,7 @@ header #logout-button {
   padding: 8px 16px;
   border: 1px solid #0366d6;
   border-radius: 6px;
-  background-color: #0366d6;
+  background-color: #0077ff;
   color: white;
   font-size: 14px;
   cursor: pointer;
@@ -141,11 +141,11 @@ header #logout-button:active {
 }
 
 .delete-btn {
-  background-color: #d73a49;
+  background-color: #ec4a5a;
 }
 
 .save-btn {
-  background-color: #2ea44f;
+  background-color: #38c660;
 }
 
 .delete-btn:hover {
@@ -162,7 +162,7 @@ header #logout-button:active {
   padding: 8px 16px;
   border: 1px solid #0366d6;
   border-radius: 6px;
-  background-color: #0366d6;
+  background-color: #0278ff;
   color: white;
   font-size: 14px;
   cursor: pointer;
