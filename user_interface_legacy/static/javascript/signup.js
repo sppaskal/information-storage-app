@@ -2,7 +2,7 @@ import { combineErrorMessages } from './errors.js';
 
 // Function to get data attribute value
 function getBaseApiUrl() {
-    const scriptTag = document.querySelector('script[src*="singup.js"]');
+    const scriptTag = document.querySelector('script[src*="signup.js"]');
     return scriptTag ? scriptTag.getAttribute('base-api-url') : null;
 }
 
@@ -35,7 +35,7 @@ function hideError() {
 
 // -------------------------------------------------------------------
 
-function singup() {
+function signup() {
     const baseApiUrl = getBaseApiUrl();
     const username = document.getElementById('username').value;
     const email = document.getElementById('email').value;
@@ -96,10 +96,10 @@ function singup() {
     });
 }
 
-// Add event listener to the singup button
+// Add event listener to the signup button
 document.addEventListener('DOMContentLoaded', function() {
-    const singupButton = document.getElementById('signup-button');
-    singupButton.addEventListener('click', function() {
-        singup();
+    const signupButton = document.getElementById('signup-button');
+    signupButton.addEventListener('click', function() {
+        signup();
     });
 });

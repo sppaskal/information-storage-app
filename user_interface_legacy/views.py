@@ -16,10 +16,10 @@ def login_view(request):
 # -------------------------------------------------------------------------------
 
 
-def singup_view(request):
+def signup_view(request):
     return render(
         request=request,
-        template_name='singup.html',
+        template_name='signup.html',
         context={'base_api_url': base_url}
 
     )
