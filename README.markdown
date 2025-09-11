@@ -1,6 +1,10 @@
 # Information Storage App
 
-This is a demo Django application showcasing a user authentication and data storage system. Follow these steps to run the app locally using Docker.
+This is a demo Django application showcasing a user authentication and account storage system.
+The application stores account data on a per user basis, allowing users to view, add, edit, and delete
+accounts from their storage.
+
+Follow these steps to run the app locally using Docker.
 
 ## Prerequisites
 - Docker installed (Docker Desktop for Windows/macOS, or Docker and Docker Compose for Linux).
