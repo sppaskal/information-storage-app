@@ -10,11 +10,11 @@ body {
     height: 100vh;
 }
 
-#singup-container {
+#signup-container {
     text-align: center;
 }
 
-#singup-form {
+#signup-form {
     background-color: #fff;
     border: 1px solid #e1e4e8;
     border-radius: 6px;
@@ -46,6 +46,12 @@ input {
     background-color: #fff;
 }
 
+#button-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 16px; /* Space above buttons */
+}
+
 button {
     padding: 8px 16px;
     border: 1px solid #0366d6;
@@ -64,5 +70,26 @@ button:hover {
 }
 
 button:active {
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.back-to-login-btn {
+    padding: 8px 16px;
+    border: 1px solid #0366d6;
+    border-radius: 6px;
+    background-color: #0077ff;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s, box-shadow 0.2s;
+}
+
+.back-to-login-btn:hover {
+    background-color: #005cc5;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+.back-to-login-btn:active {
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }

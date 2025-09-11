@@ -2,12 +2,12 @@ import { combineErrorMessages } from './errors.js';
 
 // Function to get data attribute value
 function getBaseApiUrl() {
-    const scriptTag = document.querySelector('script[src*="singup.js"]');
+    const scriptTag = document.querySelector('script[src*="signup.js"]');
     return scriptTag ? scriptTag.getAttribute('base-api-url') : null;
 }
 
 // Simple for purpose of demo
-function validateEmail(emailField){
+function validateEmail(emailField) {
     if (emailField.length < 1) {
         return false;
     }
@@ -15,11 +15,10 @@ function validateEmail(emailField){
 }
 
 // Simple for purpose of demo
-function validatePassword(password){
+function validatePassword(password) {
     if (password.length < 5) {
         return false;
     }
-
     return true;
 }
 
@@ -35,7 +34,7 @@ function hideError() {
 
 // -------------------------------------------------------------------
 
-function singup() {
+function signup() {
     const baseApiUrl = getBaseApiUrl();
     const username = document.getElementById('username').value;
     const email = document.getElementById('email').value;
@@ -57,9 +56,7 @@ function singup() {
         if (password != confirm_password) {
             throw new Error('"The passwords do not match"');
         }
-    }
-
-    catch(error) {
+    } catch (error) {
         showError(error.message);
         return null;
     }
@@ -96,10 +93,19 @@ function singup() {
     });
 }
 
-// Add event listener to the singup button
+// Add event listener to the signup button and back to login button
 document.addEventListener('DOMContentLoaded', function() {
-    const singupButton = document.getElementById('signup-button');
-    singupButton.addEventListener('click', function() {
-        singup();
+    const signupButton = document.getElementById('signup-button');
+    signupButton.addEventListener('click', function() {
+        signup();
     });
+
+    const backButton = document.getElementById('back-to-login-button');
+    console.log("test")
+    if (backButton) {
+        const baseApiUrl = getBaseApiUrl();
+        backButton.addEventListener('click', () => {
+            window.location.href = `${baseApiUrl}user-interface/login/`;
+        });
+    }
 });

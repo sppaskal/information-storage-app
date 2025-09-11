@@ -5,18 +5,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'styles/singup.css' %}">
+    <title>Signup</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/signup.css' %}">
     <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
-    <script type="module" src="{% static 'javascript/singup.js' %}" base-api-url="{{ base_api_url }}"></script>
+    <script type="module" src="{% static 'javascript/signup.js' %}" base-api-url="{{ base_api_url }}"></script>
 </head>
 
 <body>
-
-    <div id="singup-container">
-        <div id="singup-div">
+    <div id="signup-container">
+        <div id="signup-div">
             <h1>Signup</h1>
-            <form id="singup-form">
+            <form id="signup-form">
                 <label for="username">Username:</label>
                 <input type="text" id="username" name="username" required>
                 <label for="email">Email:</label>
@@ -24,13 +23,14 @@
                 <label for="password">Password:</label>
                 <input type="password" id="password" name="password" required>
                 <label for="confirm-password">Confirm Password:</label>
-                <input type="confirm-password" id="confirm-password" name="confirm-password" required>
-                <button type="button" id="signup-button">Signup</button>
+                <input type="password" id="confirm-password" name="confirm-password" required>
+                <div id="button-container">
+                    <button type="button" id="back-to-login-button" class="back-to-login-btn">Back to Login</button>
+                    <button type="button" id="signup-button">Signup</button>
+                </div>
             </form>
             <div id="error-message" style="color: red;"></div>
         </div>
     </div>
-
 </body>
-
 </html>

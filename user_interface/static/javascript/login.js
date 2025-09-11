@@ -100,16 +100,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // -------------------------------------------------------------------
 
-function singup() {
+function signup() {
     const baseApiUrl = getBaseApiUrl();
     window.location.href = `${baseApiUrl}user-interface/signup/`;
 }
 
-// Add event listener to the singup button
+// Add event listener to the signup button
 document.addEventListener('DOMContentLoaded', function() {
-    const singupButton = document.getElementById('signup-button');
-    singupButton.addEventListener('click', function() {
-        singup();
+    const signupButton = document.getElementById('signup-button');
+    signupButton.addEventListener('click', function() {
+        signup();
     });
 });
 
