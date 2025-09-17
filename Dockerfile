@@ -6,7 +6,7 @@ FROM python:${PYTHON_VERSION} as base
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
 
-# Development secrets (for local use only; avoid committing to Git)
+# Development secrets (for dev use only)
 ENV SECRET_KEY="k7vh_p+pe_oe^*&6^er(n0twv8rdx34-%1xqhg&2zs%_g_(owf" \
     CRYPTOGRAPHY_KEY="k1fg_p+pe_oe^*&9^er(n0twv8rdx34-%7xqhg&3pp%_g_(axf" \
     EMAIL_HOST_PASSWORD="fbtw veyw gjfa sdfw" \

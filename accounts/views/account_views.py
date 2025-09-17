@@ -36,19 +36,28 @@ class AccountViewSet(viewsets.ModelViewSet):
         if self.action in ['update', 'partial_update']:
             return AccountUpdateSerializer
         return AccountSerializer
+    
+    # Override generic get_queryset to filter by authenticated user
+    def get_queryset(self):
+        user_id = self.request.user.id
+        return Account.objects.filter(user_id=user_id)
 
     # GET /accounts/ — List all accounts, with caching
     def list(self, request):
         try:
+            user_id = request.user.id
             cache_key = "accounts"
-            cached_data = Caching.get_cache_value(cache_key)
+
+            cached_data = Caching.get_cache_value(cache_key, user_id)
             if cached_data:
                 return Response(cached_data)
 
+            # If cache unavailable, query database
             queryset = self.get_queryset()
             serializer = self.get_serializer(queryset, many=True)
-            Caching.set_cache_value(cache_key, serializer.data)
+            Caching.set_cache_value(cache_key, serializer.data, user_id=user_id)
             return Response(serializer.data)
+
         except Exception as e:
             logger.error(f"Error listing accounts: {str(e)}")
             return Response(
@@ -62,11 +71,15 @@ class AccountViewSet(viewsets.ModelViewSet):
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
             serializer.save()
-            Caching.delete_cache_value("accounts")
+
+            cache_key = "accounts"
+            user_id = request.user.id
+            Caching.delete_cache_value(cache_key, user_id)
             return Response(
                 serializer.data,
                 status=status.HTTP_201_CREATED
             )
+
         except Exception as e:
             logger.error(f"Error creating account: {str(e)}")
             return Response(
@@ -87,10 +100,13 @@ class AccountViewSet(viewsets.ModelViewSet):
             serializer.is_valid(raise_exception=True)
             serializer.save()
 
-            Caching.delete_cache_value("accounts")
+            cache_key = "accounts"
+            user_id = request.user.id
+            Caching.delete_cache_value(cache_key, user_id)
             return Response(
                 {"message": "Updated Account", "account": serializer.data}
             )
+
         except Exception as e:
             logger.error(f"Error updating account '{account_id}': {str(e)}")
             return Response(
@@ -106,11 +122,14 @@ class AccountViewSet(viewsets.ModelViewSet):
             email = account.email
             account.delete()
 
-            Caching.delete_cache_value("accounts")
+            cache_key = "accounts"
+            user_id = request.user.id
+            Caching.delete_cache_value(cache_key, user_id)
             return Response(
                 {"message": f"Deleted Account: {email}"},
                 status=status.HTTP_204_NO_CONTENT
             )
+
         except Exception as e:
             logger.error(f"Error deleting account '{account_id}': {str(e)}")
             return Response(
@@ -122,9 +141,9 @@ class AccountViewSet(viewsets.ModelViewSet):
     def retrieve(self, request, *args, **kwargs):
         try:
             account_id = kwargs.get('id')
+            user_id = request.user.id
             cache_key = "accounts"
-            cached_data = Caching.get_cache_value(cache_key)
-
+            cached_data = Caching.get_cache_value(cache_key, user_id)
             if cached_data:
                 filtered = AccountHelper.filter_accounts_by_id(
                     cached_data,
@@ -132,6 +151,7 @@ class AccountViewSet(viewsets.ModelViewSet):
                 )
                 return Response(filtered)
 
+            # If cache unavailable, query database
             account = get_object_or_404(self.get_queryset(), id=account_id)
             serializer = self.get_serializer(account)
             return Response(serializer.data)
@@ -154,8 +174,9 @@ class AccountViewSet(viewsets.ModelViewSet):
                     status=status.HTTP_400_BAD_REQUEST
                 )
 
+            user_id = request.user.id
             cache_key = "accounts"
-            cached_data = Caching.get_cache_value(cache_key)
+            cached_data = Caching.get_cache_value(cache_key, user_id)
             if cached_data:
                 filtered = AccountHelper.filter_accounts_by_email(
                     cached_data,
@@ -163,9 +184,11 @@ class AccountViewSet(viewsets.ModelViewSet):
                 )
                 return Response(filtered)
 
+            # If cache unavailable, query database
             queryset = self.get_queryset().filter(email=email)
             serializer = self.get_serializer(queryset, many=True)
             return Response(serializer.data)
+
         except Exception as e:
             logger.error(f"Error fetching account by email '{email}': {str(e)}")
             return Response(
