@@ -27,6 +27,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
+  // Add logout button functionality
+  const logoutButton = document.getElementById('logout-button');
+  if (logoutButton) {
+    logoutButton.addEventListener('click', () => logoutAction(baseApiUrl));
+  } else {
+    console.error('Logout button not found.');
+  }
+
   // Fetch data
   const data = await fetchData(baseApiUrl, accessToken);
   if (!data) return;
