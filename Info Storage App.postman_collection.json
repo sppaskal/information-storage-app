@@ -183,13 +183,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}accounts-api/accounts/2/",
+							"raw": "{{host}}accounts-api/accounts/1/",
 							"host": [
 								"{{host}}accounts-api"
 							],
 							"path": [
 								"accounts",
-								"2",
+								"1",
 								""
 							]
 						}
@@ -232,6 +232,42 @@
 					"response": []
 				},
 				{
+					"name": "types",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}accounts-api/types/",
+							"host": [
+								"{{host}}accounts-api"
+							],
+							"path": [
+								"types",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "accounts by email",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
@@ -255,21 +291,27 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}accounts-api/accounts/by-email/sppaskal@gmail.com",
+							"raw": "{{host}}accounts-api/accounts/by-email/?email=test@yahoo.com",
 							"host": [
 								"{{host}}accounts-api"
 							],
 							"path": [
 								"accounts",
 								"by-email",
-								"sppaskal@gmail.com"
+								""
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "test@yahoo.com"
+								}
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "accounts by id",
+					"name": "account by id",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -292,14 +334,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}accounts-api/accounts/by-email/2",
+							"raw": "{{host}}accounts-api/accounts/1/",
 							"host": [
 								"{{host}}accounts-api"
 							],
 							"path": [
 								"accounts",
-								"by-email",
-								"2"
+								"1",
+								""
 							]
 						}
 					},
@@ -326,14 +368,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}accounts-api/accounts/1/",
+							"raw": "{{host}}accounts-api/accounts/1",
 							"host": [
 								"{{host}}accounts-api"
 							],
 							"path": [
 								"accounts",
-								"1",
-								""
+								"1"
 							]
 						}
 					},
