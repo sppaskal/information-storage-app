@@ -47,23 +47,6 @@ export async function fetchData(baseApiUrl, accessToken) {
   }
 }
 
-// Generate chart data for type distribution (exported for reload button)
-export function generateTypeDistributionChart(data) {
-  const typeCounts = data.reduce((acc, row) => {
-    acc[row.type_name] = (acc[row.type_name] || 0) + 1;
-    return acc;
-  }, {});
-  const labels = Object.keys(typeCounts);
-  const values = Object.values(typeCounts);
-
-  if (labels.length === 0 || values.every(v => v === 0)) {
-    console.warn('No valid type distribution data available');
-    return;
-  }
-
-  window.typeDistributionData = { labels, values }; // Expose for accounts.js
-}
-
 // Generates Tabulator column definitions
 export function getTableColumns(baseApiUrl, accessToken, typeMap) {
   const typeNames = typeMap.map(t => t.name);
@@ -189,28 +172,10 @@ export function setupTable(tableElementId, columns, data, onTableBuilt) {
   table.on('tableBuilt', () => {
     console.log('Table built event fired');
     table.updateTotalAccounts();
-    generateTypeDistributionChart(table.getData()); // Use table explicitly
     if (typeof onTableBuilt === 'function') {
       onTableBuilt();
     }
   });
-
-  // Generate chart data for type distribution
-  function generateTypeDistributionChart(data) {
-    const typeCounts = data.reduce((acc, row) => {
-      acc[row.type_name] = (acc[row.type_name] || 0) + 1;
-      return acc;
-    }, {});
-    const labels = Object.keys(typeCounts);
-    const values = Object.values(typeCounts);
-
-    if (labels.length === 0 || values.every(v => v === 0)) {
-      console.warn('No valid type distribution data available');
-      return;
-    }
-
-    window.typeDistributionData = { labels, values }; // Expose for accounts.js
-  }
 
   return table;
 }
