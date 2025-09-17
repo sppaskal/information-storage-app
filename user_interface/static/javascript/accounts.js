@@ -1,7 +1,12 @@
 import { viewableAccountFields } from './constants.js'; 
 import { getCookie } from './cookie_utils.js';
 import { createAddButton, addAction, logoutAction } from './buttons.js';
-import { fetchData, getTableColumns, setupTable } from './accounts_utils.js';
+import {
+  fetchData,
+  getTableColumns,
+  setupTable,
+  generateTypeDistributionChart
+} from './accounts_utils.js';
 
 // Gets base API URL from script tag
 function getBaseApiUrl() {
@@ -98,6 +103,25 @@ document.addEventListener('DOMContentLoaded', async () => {
       buttonContainer.appendChild(addButton);
     } else {
       console.error('Button container not found.');
+    }
+
+    // Add event listener for KPI reload button
+    const reloadButton = document.getElementById('kpi-reload-button');
+    if (reloadButton) {
+      reloadButton.addEventListener('click', () => {
+        generateTypeDistributionChart(table.getData());
+        const chart = Chart.getChart('type-distribution-chart');
+        if (chart && window.typeDistributionData) {
+          chart.data.labels = window.typeDistributionData.labels;
+          chart.data.datasets[0].data = window.typeDistributionData.values;
+          chart.update('none'); // Update without animation for instant reload
+          console.log('KPIs reloaded');
+        } else {
+          console.warn('Chart not found or data unavailable for reload');
+        }
+      });
+    } else {
+      console.error('KPI reload button not found.');
     }
   }
 });
