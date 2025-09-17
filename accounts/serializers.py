@@ -17,7 +17,12 @@ class AccountSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Account
-        fields = '__all__'
+        exclude = ['user_id']  # Hide user_id from GET responses
+
+    def create(self, validated_data):
+        # Inject user_id from request context
+        validated_data['user_id'] = self.context['request'].user.id
+        return super().create(validated_data)
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)

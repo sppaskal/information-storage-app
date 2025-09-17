@@ -9,6 +9,7 @@ class Type(models.Model):
 
 
 class Account(models.Model):
+    user_id = models.IntegerField() # manual link to user model in auth db
     email = models.EmailField(max_length=254, blank=True)
     username = models.CharField(max_length=254, blank=True)
     password = encrypt(models.CharField(max_length=254))
