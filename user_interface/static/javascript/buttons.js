@@ -1,5 +1,6 @@
 import { deleteCookies } from './cookie_utils.js';
 import { showSuccessPopup, showFailurePopup, showEditSuccessPopup } from './popups.js';
+import { generateTypeDistributionChart, updateChart } from './charts.js';
 
 // GENERIC BUTTON ACTIONS AND CREATORS
 
@@ -43,6 +44,19 @@ export function createAddButton() {
     addButton.textContent = 'Add New Account';
     addButton.className = 'add-btn';
     return addButton;
+}
+
+// Creates a Reload KPI button
+export function createReloadButton() {
+    const reloadBtn = document.createElement('button');
+    reloadBtn.className = 'kpi-reload-btn';
+    const reloadIcon = document.createElement('img');
+    reloadIcon.src = '/static/images/reload.svg';
+    reloadIcon.alt = 'Reload KPIs';
+    reloadIcon.style.width = '20px';
+    reloadIcon.style.height = '20px';
+    reloadBtn.appendChild(reloadIcon);
+    return reloadBtn;
 }
 
 // Handles the Delete action for a row
@@ -142,4 +156,10 @@ export function addAction(table, viewableAccountFields) {
         newRowData[field] = (field === 'type' ? null : '');
     });
     table.addRow(newRowData);
+}
+
+// Handles the Reload KPI action
+export function reloadKpiAction(table) {
+    generateTypeDistributionChart(table.getData());
+    updateChart();
 }

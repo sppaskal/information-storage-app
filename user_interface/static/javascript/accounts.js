@@ -1,12 +1,8 @@
 import { viewableAccountFields } from './constants.js'; 
 import { getCookie } from './cookie_utils.js';
-import { createAddButton, addAction, logoutAction } from './buttons.js';
-import {
-  fetchData,
-  getTableColumns,
-  setupTable,
-  generateTypeDistributionChart
-} from './accounts_utils.js';
+import { createAddButton, addAction, logoutAction, reloadKpiAction } from './buttons.js';
+import { fetchData, getTableColumns, setupTable } from './accounts_utils.js';
+import { initializeChart, generateTypeDistributionChart, updateChart } from './charts.js';
 
 // Gets base API URL from script tag
 function getBaseApiUrl() {
@@ -31,14 +27,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
-  // Add logout button functionality
-  const logoutButton = document.getElementById('logout-button');
-  if (logoutButton) {
-    logoutButton.addEventListener('click', () => logoutAction(baseApiUrl));
-  } else {
-    console.error('Logout button not found.');
-  }
-
   // Fetch data
   const data = await fetchData(baseApiUrl, accessToken);
   if (!data) return;
@@ -48,49 +36,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Initialize Tabulator with a callback for chart setup
   const table = setupTable('accounts-table', getTableColumns(baseApiUrl, accessToken, typeMap), accounts, () => {
-    // Initialize the pie chart after table is built
+    // Generate initial chart data and initialize the chart
+    generateTypeDistributionChart(accounts); // Generate data first
     const ctx = document.getElementById('type-distribution-chart').getContext('2d');
-    if (window.typeDistributionData && window.typeDistributionData.labels) {
-      new Chart(ctx, {
-        type: 'pie',
-        data: {
-          labels: window.typeDistributionData.labels,
-          datasets: [{
-            data: window.typeDistributionData.values,
-            backgroundColor: [
-              'rgba(255, 99, 132, 0.7)',
-              'rgba(54, 162, 235, 0.7)',
-              'rgba(255, 206, 86, 0.7)',
-              'rgba(75, 192, 192, 0.7)',
-              'rgba(153, 102, 255, 0.7)'
-            ],
-            borderColor: 'rgba(255, 255, 255, 0.8)',
-            borderWidth: 1
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              position: 'bottom',
-              labels: {
-                font: { size: 14 },
-                color: '#333'
-              }
-            },
-            title: {
-              display: true,
-              text: 'Account Type Distribution',
-              font: { size: 18 },
-              color: '#24292e'
-            }
-          }
-        }
-      });
-    } else {
-      console.warn('Type distribution data not available for chart.');
-    }
+    initializeChart(ctx); // Initialize chart after data is available
   });
 
   if (table) {
@@ -108,18 +57,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Add event listener for KPI reload button
     const reloadButton = document.getElementById('kpi-reload-button');
     if (reloadButton) {
-      reloadButton.addEventListener('click', () => {
-        generateTypeDistributionChart(table.getData());
-        const chart = Chart.getChart('type-distribution-chart');
-        if (chart && window.typeDistributionData) {
-          chart.data.labels = window.typeDistributionData.labels;
-          chart.data.datasets[0].data = window.typeDistributionData.values;
-          chart.update('none'); // Update without animation for instant reload
-          console.log('KPIs reloaded');
-        } else {
-          console.warn('Chart not found or data unavailable for reload');
-        }
-      });
+      reloadButton.addEventListener('click', () => reloadKpiAction(table));
     } else {
       console.error('KPI reload button not found.');
     }
