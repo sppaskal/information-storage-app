@@ -47,57 +47,21 @@ export async function fetchData(baseApiUrl, accessToken) {
   }
 }
 
-// Custom editor function for the description column to maintain scroll position
-function createDescriptionEditor(cell, onRendered, success, cancel, editorParams) {
-  // Create a textarea element with predefined styles for editing
-  const textarea = document.createElement('textarea');
-  textarea.style.width = '100%';
-  textarea.style.height = '100px';
-  textarea.style.maxHeight = '200px';
-  textarea.style.resize = 'vertical';
-  textarea.style.boxSizing = 'border-box';
-  textarea.style.padding = '5px';
+// Generate chart data for type distribution (exported for reload button)
+export function generateTypeDistributionChart(data) {
+  const typeCounts = data.reduce((acc, row) => {
+    acc[row.type_name] = (acc[row.type_name] || 0) + 1;
+    return acc;
+  }, {});
+  const labels = Object.keys(typeCounts);
+  const values = Object.values(typeCounts);
 
-  // Set the initial value from the cell
-  const value = cell.getValue() || '';
-  textarea.value = value;
-
-  // Calculate the initial scroll position for long text
-  let scrollTop = 0;
-  if (value.length > 0) {
-    const tempDiv = document.createElement('div');
-    tempDiv.style.visibility = 'hidden';
-    tempDiv.style.whiteSpace = 'pre-wrap';
-    tempDiv.style.wordWrap = 'break-word';
-    tempDiv.style.width = '100%';
-    tempDiv.style.padding = '5px';
-    tempDiv.textContent = value;
-    document.body.appendChild(tempDiv);
-    const height = tempDiv.scrollHeight;
-    document.body.removeChild(tempDiv);
-    scrollTop = Math.max(0, height - 100); // Adjust based on textarea height
+  if (labels.length === 0 || values.every(v => v === 0)) {
+    console.warn('No valid type distribution data available');
+    return;
   }
 
-  // Render the textarea and set the scroll position
-  onRendered(() => {
-    textarea.focus();
-    textarea.scrollTop = scrollTop; // Restore scroll position to match content
-  });
-
-  // Handle saving the edited value
-  function successFunc() {
-    success(textarea.value);
-  }
-
-  textarea.addEventListener('blur', successFunc);
-  textarea.addEventListener('keyup', (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      successFunc();
-      cell.getRow().getTable().deselectRow();
-    }
-  });
-
-  return textarea;
+  window.typeDistributionData = { labels, values }; // Expose for accounts.js
 }
 
 // Generates Tabulator column definitions
@@ -249,4 +213,57 @@ export function setupTable(tableElementId, columns, data, onTableBuilt) {
   }
 
   return table;
+}
+
+// Custom editor function for the description column to maintain scroll position
+function createDescriptionEditor(cell, onRendered, success, cancel, editorParams) {
+  // Create a textarea element with predefined styles for editing
+  const textarea = document.createElement('textarea');
+  textarea.style.width = '100%';
+  textarea.style.height = '100px';
+  textarea.style.maxHeight = '200px';
+  textarea.style.resize = 'vertical';
+  textarea.style.boxSizing = 'border-box';
+  textarea.style.padding = '5px';
+
+  // Set the initial value from the cell
+  const value = cell.getValue() || '';
+  textarea.value = value;
+
+  // Calculate the initial scroll position for long text
+  let scrollTop = 0;
+  if (value.length > 0) {
+    const tempDiv = document.createElement('div');
+    tempDiv.style.visibility = 'hidden';
+    tempDiv.style.whiteSpace = 'pre-wrap';
+    tempDiv.style.wordWrap = 'break-word';
+    tempDiv.style.width = '100%';
+    tempDiv.style.padding = '5px';
+    tempDiv.textContent = value;
+    document.body.appendChild(tempDiv);
+    const height = tempDiv.scrollHeight;
+    document.body.removeChild(tempDiv);
+    scrollTop = Math.max(0, height - 100); // Adjust based on textarea height
+  }
+
+  // Render the textarea and set the scroll position
+  onRendered(() => {
+    textarea.focus();
+    textarea.scrollTop = scrollTop; // Restore scroll position to match content
+  });
+
+  // Handle saving the edited value
+  function successFunc() {
+    success(textarea.value);
+  }
+
+  textarea.addEventListener('blur', successFunc);
+  textarea.addEventListener('keyup', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      successFunc();
+      cell.getRow().getTable().deselectRow();
+    }
+  });
+
+  return textarea;
 }
