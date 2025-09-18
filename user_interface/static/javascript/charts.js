@@ -45,7 +45,9 @@ export function initializeChart(ctx) {
 
 // Generate chart data for type distribution
 export function generateTypeDistributionChart(data) {
-  const typeCounts = data.reduce((acc, row) => {
+  // Filter out rows without an id (unsaved rows)
+  const savedData = data.filter(row => row.id != null && row.id !== undefined);
+  const typeCounts = savedData.reduce((acc, row) => {
     acc[row.type_name] = (acc[row.type_name] || 0) + 1;
     return acc;
   }, {});
