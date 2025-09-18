@@ -101,7 +101,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     const backButton = document.getElementById('back-to-login-button');
-    console.log("test")
     if (backButton) {
         const baseApiUrl = getBaseApiUrl();
         backButton.addEventListener('click', () => {

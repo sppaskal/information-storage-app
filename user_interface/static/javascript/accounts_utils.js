@@ -15,9 +15,8 @@ export async function fetchData(baseApiUrl, accessToken) {
     if (!typesResponse.ok) {
       throw new Error(`Types API error: ${typesResponse.status}`);
     }
+    
     const typeMap = await typesResponse.json();
-    console.log('Fetched types:', typeMap);
-
     const accountsResponse = await fetch(`${baseApiUrl}accounts-api/accounts`, {
       method: 'GET',
       headers: {
@@ -30,14 +29,11 @@ export async function fetchData(baseApiUrl, accessToken) {
       throw new Error(`Accounts API error: ${accountsResponse.status}`);
     }
     const accountsData = await accountsResponse.json();
-    console.log('API response:', accountsData);
     const accounts = Array.isArray(accountsData.accounts) ? accountsData.accounts : accountsData;
-    console.log('Processed accounts before mapping:', accounts);
     accounts.forEach(account => {
       const typeObj = typeMap.find(t => t.id === account.type);
       account.type_name = typeObj ? typeObj.name : account.type || 'Unknown';
     });
-    console.log('Processed accounts:', accounts);
     return { accounts, typeMap };
   } catch (error) {
     console.error('Error fetching data:', error);
@@ -72,7 +68,6 @@ export function getTableColumns(baseApiUrl, accessToken, typeMap) {
         if (cell.getElement()) {
           setTimeout(() => {
             const style = window.getComputedStyle(cell.getElement());
-            console.log('Actions cell rendered, computed width:', style.width);
           }, 0);
         }
         return span;
@@ -130,14 +125,11 @@ export function getTableColumns(baseApiUrl, accessToken, typeMap) {
     });
   });
 
-  console.log('Tabulator columns:', columns);
   return columns;
 }
 
 // Configures and initializes the Tabulator table
 export function setupTable(tableElementId, columns, data, onTableBuilt) {
-  console.log('Setting up table with element ID:', tableElementId, 'and data:', data);
-
   const table = new Tabulator(`#${tableElementId}`, {
     data: data,
     columns: columns,
@@ -156,13 +148,11 @@ export function setupTable(tableElementId, columns, data, onTableBuilt) {
 
   // Store the updateTotalAccounts function on the table object
   table.updateTotalAccounts = function() {
-    console.log('updateTotalAccounts called');
     const savedRows = this.getData().filter(row => row.id && row.id !== null);
     const total = savedRows.length;
     const totalElement = document.getElementById('total-accounts');
     if (totalElement) {
       totalElement.textContent = total || '0';
-      console.log('Updated total accounts:', total);
     } else {
       console.error('Total element not found:', totalElement);
     }
@@ -170,7 +160,6 @@ export function setupTable(tableElementId, columns, data, onTableBuilt) {
 
   // Set initial total and trigger onTableBuilt callback
   table.on('tableBuilt', () => {
-    console.log('Table built event fired');
     table.updateTotalAccounts();
     if (typeof onTableBuilt === 'function') {
       onTableBuilt();

@@ -40,7 +40,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (!data) return;
 
   const { accounts, typeMap } = data;
-  console.log('Fetched accounts:', accounts); // Debug log
 
   // Initialize Tabulator with a callback for chart setup
   const table = setupTable('accounts-table', getTableColumns(baseApiUrl, accessToken, typeMap), accounts, () => {
