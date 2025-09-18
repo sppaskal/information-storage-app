@@ -32,7 +32,7 @@ export function initializeChart(ctx) {
           title: {
             display: true,
             text: 'Account Type Distribution',
-            font: { size: 18 },
+            font: { size: 18, weight: 'normal' },
             color: '#24292e'
           }
         }
@@ -69,7 +69,6 @@ export function updateChart() {
     chart.data.labels = window.typeDistributionData.labels;
     chart.data.datasets[0].data = window.typeDistributionData.values;
     chart.update(); // Enable animations by default
-    console.log('KPIs reloaded');
   } else {
     console.warn('Chart not found or data unavailable for reload');
   }

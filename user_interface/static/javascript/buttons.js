@@ -19,8 +19,6 @@ export function createDeleteButton() {
     const deleteIcon = document.createElement('img');
     deleteIcon.src = '/static/images/trash.svg';
     deleteIcon.alt = 'Delete';
-    deleteIcon.style.width = '20px';
-    deleteIcon.style.height = '20px';
     deleteBtn.appendChild(deleteIcon);
     return deleteBtn;
 }
@@ -32,8 +30,6 @@ export function createSaveButton() {
     const saveIcon = document.createElement('img');
     saveIcon.src = '/static/images/save-floppy-disk.svg';
     saveIcon.alt = 'Save';
-    saveIcon.style.width = '20px';
-    saveIcon.style.height = '20px';
     saveBtn.appendChild(saveIcon);
     return saveBtn;
 }
@@ -53,8 +49,6 @@ export function createReloadButton() {
     const reloadIcon = document.createElement('img');
     reloadIcon.src = '/static/images/reload.svg';
     reloadIcon.alt = 'Reload KPIs';
-    reloadIcon.style.width = '20px';
-    reloadIcon.style.height = '20px';
     reloadBtn.appendChild(reloadIcon);
     return reloadBtn;
 }
@@ -74,7 +68,6 @@ export function deleteAction(id, baseApiUrl, accessToken, table, row, updateTota
                 const currentTotal = parseInt(document.getElementById('total-accounts').textContent) || 0;
                 row.delete(); // Remove row from Tabulator
                 document.getElementById('total-accounts').textContent = currentTotal - 1;
-                console.log('Deleted row, new total:', currentTotal - 1);
             } else {
                 console.error('Delete failed');
             }
@@ -124,7 +117,6 @@ export function saveAction(data, baseApiUrl, accessToken, table, row, typeMap, u
             if (addButton) {
                 showSuccessPopup(addButton);
                 document.getElementById('total-accounts').textContent = currentTotal + 1;
-                console.log('Saved new row, new total:', currentTotal + 1);
             }
         } else if (method === 'PUT') {
             const saveButton = row.getCell('actions').getElement().querySelector('.save-btn');

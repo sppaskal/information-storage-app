@@ -50,7 +50,7 @@ export function showFailurePopup(addButton) {
 export function showEditSuccessPopup(saveButton) {
     const popup = document.createElement('div');
     popup.className = 'success-popup';
-    popup.textContent = 'Account successfully edited';
+    popup.textContent = 'Account successfully updated';
     document.body.appendChild(popup);
 
     // Position popup to the right of the save button
