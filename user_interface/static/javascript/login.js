@@ -73,15 +73,15 @@ export function submitCredentials() {
         if (!response.ok) {
             throw new Error('Invalid username or password');
         }
-
-        showValidationComponents()
-
-        // Parse JSON response
         return response.json();
     })
     .then(data => {
-        if (data.demo_mode) { // Bypass multifactor auth
+        console.log(data)
+        if (!data.mfa_enabled) { // Bypass multifactor auth
             handleSuccessfulLogin(baseApiUrl, data)
+        } else {
+            showValidationComponents()
+            return
         }
     })
     .catch(error => {

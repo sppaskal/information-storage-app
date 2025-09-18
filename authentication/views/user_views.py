@@ -32,9 +32,15 @@ class UserViewSet(ViewSet):
         try:
             serializer = UserSerializer(data=request.data)
             if serializer.is_valid():
-                # Delegate creation logic to helper
-                UserHelper.create_user(serializer.validated_data)
-                return Response(status=status.HTTP_201_CREATED)
+                # Create user and profile
+                user = UserHelper.create_user(serializer.validated_data)
+
+                response_serializer = UserSerializer(user)
+                return Response(
+                    response_serializer.data,
+                    status=status.HTTP_201_CREATED
+                )
+
             # Return validation errors
             return Response(
                 serializer.errors,

@@ -35,6 +35,25 @@ label {
     margin-bottom: 8px;
 }
 
+.mfa-option {
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+
+.mfa-option label {
+    margin-right: 8px;
+    margin-bottom: 0;
+}
+
+.mfa-option input[type="checkbox"] {
+    margin: 0;
+    vertical-align: middle;
+    width: 16px;
+    height: 16px;
+}
+
 input {
     width: 100%;
     padding: 8px;

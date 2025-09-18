@@ -8,3 +8,9 @@ class AccessCode(models.Model):
     used = models.BooleanField(default=False)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
+
+# -------------------------------------------------------------------------------
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    mfa_enabled = models.BooleanField(default=False)
