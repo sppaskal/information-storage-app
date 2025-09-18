@@ -1,45 +1,46 @@
 // Initialize the pie chart
 export function initializeChart(ctx) {
-  if (window.typeDistributionData && window.typeDistributionData.labels) {
-    new Chart(ctx, {
-      type: 'pie',
-      data: {
-        labels: window.typeDistributionData.labels,
-        datasets: [{
-          data: window.typeDistributionData.values,
-          backgroundColor: [
-            'rgba(255, 99, 132, 0.7)',
-            'rgba(54, 162, 235, 0.7)',
-            'rgba(255, 206, 86, 0.7)',
-            'rgba(75, 192, 192, 0.7)',
-            'rgba(153, 102, 255, 0.7)'
-          ],
-          borderColor: 'rgba(255, 255, 255, 0.8)',
-          borderWidth: 1
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            position: 'bottom',
-            labels: {
-              font: { size: 14 },
-              color: '#333'
-            }
-          },
-          title: {
-            display: true,
-            text: 'Account Type Distribution',
-            font: { size: 18, weight: 'normal' },
-            color: '#24292e'
+  // Always create the chart, even if no data is available initially
+  new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: window.typeDistributionData ? window.typeDistributionData.labels : [],
+      datasets: [{
+        data: window.typeDistributionData ? window.typeDistributionData.values : [],
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.7)',
+          'rgba(54, 162, 235, 0.7)',
+          'rgba(255, 206, 86, 0.7)',
+          'rgba(75, 192, 192, 0.7)',
+          'rgba(153, 102, 255, 0.7)'
+        ],
+        borderColor: 'rgba(255, 255, 255, 0.8)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: {
+            font: { size: 14 },
+            color: '#333'
           }
+        },
+        title: {
+          display: true,
+          text: 'Account Type Distribution',
+          font: { size: 18, weight: 'normal' },
+          color: '#24292e'
         }
       }
-    });
-  } else {
-    console.warn('Type distribution data not available for chart.');
+    }
+  });
+
+  if (!window.typeDistributionData || window.typeDistributionData.labels.length === 0) {
+    console.warn('No initial type distribution data available; chart created empty.');
   }
 }
 
@@ -56,6 +57,7 @@ export function generateTypeDistributionChart(data) {
 
   if (labels.length === 0 || values.every(v => v === 0)) {
     console.warn('No valid type distribution data available');
+    window.typeDistributionData = { labels: [], values: [] };
     return;
   }
 
