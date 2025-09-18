@@ -16,9 +16,11 @@ class AccessCodeSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+    mfa_enabled = serializers.BooleanField(write_only=True, required=False)
+
     class Meta:
         model = User
-        fields = ['username', 'email', 'password']
+        fields = ['username', 'email', 'password', 'mfa_enabled']
         extra_kwargs = {'password': {'write_only': True}}
 
     # Overriding validate() to check if email is unique

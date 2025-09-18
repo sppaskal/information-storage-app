@@ -6,6 +6,7 @@ from rest_framework import status
 from django.contrib.auth import authenticate
 from django.conf import settings
 from ..helpers.acces_code_helper import AccessCodeHelper
+from ..helpers.user_helper import UserHelper
 from utils.other import Other
 from utils.notifications import Email
 from ..serializers import (
@@ -26,19 +27,22 @@ class LoginInitial(APIView):
             username = request.data.get("username")
             password = request.data.get("password")
             user = authenticate(username=username, password=password)
+
             if user is not None:
-                if settings.DEMO_MODE:  # Bypass multifactor auth
+                # Bypass MFA if disabled in user profile
+                if not UserHelper.is_mfa_enabled(user):
                     new_refresh = RefreshToken.for_user(user)
                     new_access = AccessToken.for_user(user)
                     return Response(
                         {
-                            "demo_mode": settings.DEMO_MODE,
+                            "mfa_enabled": False,
                             "access_token": str(new_access),
                             "refresh_token": str(new_refresh)
                         },
                         status=status.HTTP_200_OK
                     )
-
+                
+                # Generate or update access code for user                
                 access_code = AccessCodeHelper.get_access_code_instance_by_user_id(
                     user_id=user.id
                 )
@@ -55,7 +59,6 @@ class LoginInitial(APIView):
                         "code": random_code
                     }
                     serializer = AccessCodeSerializer(data=access_code_data)
-
                     if serializer.is_valid():
                         serializer.save()
                     else:
@@ -66,7 +69,7 @@ class LoginInitial(APIView):
 
                 # email code to user
                 email_response = Email.send_email(
-                    title="Your Information Storage App Access Code",
+                    title="Your Account Storage App Access Code",
                     message="Your access code is: " + str(random_code),
                     recipients=[user.email]
                 )
@@ -79,7 +82,7 @@ class LoginInitial(APIView):
                     )
 
                 return Response(
-                        {"demo_mode": settings.DEMO_MODE},
+                        {"mfa_enabled": True},
                         status=status.HTTP_200_OK
                     )
             return Response(status=status.HTTP_401_UNAUTHORIZED)
@@ -125,7 +128,7 @@ class LoginFinal(APIView):
 
                         return Response(
                             {
-                                "demo_mode": settings.DEMO_MODE,
+                                "mfa_enabled": True,
                                 "access_token": str(new_access),
                                 "refresh_token": str(new_refresh)
                             },

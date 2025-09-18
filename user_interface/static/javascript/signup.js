@@ -40,6 +40,7 @@ function signup() {
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
     const confirm_password = document.getElementById('confirm-password').value;
+    const mfa = document.getElementById('mfa-toggle').checked;
 
     try {
         // Check if email is valid
@@ -49,11 +50,11 @@ function signup() {
 
         // Check if password is valid
         if (!validatePassword(password)) {
-            throw new Error('"The password needs to be atleast 5 characters"');
+            throw new Error('"The password needs to be at least 5 characters"');
         }
 
         // Check if passwords match
-        if (password != confirm_password) {
+        if (password !== confirm_password) {
             throw new Error('"The passwords do not match"');
         }
     } catch (error) {
@@ -74,6 +75,7 @@ function signup() {
             username: username,
             email: email,
             password: password,
+            mfa_enabled: mfa,
         }),
     })
     .then(response => {
