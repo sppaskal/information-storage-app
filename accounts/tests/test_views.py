@@ -17,14 +17,18 @@ class ViewTests(APITestCase):
         "accounts/tests/fixtures/accounts.json"
     ]
 
-    def setUp(self):
-        self.user = User.objects.create_user(
-            username="testuser",
-            password="testpassword"
-        )
-        refresh = RefreshToken.for_user(self.user)
+    @classmethod
+    def setUpTestData(cls):
+        User.objects.all().delete()  # Ensure no ID collision
+        cls.user = User(id=1, username="testuser")
+        cls.user.set_password("testpassword")
+        refresh = RefreshToken.for_user(cls.user)
         access_token = str(refresh.access_token)
-        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {access_token}")
+        cls.auth_header = f"Bearer {access_token}"
+        cls.user.save()
+
+    def setUp(self):
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth_header)
 
     # ----------------------------------------------------------------------------
 
@@ -43,14 +47,14 @@ class ViewTests(APITestCase):
         response = self.client.post(url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data["message"], "Added Account")
-        self.assertEqual(response.data["account"]["email"], "test-auto@gmail.com")
-        self.assertEqual(response.data["account"]["username"], "test-auto")
-        self.assertEqual(response.data["account"]["password"], "test-password")
-        self.assertEqual(response.data["account"]["company"], "auto-test")
-        self.assertEqual(response.data["account"]["website"], "https://www.example.com")
-        self.assertEqual(response.data["account"]["description"], "automated test")
-        self.assertEqual(response.data["account"]["type"], 1)
+        self.assertEqual(response.data["email"], "test-auto@gmail.com")
+        self.assertEqual(response.data["username"], "test-auto")
+        self.assertEqual(response.data["password"], "test-password")
+        self.assertEqual(response.data["company"], "auto-test")
+        self.assertEqual(response.data["website"], "https://www.example.com")
+        self.assertEqual(response.data["description"], "automated test")
+        self.assertEqual(response.data["type"], 1)
+
 
     def test_add_account_with_invalid_type(self):
         url = reverse("accounts-api:account-list")

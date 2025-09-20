@@ -4,10 +4,10 @@ from ..models import (
     Account,
     Type,
 )
+from django.contrib.auth.models import User
 
 # NOTE: Test command: python manage.py test accounts.tests.test_models
 # NOTE: To run all test modules: python manage.py run_accounts_tests
-
 
 class ModelTests(TestCase):
     databases = "__all__"
@@ -16,7 +16,10 @@ class ModelTests(TestCase):
     ]
 
     def setUp(self):
-        pass
+        self.user = User.objects.create_user(
+            username="testuser",
+            password="testpassword"
+        )
 
     # ----------------------------------------------------------------------------
 
@@ -26,6 +29,7 @@ class ModelTests(TestCase):
         )
 
         instance = Account.objects.create(
+            user_id=10,
             email='test@test.com',
             username='testuser',
             password='testpassword',
@@ -44,6 +48,7 @@ class ModelTests(TestCase):
         self.assertEqual(saved_instance.website, 'www.test.com')
         self.assertEqual(saved_instance.description, 'test description')
         self.assertEqual(saved_instance.type, type_inst)
+        self.assertEqual(saved_instance.user_id, 10)
 
     # ----------------------------------------------------------------------------
 
