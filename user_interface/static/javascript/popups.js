@@ -10,7 +10,7 @@ export function showSuccessPopup(addButton) {
     popup.style.position = 'absolute';
     popup.style.top = `${buttonRect.top + window.scrollY}px`;
     popup.style.left = `${buttonRect.right + 10}px`;
-    popup.style.height = `${addButton.offsetHeight}px`; // Match button height
+    popup.style.height = `${addButton.offsetHeight}px`;
 
     // Trigger animation
     setTimeout(() => popup.classList.add('show'), 10);
@@ -18,7 +18,7 @@ export function showSuccessPopup(addButton) {
     // Auto-close after 3 seconds
     setTimeout(() => {
         popup.classList.remove('show');
-        setTimeout(() => popup.remove(), 500); // Match animation duration
+        setTimeout(() => popup.remove(), 500);
     }, 3000);
 }
 
@@ -34,7 +34,7 @@ export function showFailurePopup(addButton) {
     popup.style.position = 'absolute';
     popup.style.top = `${buttonRect.top + window.scrollY}px`;
     popup.style.left = `${buttonRect.right + 10}px`;
-    popup.style.height = `${addButton.offsetHeight}px`; // Match button height
+    popup.style.height = `${addButton.offsetHeight}px`;
 
     // Trigger animation
     setTimeout(() => popup.classList.add('show'), 10);
@@ -42,7 +42,7 @@ export function showFailurePopup(addButton) {
     // Auto-close after 3 seconds
     setTimeout(() => {
         popup.classList.remove('show');
-        setTimeout(() => popup.remove(), 500); // Match animation duration
+        setTimeout(() => popup.remove(), 500);
     }, 3000);
 }
 
@@ -58,7 +58,7 @@ export function showEditSuccessPopup(saveButton) {
     popup.style.position = 'absolute';
     popup.style.top = `${buttonRect.top + window.scrollY}px`;
     popup.style.left = `${buttonRect.right + 10}px`;
-    popup.style.height = `${saveButton.offsetHeight}px`; // Match button height
+    popup.style.height = `${saveButton.offsetHeight}px`;
 
     // Trigger animation
     setTimeout(() => popup.classList.add('show'), 10);
@@ -66,6 +66,24 @@ export function showEditSuccessPopup(saveButton) {
     // Auto-close after 3 seconds
     setTimeout(() => {
         popup.classList.remove('show');
-        setTimeout(() => popup.remove(), 500); // Match animation duration
+        setTimeout(() => popup.remove(), 500);
     }, 3000);
+}
+
+// Helper function to show reminder popup
+export function showReminderPopup(addButton) {
+    const popup = document.createElement('div');
+    popup.className = 'reminder-popup';
+    popup.textContent = 'Make sure to save newly added accounts';
+    document.body.appendChild(popup);
+
+    // Position popup to the right of the add button
+    const buttonRect = addButton.getBoundingClientRect();
+    popup.style.position = 'absolute';
+    popup.style.top = `${buttonRect.top + window.scrollY}px`;
+    popup.style.left = `${buttonRect.right + 10}px`;
+    popup.style.height = `${addButton.offsetHeight}px`;
+
+    // Trigger animation
+    setTimeout(() => popup.classList.add('show'), 10);
 }
