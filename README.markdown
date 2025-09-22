@@ -4,7 +4,7 @@ Summary: This is a demo Django application showcasing a user authentication and 
 The application stores account data on a per user basis, allowing users to view, add, edit, and delete
 accounts from their storage.
 
-NOTE: To test multi-factor authentication create a new account with an email you have access to and
+NOTE: To test multi-factor authentication, create a new account with an email you have access to and
 make sure to check the multi-factor authentication option during account creation.
 
 Follow these steps to run the app locally using Docker.
