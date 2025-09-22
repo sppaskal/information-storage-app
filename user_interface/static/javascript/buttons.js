@@ -1,5 +1,5 @@
 import { deleteCookies } from './cookie_utils.js';
-import { showSuccessPopup, showFailurePopup, showEditSuccessPopup } from './popups.js';
+import { showSuccessPopup, showFailurePopup, showEditSuccessPopup, showReminderPopup } from './popups.js';
 import { generateTypeDistributionChart, updateChart } from './charts.js';
 
 // GENERIC BUTTON ACTIONS AND CREATORS
@@ -39,6 +39,19 @@ export function createAddButton() {
     const addButton = document.createElement('button');
     addButton.textContent = 'Add New Account';
     addButton.className = 'add-btn';
+
+    // Add hover event listeners to show/hide reminder popup
+    addButton.addEventListener('mouseenter', () => {
+        showReminderPopup(addButton);
+    });
+    addButton.addEventListener('mouseleave', () => {
+        const popup = document.querySelector('.reminder-popup');
+        if (popup) {
+            popup.classList.remove('show');
+            setTimeout(() => popup.remove(), 500); // Match animation duration
+        }
+    });
+
     return addButton;
 }
 
