@@ -48,7 +48,7 @@ export function createAddButton() {
         const popup = document.querySelector('.reminder-popup');
         if (popup) {
             popup.classList.remove('show');
-            setTimeout(() => popup.remove(), 500); // Match animation duration
+            popup.remove()
         }
     });
 
